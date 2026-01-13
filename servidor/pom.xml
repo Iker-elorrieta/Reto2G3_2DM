@@ -46,7 +46,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.48</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>AplicacionEscritorio</groupId>
+			<artifactId>AplicacionEscritorio</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
