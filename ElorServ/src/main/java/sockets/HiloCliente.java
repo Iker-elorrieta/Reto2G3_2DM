@@ -59,7 +59,6 @@ public class HiloCliente extends Thread {
                         out.writeObject(new Respuesta(false, respuesta));
                     }
 
-
                     break;
 
                 default:

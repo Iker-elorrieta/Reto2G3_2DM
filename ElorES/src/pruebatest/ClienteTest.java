@@ -17,7 +17,7 @@ public class ClienteTest {
             ConexionServidor con = new ConexionServidor();
 
             Map<String,Object> datos = new HashMap<>();
-            datos.put("user", "goduser");
+            datos.put("user", "alumno3");
             datos.put("pass", "123456");
 
             Peticion p = new Peticion(Acciones.LOGIN, datos);

@@ -17,7 +17,7 @@ public class ConexionServidor {
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
     }
-
+    
     public Respuesta enviar(Peticion p) throws Exception {
         out.writeObject(p);
         out.flush();
