@@ -45,9 +45,10 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
-			<groupId>ElorES</groupId>
-			<artifactId>ElorES</artifactId>
+			<groupId>HIBERNATE</groupId>
+			<artifactId>HIBERNATE</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
