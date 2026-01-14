@@ -6,12 +6,13 @@ import java.net.Socket;
 public class Servidor {
 
     public static void main(String[] args) throws Exception {
-        ServerSocket server = new ServerSocket(5000);
-        System.out.println("Servidor iniciado");
+        try (ServerSocket server = new ServerSocket(5000)) {
+			System.out.println("Servidor iniciado");
 
-        while (true) {
-            Socket cliente = server.accept();
-            new HiloCliente(cliente).start();
-        }
+			while (true) {
+			    Socket cliente = server.accept();
+			    new HiloCliente(cliente).start();
+			}
+		}
     }
 }
