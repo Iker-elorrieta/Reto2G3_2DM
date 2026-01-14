@@ -13,6 +13,9 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
 
 public class Login extends JFrame {
 
@@ -42,8 +45,9 @@ public class Login extends JFrame {
 	 */
 	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 911, 558);
+		setBounds(100, 100, 894, 558);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -71,6 +75,9 @@ public class Login extends JFrame {
 		}
 		
 		JPanel panelLogin = new JPanel();
+		panelLogin.setBackground(new Color(255, 255, 255));
+		panelLogin.setForeground(new Color(196, 225, 255));
+		panelLogin.setBorder(new LineBorder(new Color(0, 64, 128), 2, true));
 		panelLogin.setBounds(262, 117, 332, 356);
 		contentPane.add(panelLogin);
 		panelLogin.setLayout(null);
@@ -86,6 +93,7 @@ public class Login extends JFrame {
 		panelLogin.add(txtContrasena);
 		
 		JLabel lblUsuario = new JLabel("Usuario");
+		lblUsuario.setForeground(new Color(252, 140, 39));
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsuario.setToolTipText("");
 		lblUsuario.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 30));
@@ -93,6 +101,7 @@ public class Login extends JFrame {
 		panelLogin.add(lblUsuario);
 		
 		JLabel lblContrasena = new JLabel("Contraseña");
+		lblContrasena.setForeground(new Color(252, 140, 39));
 		lblContrasena.setToolTipText("");
 		lblContrasena.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasena.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 30));
@@ -100,6 +109,7 @@ public class Login extends JFrame {
 		panelLogin.add(lblContrasena);
 		
 		JLabel lblLogin = new JLabel("Inicio");
+		lblLogin.setForeground(new Color(0, 64, 128));
 		lblLogin.setToolTipText("");
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 50));
