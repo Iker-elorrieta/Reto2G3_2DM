@@ -2,6 +2,7 @@ package Vista;
 
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -50,10 +51,24 @@ public class Login extends JFrame {
 		JLabel logo1 = new JLabel("logo");
 		logo1.setBounds(30, 20, 133, 134);
 		contentPane.add(logo1);
-		ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/media/logo1.png"));
-		Image imagen = iconoOriginal.getImage();
-		Image imagenEscalada = imagen.getScaledInstance(logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH);
-		logo1.setIcon(new ImageIcon(imagenEscalada));
+		java.net.URL imgURL = getClass().getResource("/media/logo1.png");
+		if (imgURL != null) {
+			ImageIcon iconoOriginal = new ImageIcon(imgURL);
+			Image imagen = iconoOriginal.getImage();
+			Image imagenEscalada = imagen.getScaledInstance(logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH);
+			logo1.setIcon(new ImageIcon(imagenEscalada));
+		} else {
+			// Fallback: try loading from working directory (useful during development)
+			File f = new File("media/logo1.png");
+			if (f.exists()) {
+				ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+				Image imagen = iconoOriginal.getImage();
+				Image imagenEscalada = imagen.getScaledInstance(logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH);
+				logo1.setIcon(new ImageIcon(imagenEscalada));
+			} else {
+				System.err.println("Resource not found: /media/logo1.png and media/logo1.png not found in working dir.");
+			}
+		}
 		
 		JPanel panelLogin = new JPanel();
 		panelLogin.setBounds(262, 117, 332, 356);
