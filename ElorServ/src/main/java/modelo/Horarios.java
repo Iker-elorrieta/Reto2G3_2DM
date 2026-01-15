@@ -8,6 +8,10 @@ import java.sql.Timestamp;
  */
 public class Horarios implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Modulos modulos;
 	private Users users;

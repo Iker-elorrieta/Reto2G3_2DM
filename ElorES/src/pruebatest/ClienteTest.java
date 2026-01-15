@@ -17,7 +17,7 @@ public class ClienteTest {
          DataInputStream in = con.getIn();
 
             out.writeUTF("LOGIN");      
-            out.writeUTF("alumno3");     
+            out.writeUTF("goduser");     
             out.writeUTF("123456");      
 
             String estado = in.readUTF();   
