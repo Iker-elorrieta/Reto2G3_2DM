@@ -1,36 +1,52 @@
 package pruebatest;
 
-import modelo.Peticion;
-import modelo.Respuesta;
-import modelo.Acciones;
+import conexion.ConexionServidor;
 import modelo.UsersDTO;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
-import conexion.ConexionServidor;
 
 public class ClienteTest {
 
     public static void main(String[] args) {
         try {
+        
             ConexionServidor con = new ConexionServidor();
+         DataOutputStream out = con.getOut();
+         DataInputStream in = con.getIn();
 
-            Map<String,Object> datos = new HashMap<>();
-            datos.put("user", "alumno3");
-            datos.put("pass", "123456");
+            out.writeUTF("LOGIN");      
+            out.writeUTF("alumno3");     
+            out.writeUTF("123456");      
 
-            Peticion p = new Peticion(Acciones.LOGIN, datos);
-            Respuesta r = con.enviar(p);
+            String estado = in.readUTF();   
 
-            Map<String, Object> datosRespuesta = r.getDatos();
+            switch (estado) {
 
-            UsersDTO usuario = (UsersDTO) datosRespuesta.get("usuario");
+                case "OK": {
+                    UsersDTO usuario = new UsersDTO();
+                    usuario.setUsername(in.readUTF());
+                    usuario.setNombre(in.readUTF());
+                    usuario.setTelefono2(in.readUTF());
 
-            System.out.println("Usuario logueado: " + usuario.getUsername());
-            System.out.println("Nombre: " + usuario.getNombre());
-            System.out.println("Telefono2: " + usuario.getTelefono2());
-            System.out.println("Mensaje: " + datosRespuesta.get("mensaje"));
+      
+                    System.out.println("Usuario: " + usuario.getUsername());
+                    System.out.println("Nombre: " + usuario.getNombre());
+                    System.out.println("Teléfono: " + usuario.getTelefono2());
+                    break;
+                }
+
+                case "ERROR": {
+                    String mensaje = in.readUTF();
+                    System.out.println("=== ERROR ===");
+                    System.out.println(mensaje);
+                    break;
+                }
+
+                default:
+                    System.out.println("Respuesta desconocida del servidor");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

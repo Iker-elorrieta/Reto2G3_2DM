@@ -1,17 +1,11 @@
 package sockets;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
-import modelo.Acciones;
-import modelo.Peticion;
-import modelo.Respuesta;
 import modelo.Users;
 import modelo.UsersDAO;
-import modelo.UsersDTO;
 
 public class HiloCliente extends Thread {
 
@@ -23,52 +17,42 @@ public class HiloCliente extends Thread {
 
     public void run() {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        	DataInputStream in = new DataInputStream(socket.getInputStream());
+        	DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-            Peticion p = (Peticion) in.readObject();
+        	
 
-            switch (p.getAccion()) {
+        	String accion = in.readUTF();
+        	System.out.println(accion);
+        	switch (accion) {
 
-                case Acciones.LOGIN:
+        	    case "LOGIN": {
+        	        String user = in.readUTF();
+        	        String pass = in.readUTF();
 
-                    Map<String, Object> datos = p.getDatos();
-                    String usuario = (String) datos.get("user");
-                    String password = (String) datos.get("pass");
+        	        UsersDAO dao = new UsersDAO();
+        	        Users u = dao.login(user, pass);
 
-                    UsersDAO dao = new UsersDAO();
-                    Users u = dao.login(usuario, password);
+        	        if (u != null) {
+        	            out.writeUTF("OK");
+        	            out.writeUTF(u.getUsername());
+        	            out.writeUTF(u.getNombre());
+        	            out.writeUTF(u.getTelefono2());
+        	        } else {
+        	            out.writeUTF("ERROR");
+        	            out.writeUTF("Usuario o contraseña incorrectos");
+        	        }
+        	        break;
+        	    }
 
-                    Map<String, Object> respuesta = new HashMap<>();
 
-                    if (u != null) {
-
-                        UsersDTO dto = new UsersDTO();
-                        dto.setUsername(u.getUsername());
-                        dto.setNombre(u.getNombre());
-                        dto.setTelefono2(u.getTelefono2());
-
-                        respuesta.put("mensaje", "Login correcto");
-                        respuesta.put("usuario", dto);
-
-                        out.writeObject(new Respuesta(true, respuesta));
-
-                    } else {
-
-                        respuesta.put("mensaje", "Usuario o contraseña incorrectos");
-                        out.writeObject(new Respuesta(false, respuesta));
-                    }
-
-                    break;
-
-                default:
-                    Map<String, Object> error = new HashMap<>();
-                    error.put("mensaje", "Acción no reconocida");
-                    out.writeObject(new Respuesta(false, error));
-            }
-
+        	    default:
+        	        out.writeUTF("ERROR");
+        	        out.writeUTF("Acción no reconocida");
+        	        break;
+        	}
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+			e.printStackTrace();
     }
+}
 }

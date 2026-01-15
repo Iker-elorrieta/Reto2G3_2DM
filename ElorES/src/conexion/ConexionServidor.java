@@ -1,26 +1,35 @@
 package conexion;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 import java.net.Socket;
-import modelo.Peticion;
-import modelo.Respuesta;
 
 public class ConexionServidor {
 
     private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private DataOutputStream out;
+    private DataInputStream in;
 
     public ConexionServidor() throws Exception {
         socket = new Socket("localhost", 5000);
-        out = new ObjectOutputStream(socket.getOutputStream());
-        in = new ObjectInputStream(socket.getInputStream());
-    }
-    
-    public Respuesta enviar(Peticion p) throws Exception {
-        out.writeObject(p);
+        in = new DataInputStream(socket.getInputStream());
+        out = new DataOutputStream(socket.getOutputStream());
         out.flush();
-        return (Respuesta) in.readObject();
+        
+    }
+
+    public DataOutputStream getOut() {
+        return out;
+    }
+
+    public DataInputStream getIn() {
+        return in;
+    }
+
+    public void cerrar() throws Exception {
+        in.close();
+        out.close();
+        socket.close();
     }
 }
