@@ -16,6 +16,8 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
@@ -112,6 +114,11 @@ public class Login extends JFrame {
 		panelLogin.add(lblLogin);
 		
 		JButton btnIniciar = new JButton("Iniciar Sesión");
+		btnIniciar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		btnIniciar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
 		btnIniciar.setBounds(107, 303, 120, 23);
 		panelLogin.add(btnIniciar);
