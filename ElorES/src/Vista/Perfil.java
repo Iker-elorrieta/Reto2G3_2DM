@@ -14,6 +14,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Perfil extends JFrame {
 
@@ -73,7 +75,7 @@ public class Perfil extends JFrame {
 		panelLogin.setBackground(new Color(255, 255, 255));
 		panelLogin.setForeground(new Color(196, 225, 255));
 		panelLogin.setBorder(new LineBorder(new Color(0, 64, 128), 2, true));
-		panelLogin.setBounds(261, 90, 332, 418);
+		panelLogin.setBounds(209, 86, 466, 411);
 		contentPane.add(panelLogin);
 		panelLogin.setLayout(null);
 		
@@ -81,41 +83,9 @@ public class Perfil extends JFrame {
 		lblUsuario.setForeground(new Color(0, 64, 128));
 		lblUsuario.setHorizontalAlignment(SwingConstants.LEFT);
 		lblUsuario.setToolTipText("");
-		lblUsuario.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		lblUsuario.setBounds(10, 11, 312, 29);
+		lblUsuario.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 14));
+		lblUsuario.setBounds(10, 11, 72, 29);
 		panelLogin.add(lblUsuario);
-		
-		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setToolTipText("");
-		lblApellido.setHorizontalAlignment(SwingConstants.LEFT);
-		lblApellido.setForeground(new Color(0, 64, 128));
-		lblApellido.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		lblApellido.setBounds(10, 70, 312, 29);
-		panelLogin.add(lblApellido);
-		
-		JLabel lblDNI = new JLabel("DNI:");
-		lblDNI.setToolTipText("");
-		lblDNI.setHorizontalAlignment(SwingConstants.LEFT);
-		lblDNI.setForeground(new Color(0, 64, 128));
-		lblDNI.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		lblDNI.setBounds(10, 127, 312, 29);
-		panelLogin.add(lblDNI);
-		
-		JLabel lblTelfono = new JLabel("Teléfono 1:");
-		lblTelfono.setToolTipText("");
-		lblTelfono.setHorizontalAlignment(SwingConstants.LEFT);
-		lblTelfono.setForeground(new Color(0, 64, 128));
-		lblTelfono.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		lblTelfono.setBounds(10, 182, 312, 29);
-		panelLogin.add(lblTelfono);
-		
-		JLabel lblTelfono_2 = new JLabel("Teléfono 2:");
-		lblTelfono_2.setToolTipText("");
-		lblTelfono_2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblTelfono_2.setForeground(new Color(0, 64, 128));
-		lblTelfono_2.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		lblTelfono_2.setBounds(10, 237, 312, 29);
-		panelLogin.add(lblTelfono_2);
 		
 		JLabel lblTitulo = new JLabel("Tu perfil\r\n");
 		lblTitulo.setBounds(10, 17, 858, 58);
@@ -125,10 +95,14 @@ public class Perfil extends JFrame {
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 50));
 		
-		JButton btnIniciar = new JButton("Iniciar Sesión");
-		btnIniciar.setBounds(98, 440, 120, 23);
-		contentPane.add(btnIniciar);
-		btnIniciar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnVolver.setBounds(32, 474, 120, 23);
+		contentPane.add(btnVolver);
+		btnVolver.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
 		
 
 

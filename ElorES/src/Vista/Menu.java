@@ -52,7 +52,7 @@ public class Menu extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel logo1 = new JLabel("logo");
-		logo1.setBounds(770, 11, 98, 101);
+		logo1.setBounds(37, 11, 85, 79);
 		contentPane.add(logo1);
 		java.net.URL imgURL = getClass().getResource("/media/logo1.png");
 		if (imgURL != null) {
@@ -96,13 +96,13 @@ public class Menu extends JFrame {
 			}
 		});
 		btnMiHorario.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		btnMiHorario.setBounds(53, 113, 136, 50);
+		btnMiHorario.setBounds(53, 113, 176, 50);
 		panelLogin.add(btnMiHorario);
 		
 		JButton btnOtrosHorarios = new JButton("Otros horarios");
 		btnOtrosHorarios.setBackground(UIManager.getColor("Button.background"));
-		btnOtrosHorarios.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 14));
-		btnOtrosHorarios.setBounds(53, 211, 136, 50);
+		btnOtrosHorarios.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
+		btnOtrosHorarios.setBounds(53, 211, 176, 50);
 		panelLogin.add(btnOtrosHorarios);
 		
 		JButton btnAlumnos = new JButton("Alumnos");
@@ -112,7 +112,7 @@ public class Menu extends JFrame {
 			}
 		});
 		btnAlumnos.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		btnAlumnos.setBounds(370, 113, 136, 50);
+		btnAlumnos.setBounds(343, 113, 163, 50);
 		panelLogin.add(btnAlumnos);
 		
 		JButton btnReuniones = new JButton("Reuniones");
@@ -122,19 +122,8 @@ public class Menu extends JFrame {
 			}
 		});
 		btnReuniones.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
-		btnReuniones.setBounds(370, 211, 136, 50);
+		btnReuniones.setBounds(343, 211, 163, 50);
 		panelLogin.add(btnReuniones);
-		
-		JButton btnCerrarSesion = new JButton("Cerrar Sesión");
-		btnCerrarSesion.setBounds(209, 293, 136, 25);
-		panelLogin.add(btnCerrarSesion);
-		btnCerrarSesion.setForeground(new Color(0, 0, 0));
-		btnCerrarSesion.setBackground(new Color(244, 122, 0));
-		btnCerrarSesion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnCerrarSesion.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 12));
 		
 		JLabel lblBienvenidoUsuario = new JLabel("Bienvenido, usuario.");
 		lblBienvenidoUsuario.setToolTipText("");
@@ -145,7 +134,7 @@ public class Menu extends JFrame {
 		contentPane.add(lblBienvenidoUsuario);
 		
 		JButton btnPerfil = new JButton("");
-		btnPerfil.setBounds(23, 11, 110, 101);
+		btnPerfil.setBounds(770, 21, 62, 58);
 		contentPane.add(btnPerfil);
 		
 		java.net.URL imgPerfilURL = getClass().getResource("/media/perfil1.jpg");
@@ -155,7 +144,7 @@ public class Menu extends JFrame {
 			Image imagenEscalada = imagen.getScaledInstance(btnPerfil.getWidth(), btnPerfil.getHeight(), Image.SCALE_SMOOTH);
 			btnPerfil.setIcon(new ImageIcon(imagenEscalada));
 		} else {
-			File f = new File("media/perfil.jpg");
+			File f = new File("media/perfil1.jpg");
 			if (f.exists()) {
 				ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
 				Image imagen = iconoOriginal.getImage();
@@ -166,6 +155,17 @@ public class Menu extends JFrame {
 			}
 		}
 		btnPerfil.setText("");
+		
+		JButton btnCerrarSesion = new JButton("Cerrar Sesión");
+		btnCerrarSesion.setBounds(732, 102, 136, 25);
+		contentPane.add(btnCerrarSesion);
+		btnCerrarSesion.setForeground(new Color(0, 0, 0));
+		btnCerrarSesion.setBackground(UIManager.getColor("Button.background"));
+		btnCerrarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnCerrarSesion.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 12));
 
 
 	}

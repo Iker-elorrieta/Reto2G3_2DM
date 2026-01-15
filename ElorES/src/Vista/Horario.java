@@ -107,6 +107,10 @@ public class Horario extends JFrame {
 				"Horas", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] {
 				false, true, true, true, true, true
 			};
