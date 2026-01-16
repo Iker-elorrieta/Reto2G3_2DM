@@ -1,6 +1,5 @@
 package Vista;
 
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.File;
 
@@ -15,6 +14,9 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+
+import controlador.Controlador;
+
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -26,26 +28,8 @@ public class Login extends JFrame {
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasena;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public Login() {
+	
+	public Login(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 894, 558);
 		contentPane = new JPanel();
@@ -117,6 +101,14 @@ public class Login extends JFrame {
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				if (controlador.login(txtUsuario.getText(), new String (txtContrasena.getPassword()))) {
+					contentPane.setVisible(false);
+					Menu menu = new Menu(controlador);
+					menu.setVisible(true);
+					dispose();
+				} else {
+					System.out.println("Login fallido");
+				}
 			}
 		});
 		btnIniciar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
