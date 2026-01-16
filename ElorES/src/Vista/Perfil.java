@@ -66,7 +66,7 @@ public class Perfil extends JFrame {
 
 			JLabel logo1 = new JLabel("logo");
 
-			logo1.setBounds(727, 11, 98, 101);
+			logo1.setBounds(683, 17, 168, 58);
 
 			contentPane.add(logo1);
 
@@ -396,7 +396,7 @@ public class Perfil extends JFrame {
 
 			JButton btnVolver = new JButton("Volver");
 
-			btnVolver.setBackground(new Color(242, 121, 0));
+			btnVolver.setBackground(new Color(248, 188, 7));
 
 			btnVolver.setForeground(new Color(255, 255, 255));
 
@@ -413,6 +413,27 @@ public class Perfil extends JFrame {
 			contentPane.add(btnVolver);
 
 			btnVolver.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
+			
+			JLabel logo2 = new JLabel("logo2");
+			logo2.setBounds(411, 454, 45, 41);
+			contentPane.add(logo2);
+			java.net.URL imgURL1 = getClass().getResource("/media/logo2.png");
+			if (imgURL1 != null) {
+				ImageIcon iconoOriginal = new ImageIcon(imgURL1);
+				Image imagen = iconoOriginal.getImage();
+				Image imagenEscalada = imagen.getScaledInstance(logo2.getWidth(), logo2.getHeight(), Image.SCALE_SMOOTH);
+				logo2.setIcon(new ImageIcon(imagenEscalada));
+			} else {
+				File f = new File("media/logo2.png");
+				if (f.exists()) {
+					ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+					Image imagen = iconoOriginal.getImage();
+					Image imagenEscalada = imagen.getScaledInstance(logo2.getWidth(), logo2.getHeight(), Image.SCALE_SMOOTH);
+					logo2.setIcon(new ImageIcon(imagenEscalada));
+				} else {
+					System.err.println("error en imagen.");
+				}
+			}
 
 			
 

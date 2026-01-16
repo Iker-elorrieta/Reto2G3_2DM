@@ -23,7 +23,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Horario extends JFrame {
+public class Alumnos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,7 +31,7 @@ public class Horario extends JFrame {
 
 	
 
-	public Horario(Controlador controlador) {
+	public Alumnos(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 894, 558);
 		contentPane = new JPanel();
@@ -87,30 +87,17 @@ public class Horario extends JFrame {
 
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
 			},
 			new String[] {
-				"Horas", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"
+				"Nombre", "Apellido"
 			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] {
-				false, true, true, true, true, true
-			};
-
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		));
 
 		// 🔹 ALTURA Y FUENTE DEL ENCABEZADO
 		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -118,12 +105,12 @@ public class Horario extends JFrame {
 			new Dimension(table.getTableHeader().getWidth(), 45)
 		);
 		
-		JLabel lblHorario = new JLabel("Horario de usuario.");
-		lblHorario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHorario.setForeground(new Color(0, 64, 128));
-		lblHorario.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 40));
-		lblHorario.setBounds(10, 21, 858, 58);
-		contentPane.add(lblHorario);
+		JLabel lblTitulo = new JLabel("Mis alumnos");
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitulo.setForeground(new Color(0, 64, 128));
+		lblTitulo.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 40));
+		lblTitulo.setBounds(10, 21, 858, 58);
+		contentPane.add(lblTitulo);
 		
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.setForeground(new Color(255, 255, 255));

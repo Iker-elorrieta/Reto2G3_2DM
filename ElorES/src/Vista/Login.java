@@ -39,7 +39,7 @@ public class Login extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel logo1 = new JLabel("logo");
-		logo1.setBounds(770, 11, 98, 101);
+		logo1.setBounds(341, 21, 155, 52);
 		contentPane.add(logo1);
 		java.net.URL imgURL = getClass().getResource("/media/logo1.png");
 		if (imgURL != null) {
@@ -55,7 +55,7 @@ public class Login extends JFrame {
 				Image imagenEscalada = imagen.getScaledInstance(logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH);
 				logo1.setIcon(new ImageIcon(imagenEscalada));
 			} else {
-				System.err.println("Resource not found: /media/logo1.png and media/logo1.png not found in working dir.");
+				System.err.println("error en imagen.");
 			}
 		}
 		
@@ -74,18 +74,18 @@ public class Login extends JFrame {
 		txtUsuario.setColumns(10);
 		
 		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setForeground(new Color(252, 140, 39));
+		lblUsuario.setForeground(new Color(248, 188, 7));
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsuario.setToolTipText("");
-		lblUsuario.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 25));
+		lblUsuario.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 22));
 		lblUsuario.setBounds(0, 99, 324, 29);
 		panelLogin.add(lblUsuario);
 		
 		JLabel lblContrasena = new JLabel("Contraseña");
-		lblContrasena.setForeground(new Color(252, 140, 39));
+		lblContrasena.setForeground(new Color(248, 188, 7));
 		lblContrasena.setToolTipText("");
 		lblContrasena.setHorizontalAlignment(SwingConstants.CENTER);
-		lblContrasena.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 25));
+		lblContrasena.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 22));
 		lblContrasena.setBounds(0, 202, 331, 29);
 		panelLogin.add(lblContrasena);
 		
@@ -98,6 +98,8 @@ public class Login extends JFrame {
 		panelLogin.add(lblLogin);
 		
 		JButton btnIniciar = new JButton("Iniciar Sesión");
+		btnIniciar.setForeground(Color.WHITE);
+		btnIniciar.setBackground(new Color(248, 188, 7));
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -120,7 +122,27 @@ public class Login extends JFrame {
 		txtContrasena.setBounds(21, 235, 281, 46);
 		panelLogin.add(txtContrasena);
 		
+		JLabel logo2 = new JLabel("logo2");
+		logo2.setBounds(408, 457, 45, 41);
+		contentPane.add(logo2);
+		java.net.URL imgURL1 = getClass().getResource("/media/logo2.png");
+		if (imgURL1 != null) {
+			ImageIcon iconoOriginal = new ImageIcon(imgURL1);
+			Image imagen = iconoOriginal.getImage();
+			Image imagenEscalada = imagen.getScaledInstance(logo2.getWidth(), logo2.getHeight(), Image.SCALE_SMOOTH);
+			logo2.setIcon(new ImageIcon(imagenEscalada));
+		} else {
+			File f = new File("media/logo2.png");
+			if (f.exists()) {
+				ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+				Image imagen = iconoOriginal.getImage();
+				Image imagenEscalada = imagen.getScaledInstance(logo2.getWidth(), logo2.getHeight(), Image.SCALE_SMOOTH);
+				logo2.setIcon(new ImageIcon(imagenEscalada));
+			} else {
+				System.err.println("error en imagen.");
+			}
+		}
 
-
+	
 	}
 }

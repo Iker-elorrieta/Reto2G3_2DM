@@ -41,7 +41,7 @@ public class Menu extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel logo1 = new JLabel("logo");
-		logo1.setBounds(37, 11, 85, 79);
+		logo1.setBounds(21, 21, 129, 51);
 		contentPane.add(logo1);
 		java.net.URL imgURL = getClass().getResource("/media/logo1.png");
 		if (imgURL != null) {
@@ -79,6 +79,7 @@ public class Menu extends JFrame {
 		panelLogin.add(lblMenu);
 		
 		JButton btnMiHorario = new JButton("Mi horario");
+		btnMiHorario.setForeground(new Color(0, 0, 0));
 		btnMiHorario.setBackground(UIManager.getColor("Button.background"));
 		btnMiHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -108,6 +109,7 @@ public class Menu extends JFrame {
 		panelLogin.add(btnOtrosHorarios);
 		
 		JButton btnAlumnos = new JButton("Alumnos");
+		btnAlumnos.setForeground(new Color(0, 0, 0));
 		btnAlumnos.setBackground(UIManager.getColor("Button.background"));
 		btnAlumnos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -164,7 +166,7 @@ public class Menu extends JFrame {
 		btnCerrarSesion.setBounds(732, 102, 136, 25);
 		contentPane.add(btnCerrarSesion);
 		btnCerrarSesion.setForeground(new Color(0, 0, 0));
-		btnCerrarSesion.setBackground(UIManager.getColor("Button.background"));
+		btnCerrarSesion.setBackground(new Color(221, 175, 55));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				contentPane.setVisible(false);
@@ -174,6 +176,27 @@ public class Menu extends JFrame {
 			}
 		});
 		btnCerrarSesion.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 12));
+		
+		JLabel logo2 = new JLabel("logo2");
+		logo2.setBounds(417, 464, 45, 41);
+		contentPane.add(logo2);
+		java.net.URL imgURL1 = getClass().getResource("/media/logo2.png");
+		if (imgURL1 != null) {
+			ImageIcon iconoOriginal = new ImageIcon(imgURL1);
+			Image imagen = iconoOriginal.getImage();
+			Image imagenEscalada = imagen.getScaledInstance(logo2.getWidth(), logo2.getHeight(), Image.SCALE_SMOOTH);
+			logo2.setIcon(new ImageIcon(imagenEscalada));
+		} else {
+			File f = new File("media/logo2.png");
+			if (f.exists()) {
+				ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+				Image imagen = iconoOriginal.getImage();
+				Image imagenEscalada = imagen.getScaledInstance(logo2.getWidth(), logo2.getHeight(), Image.SCALE_SMOOTH);
+				logo2.setIcon(new ImageIcon(imagenEscalada));
+			} else {
+				System.err.println("error en imagen.");
+			}
+		}
 
 
 	}

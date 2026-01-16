@@ -23,7 +23,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Horario extends JFrame {
+public class Reuniones extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,7 +31,7 @@ public class Horario extends JFrame {
 
 	
 
-	public Horario(Controlador controlador) {
+	public Reuniones(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 894, 558);
 		contentPane = new JPanel();
@@ -118,12 +118,12 @@ public class Horario extends JFrame {
 			new Dimension(table.getTableHeader().getWidth(), 45)
 		);
 		
-		JLabel lblHorario = new JLabel("Horario de usuario.");
-		lblHorario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHorario.setForeground(new Color(0, 64, 128));
-		lblHorario.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 40));
-		lblHorario.setBounds(10, 21, 858, 58);
-		contentPane.add(lblHorario);
+		JLabel lblTitulo = new JLabel("Mis reuniones");
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitulo.setForeground(new Color(0, 64, 128));
+		lblTitulo.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 40));
+		lblTitulo.setBounds(10, 21, 858, 58);
+		contentPane.add(lblTitulo);
 		
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.setForeground(new Color(255, 255, 255));
@@ -139,6 +139,27 @@ public class Horario extends JFrame {
 		JLabel logo2 = new JLabel("logo");
 		logo2.setBounds(399, 466, 48, 42);
 		contentPane.add(logo2);
+		
+		JButton btnCrear = new JButton("Crear reunión");
+		btnCrear.setForeground(Color.WHITE);
+		btnCrear.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnCrear.setBackground(new Color(221, 175, 55));
+		btnCrear.setBounds(721, 90, 147, 31);
+		contentPane.add(btnCrear);
+		
+		JButton btnAceptarReunion = new JButton("Aceptar");
+		btnAceptarReunion.setForeground(Color.WHITE);
+		btnAceptarReunion.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnAceptarReunion.setBackground(new Color(34, 139, 34));
+		btnAceptarReunion.setBounds(721, 132, 147, 31);
+		contentPane.add(btnAceptarReunion);
+		
+		JButton btnRechazar = new JButton("Rechazar");
+		btnRechazar.setForeground(Color.WHITE);
+		btnRechazar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnRechazar.setBackground(new Color(139, 0, 0));
+		btnRechazar.setBounds(721, 174, 147, 31);
+		contentPane.add(btnRechazar);
 		java.net.URL imgURL1 = getClass().getResource("/media/logo2.png");
 		if (imgURL1 != null) {
 			ImageIcon iconoOriginal = new ImageIcon(imgURL1);
