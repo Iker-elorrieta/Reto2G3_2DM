@@ -7,14 +7,25 @@ import conexion.ConexionServidor;
 import modelo.UsersDTO;
 
 public class Controlador {
+	
+	private ConexionServidor con;
+	private DataOutputStream out;
+	private DataInputStream in;
+
+	public Controlador() {
+	    try {
+	        con = new ConexionServidor();
+	        out = con.getOut();
+	        in = con.getIn();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	public boolean login(String usuariotexto, String contrasenatexto) {
 		boolean resultado = false;
 		try {
-	        
-            ConexionServidor con = new ConexionServidor();
-         DataOutputStream out = con.getOut();
-         DataInputStream in = con.getIn();
+	       
 
             out.writeUTF("LOGIN");      
             out.writeUTF(usuariotexto);     
@@ -41,7 +52,7 @@ public class Controlador {
 
                 case "ERROR": {
                     String mensaje = in.readUTF();
-                    System.out.println("=== ERROR ===");
+                    
                     System.out.println(mensaje);
                     break;
                 }
