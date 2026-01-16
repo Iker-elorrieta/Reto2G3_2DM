@@ -82,6 +82,11 @@ public class Menu extends JFrame {
 		btnMiHorario.setBackground(UIManager.getColor("Button.background"));
 		btnMiHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+					contentPane.setVisible(false);
+					Horario horario = new Horario(controlador);
+					horario.setVisible(true);
+					dispose();
+			
 			}
 		});
 		btnMiHorario.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
@@ -89,6 +94,14 @@ public class Menu extends JFrame {
 		panelLogin.add(btnMiHorario);
 		
 		JButton btnOtrosHorarios = new JButton("Otros horarios");
+		btnOtrosHorarios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				contentPane.setVisible(false);
+				Horario horario = new Horario(controlador);
+				horario.setVisible(true);
+				dispose();
+			}
+		});
 		btnOtrosHorarios.setBackground(UIManager.getColor("Button.background"));
 		btnOtrosHorarios.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
 		btnOtrosHorarios.setBounds(53, 211, 176, 50);
@@ -98,6 +111,7 @@ public class Menu extends JFrame {
 		btnAlumnos.setBackground(UIManager.getColor("Button.background"));
 		btnAlumnos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		btnAlumnos.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
@@ -108,6 +122,7 @@ public class Menu extends JFrame {
 		btnReuniones.setBackground(UIManager.getColor("Button.background"));
 		btnReuniones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
 			}
 		});
 		btnReuniones.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 18));
@@ -152,6 +167,10 @@ public class Menu extends JFrame {
 		btnCerrarSesion.setBackground(UIManager.getColor("Button.background"));
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				contentPane.setVisible(false);
+				Login login = new Login(controlador);
+				login.setVisible(true);
+				dispose();
 			}
 		});
 		btnCerrarSesion.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 12));

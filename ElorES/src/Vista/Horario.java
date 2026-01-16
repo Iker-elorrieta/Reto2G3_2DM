@@ -1,6 +1,5 @@
 package Vista;
 
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.File;
 
@@ -16,6 +15,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import controlador.Controlador;
+
 import java.awt.Dimension;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -27,20 +29,9 @@ public class Horario extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Horario frame = new Horario();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
-	public Horario() {
+	public Horario(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 894, 558);
 		contentPane = new JPanel();
