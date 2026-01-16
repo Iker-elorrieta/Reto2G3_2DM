@@ -15,8 +15,8 @@ public class Ciclos implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nombre;
-	private Set moduloses = new HashSet(0);
-	private Set matriculacioneses = new HashSet(0);
+	private Set<Modulos> moduloses = new HashSet<Modulos>();
+	private Set<Matriculaciones> matriculacioneses = new HashSet<Matriculaciones>();
 
 	public Ciclos() {
 	}
@@ -25,7 +25,7 @@ public class Ciclos implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Ciclos(String nombre, Set moduloses, Set matriculacioneses) {
+	public Ciclos(String nombre, Set<Modulos> moduloses, Set<Matriculaciones> matriculacioneses) {
 		this.nombre = nombre;
 		this.moduloses = moduloses;
 		this.matriculacioneses = matriculacioneses;
@@ -47,19 +47,19 @@ public class Ciclos implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Set getModuloses() {
+	public Set<Modulos> getModuloses() {
 		return this.moduloses;
 	}
 
-	public void setModuloses(Set moduloses) {
+	public void setModuloses(Set<Modulos> moduloses) {
 		this.moduloses = moduloses;
 	}
 
-	public Set getMatriculacioneses() {
+	public Set<Matriculaciones> getMatriculacioneses() {
 		return this.matriculacioneses;
 	}
 
-	public void setMatriculacioneses(Set matriculacioneses) {
+	public void setMatriculacioneses(Set<Matriculaciones> matriculacioneses) {
 		this.matriculacioneses = matriculacioneses;
 	}
 
