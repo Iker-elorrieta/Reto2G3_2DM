@@ -10,42 +10,47 @@ import modelo.UsersDAO;
 
 public class ControladorServidor {
 
-	public void login(DataInputStream in, DataOutputStream out) {
-	    try {
-	    	String userPlano = in.readUTF();
-	    	String passPlano = in.readUTF();
+    private boolean contrasenasConvertidas = false;
 
-	    	String userHash = sha256(userPlano);
-	    	String passHash = sha256(passPlano);
+    public void login(DataInputStream in, DataOutputStream out) {
+        try {
 
+            if (!contrasenasConvertidas) {
+                UsersDAO dao = new UsersDAO();
+                dao.encriptarTodasLasContrasenas();
+                contrasenasConvertidas = true;
+            }
 
-	        UsersDAO dao = new UsersDAO();
-	        Users u = dao.login(userHash, passHash);
+            String userPlano = in.readUTF();
+            String passPlano = in.readUTF();
 
-	        if (u != null) {
+            String passHash = sha256(passPlano);
+            UsersDAO dao = new UsersDAO();
+            Users u = dao.login(userPlano, passHash);
 
-	            if (u.getTipos().getId() == 3) {
-	                out.writeUTF("OK");
-	                out.writeUTF(u.getUsername());
-	                out.writeUTF(u.getNombre());
-	                out.writeUTF(u.getTelefono2());
-	                out.flush();
-	            } else {
-	                out.writeUTF("ERROR");
-	                out.writeUTF("No tienes permisos para acceder");
-	                out.flush();
-	            }
+            if (u != null) {
+                if (u.getTipos().getId() == 3) {
+                    out.writeUTF("OK");
+                    out.writeUTF(u.getUsername());
+                    out.writeUTF(u.getNombre());
+                    out.writeUTF(u.getTelefono2());
+                } else {
+                    out.writeUTF("ERROR");
+                    out.writeUTF("No tienes permisos para acceder");
+                }
+            } else {
+                out.writeUTF("ERROR");
+                out.writeUTF("Usuario o contraseña incorrectos");
+            }
 
-	        } else {
-	            out.writeUTF("ERROR");
-	            out.writeUTF("Usuario o contraseña incorrectos");
-	            out.flush();
-	        }
+            out.flush();
 
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+	
 	public static String sha256(String texto) {
 	    try {
 	        MessageDigest md = MessageDigest.getInstance("SHA-256");
