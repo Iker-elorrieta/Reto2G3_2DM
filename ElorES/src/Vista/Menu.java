@@ -113,6 +113,11 @@ public class Menu extends JFrame {
 		btnAlumnos.setBackground(UIManager.getColor("Button.background"));
 		btnAlumnos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				contentPane.setVisible(false);
+				Alumnos alumnos = new Alumnos(controlador);
+				alumnos.setVisible(true);
+				dispose();
+		
 				
 			}
 		});
@@ -124,6 +129,10 @@ public class Menu extends JFrame {
 		btnReuniones.setBackground(UIManager.getColor("Button.background"));
 		btnReuniones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				contentPane.setVisible(false);
+				Reuniones reuniones = new Reuniones(controlador);
+				reuniones.setVisible(true);
+				dispose();
 			
 			}
 		});

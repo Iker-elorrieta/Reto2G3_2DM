@@ -403,7 +403,10 @@ public class Perfil extends JFrame {
 			btnVolver.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-
+				contentPane.setVisible(false);
+				Menu menu = new Menu(controlador);
+				menu.setVisible(true);
+				dispose();
 			}
 
 			});

@@ -131,6 +131,10 @@ public class Horario extends JFrame {
 		btnVolver.setBackground(new Color(221, 175, 55));
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				contentPane.setVisible(false);
+				Menu menu = new Menu(controlador);
+				menu.setVisible(true);
+				dispose();
 			}
 		});
 		btnVolver.setBounds(355, 424, 136, 31);
