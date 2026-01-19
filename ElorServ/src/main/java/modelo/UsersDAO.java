@@ -19,7 +19,6 @@ public class UsersDAO {
         q.setParameter("pass", password);
 
         Users u = q.uniqueResult();
-        System.out.println(u.getUsername() + u.getPassword());
         sesion.close();
         return u;
     }
@@ -41,8 +40,8 @@ public class UsersDAO {
                 continue;
             }
 
-            String nueva = ControladorServidor.sha256(actual);
-            String nuevoNombre = ControladorServidor.sha256(actualNombre);
+            String nueva = ControladorServidor.sha(actual);
+            String nuevoNombre = ControladorServidor.sha(actualNombre);
             u.setPassword(nueva);
             u.setUsername(nuevoNombre);
             sesion.merge(u);
