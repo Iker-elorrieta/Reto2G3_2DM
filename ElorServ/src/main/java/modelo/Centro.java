@@ -2,205 +2,102 @@ package modelo;
 
 public class Centro {
 
-    private int ccen;
-    private String nom;
-    private String nome;
-    private String dgenrc;
-    private String dgenre;
-    private String genr;
-    private int muni;
-    private String dmunic;
-    private String dmunie;
-    private String dterrc;
-    private String dterre;
-    private int depe;
-    private String dtituc;
-    private String dtitue;
-    private String domi;
-    private int cpos;
-    private long tel1;
-    private long tfax;
-    private String email;
-    private String pagina;
-    private double coorX;
-    private double coorY;
-    private double latitud;
-    private double longitud;
-    
-	public Centro(int ccen, String nom, String nome, String dgenrc, String dgenre, String genr, int muni, String dmunic,
-			String dmunie, String dterrc, String dterre, int depe, String dtituc, String dtitue, String domi, int cpos,
-			long tel1, long tfax, String email, String pagina, double coorX, double coorY, double latitud,
-			double longitud) {
-		super();
-		this.ccen = ccen;
-		this.nom = nom;
-		this.nome = nome;
-		this.dgenrc = dgenrc;
-		this.dgenre = dgenre;
-		this.genr = genr;
-		this.muni = muni;
-		this.dmunic = dmunic;
-		this.dmunie = dmunie;
-		this.dterrc = dterrc;
-		this.dterre = dterre;
-		this.depe = depe;
-		this.dtituc = dtituc;
-		this.dtitue = dtitue;
-		this.domi = domi;
-		this.cpos = cpos;
-		this.tel1 = tel1;
-		this.tfax = tfax;
-		this.email = email;
-		this.pagina = pagina;
-		this.coorX = coorX;
-		this.coorY = coorY;
-		this.latitud = latitud;
-		this.longitud = longitud;
-	}
-	public int getCcen() {
-		return ccen;
-	}
-	public void setCcen(int ccen) {
-		this.ccen = ccen;
-	}
-	public String getNom() {
-		return nom;
-	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public String getDgenrc() {
-		return dgenrc;
-	}
-	public void setDgenrc(String dgenrc) {
-		this.dgenrc = dgenrc;
-	}
-	public String getDgenre() {
-		return dgenre;
-	}
-	public void setDgenre(String dgenre) {
-		this.dgenre = dgenre;
-	}
-	public String getGenr() {
-		return genr;
-	}
-	public void setGenr(String genr) {
-		this.genr = genr;
-	}
-	public int getMuni() {
-		return muni;
-	}
-	public void setMuni(int muni) {
-		this.muni = muni;
-	}
-	public String getDmunic() {
-		return dmunic;
-	}
-	public void setDmunic(String dmunic) {
-		this.dmunic = dmunic;
-	}
-	public String getDmunie() {
-		return dmunie;
-	}
-	public void setDmunie(String dmunie) {
-		this.dmunie = dmunie;
-	}
-	public String getDterrc() {
-		return dterrc;
-	}
-	public void setDterrc(String dterrc) {
-		this.dterrc = dterrc;
-	}
-	public String getDterre() {
-		return dterre;
-	}
-	public void setDterre(String dterre) {
-		this.dterre = dterre;
-	}
-	public int getDepe() {
-		return depe;
-	}
-	public void setDepe(int depe) {
-		this.depe = depe;
-	}
-	public String getDtituc() {
-		return dtituc;
-	}
-	public void setDtituc(String dtituc) {
-		this.dtituc = dtituc;
-	}
-	public String getDtitue() {
-		return dtitue;
-	}
-	public void setDtitue(String dtitue) {
-		this.dtitue = dtitue;
-	}
-	public String getDomi() {
-		return domi;
-	}
-	public void setDomi(String domi) {
-		this.domi = domi;
-	}
-	public int getCpos() {
-		return cpos;
-	}
-	public void setCpos(int cpos) {
-		this.cpos = cpos;
-	}
-	public long getTel1() {
-		return tel1;
-	}
-	public void setTel1(long tel1) {
-		this.tel1 = tel1;
-	}
-	public long getTfax() {
-		return tfax;
-	}
-	public void setTfax(long tfax) {
-		this.tfax = tfax;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPagina() {
-		return pagina;
-	}
-	public void setPagina(String pagina) {
-		this.pagina = pagina;
-	}
-	public double getCoorX() {
-		return coorX;
-	}
-	public void setCoorX(double coorX) {
-		this.coorX = coorX;
-	}
-	public double getCoorY() {
-		return coorY;
-	}
-	public void setCoorY(double coorY) {
-		this.coorY = coorY;
-	}
-	public double getLatitud() {
-		return latitud;
-	}
-	public void setLatitud(double latitud) {
-		this.latitud = latitud;
-	}
-	public double getLongitud() {
-		return longitud;
-	}
-	public void setLongitud(double longitud) {
-		this.longitud = longitud;
-	}
-}
+    private Integer CCEN;
+    private String NOM;
+    private String NOME;
+    private String DGENRC;
+    private String DGENRE;
+    private String GENR;
+    private Integer MUNI;
+    private String DMUNIC;
+    private String DMUNIE;
+    private String DTERRC;
+    private String DTERRE;
+    private Integer DEPE;
+    private String DTITUC;
+    private String DTITUE;
+    private String DOMI;
+    private Integer CPOS;
+    private Long TEL1;
+    private Long TFAX;
+    private String EMAIL;
+    private String PAGINA;
+    private Double COOR_X;
+    private Double COOR_Y;
+    private Double LATITUD;
+    private Double LONGITUD;
 
-    
+    public Centro() {}
+
+    public Integer getCCEN() { return CCEN; }
+    public void setCCEN(Integer CCEN) { this.CCEN = CCEN; }
+
+    public String getNOM() { return NOM; }
+    public void setNOM(String NOM) { this.NOM = NOM; }
+
+    public String getNOME() { return NOME; }
+    public void setNOME(String NOME) { this.NOME = NOME; }
+
+    public String getDGENRC() { return DGENRC; }
+    public void setDGENRC(String DGENRC) { this.DGENRC = DGENRC; }
+
+    public String getDGENRE() { return DGENRE; }
+    public void setDGENRE(String DGENRE) { this.DGENRE = DGENRE; }
+
+    public String getGENR() { return GENR; }
+    public void setGENR(String GENR) { this.GENR = GENR; }
+
+    public Integer getMUNI() { return MUNI; }
+    public void setMUNI(Integer MUNI) { this.MUNI = MUNI; }
+
+    public String getDMUNIC() { return DMUNIC; }
+    public void setDMUNIC(String DMUNIC) { this.DMUNIC = DMUNIC; }
+
+    public String getDMUNIE() { return DMUNIE; }
+    public void setDMUNIE(String DMUNIE) { this.DMUNIE = DMUNIE; }
+
+    public String getDTERRC() { return DTERRC; }
+    public void setDTERRC(String DTERRC) { this.DTERRC = DTERRC; }
+
+    public String getDTERRE() { return DTERRE; }
+    public void setDTERRE(String DTERRE) { this.DTERRE = DTERRE; }
+
+    public Integer getDEPE() { return DEPE; }
+    public void setDEPE(Integer DEPE) { this.DEPE = DEPE; }
+
+    public String getDTITUC() { return DTITUC; }
+    public void setDTITUC(String DTITUC) { this.DTITUC = DTITUC; }
+
+    public String getDTITUE() { return DTITUE; }
+    public void setDTITUE(String DTITUE) { this.DTITUE = DTITUE; }
+
+    public String getDOMI() { return DOMI; }
+    public void setDOMI(String DOMI) { this.DOMI = DOMI; }
+
+    public Integer getCPOS() { return CPOS; }
+    public void setCPOS(Integer CPOS) { this.CPOS = CPOS; }
+
+    public Long getTEL1() { return TEL1; }
+    public void setTEL1(Long TEL1) { this.TEL1 = TEL1; }
+
+    public Long getTFAX() { return TFAX; }
+    public void setTFAX(Long TFAX) { this.TFAX = TFAX; }
+
+    public String getEMAIL() { return EMAIL; }
+    public void setEMAIL(String EMAIL) { this.EMAIL = EMAIL; }
+
+    public String getPAGINA() { return PAGINA; }
+    public void setPAGINA(String PAGINA) { this.PAGINA = PAGINA; }
+
+    public Double getCOOR_X() { return COOR_X; }
+    public void setCOOR_X(Double COOR_X) { this.COOR_X = COOR_X; }
+
+    public Double getCOOR_Y() { return COOR_Y; }
+    public void setCOOR_Y(Double COOR_Y) { this.COOR_Y = COOR_Y; }
+
+    public Double getLATITUD() { return LATITUD; }
+    public void setLATITUD(Double LATITUD) { this.LATITUD = LATITUD; }
+
+    public Double getLONGITUD() { return LONGITUD; }
+    public void setLONGITUD(Double LONGITUD) { this.LONGITUD = LONGITUD; }
+}
