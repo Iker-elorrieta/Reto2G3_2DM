@@ -15,7 +15,7 @@ public class CentroController {
     }
 
     @GetMapping 
-    public List<Centro> getCentros() {            //EJECUCCION DE FUNCIONES DEPENDIENDO DE LO DESEADO
+    public List<Centro> getCentros() {            //EJECUCCION DE FUNCIONES DEPENDIENDO DE LO DESEADO 
         return service.getCentros();
     }
 
