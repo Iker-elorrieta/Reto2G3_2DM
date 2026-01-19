@@ -5,42 +5,38 @@ import java.util.List;
 import org.hibernate.Session;
 
 import bd.HibernateUtil;
-import controlador.ControladorServidor;
+import controlador.CypherAES;
 import modelo.Users;
 
-
+//CIFRADO 1 SOLA VEZ POR ALUMNOS, IKER NO TIENES QUE TOCAR
 public class PrimeroCifrar {
-	
+
     public static void main(String[] args) throws Exception {
+        cifrarUsuariosYContrasenas();
+    }
 
-     encriptarTodasLasContrasenas();
-
-}
-    public static void encriptarTodasLasContrasenas() {
+    public static void cifrarUsuariosYContrasenas() {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
         sesion.beginTransaction();
 
         List<Users> lista = sesion.createQuery("FROM Users", Users.class).list();
 
         for (Users u : lista) {
-            String actual = u.getPassword();
-            String actualNombre = u.getUsername();
 
-            if (actual != null && actual.length() == 64 && actual.matches("[0-9a-fA-F]+")) {
-                continue;
-            }
-            if (actualNombre != null && actualNombre.length() == 64 && actualNombre.matches("[0-9a-fA-F]+")) {
-                continue;
-            }
+           
+                u.setUsername(CypherAES.encrypt(u.getUsername()));
+         
 
-            String nueva = ControladorServidor.sha(actual);
-            String nuevoNombre = ControladorServidor.sha(actualNombre);
-            u.setPassword(nueva);
-            u.setUsername(nuevoNombre);
+           
+                u.setPassword(CypherAES.encrypt(u.getPassword()));
+            
+
             sesion.merge(u);
         }
 
         sesion.getTransaction().commit();
         sesion.close();
     }
+
+  
 }

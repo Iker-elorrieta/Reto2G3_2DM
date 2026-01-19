@@ -19,17 +19,18 @@ public class HiloCliente extends Thread {
 
     public void run() {
         try {
-            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataInputStream in = new DataInputStream(socket.getInputStream());  //CREACION SOCKET
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             
 
             while (true) { 
                 String accion = in.readUTF();
 
-                switch (accion) {
+                switch (accion) { // SWITCH PARA ACCIONES EN EL SERVIDOR DEPENDIENDO DE LO QUE PIDA EL CLIENTE
 
                     case "LOGIN":
-                        controlador.login(in, out);
+                       controlador.login(in, out);
+                    
                         break;
 
                    

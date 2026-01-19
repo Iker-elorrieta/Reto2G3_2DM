@@ -16,6 +16,7 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 
 import controlador.Controlador;
+import modelo.Users;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -251,7 +252,6 @@ public class Perfil extends JFrame {
 			textField_usuario = new JTextField();
 
 			textField_usuario.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
-			textField_usuario.setText(controlador.leerUsuarioActual().getUsername());
 			textField_usuario.setEnabled(false);
 
 			textField_usuario.setEditable(false);
@@ -389,6 +389,17 @@ public class Perfil extends JFrame {
 			lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 
 			lblTitulo.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 50));
+			
+			Users u = controlador.leerUsuarioActual();
+
+			textField_usuario.setText(u.getUsername());
+			textField_nombre.setText(u.getNombre());
+			textField_apellido.setText(u.getApellidos());
+			textField_correo.setText(u.getEmail());
+			textField_direccion.setText(u.getDireccion());
+			textField_tlf1.setText(u.getTelefono1());
+			textField_tlf2.setText(u.getTelefono2());
+			textField_dni.setText(u.getDni());
 
 			
 

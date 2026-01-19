@@ -12,15 +12,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
-public class CentroService {
+public class LeerJson {
 
     private List<Centro> centros;
 
-    public CentroService() {
+    public LeerJson() {
         try {
             Gson gson = new Gson();
 
-            JsonObject root = gson.fromJson(new FileReader("EuskadiLatLon.json"), JsonObject.class);
+            JsonObject root = gson.fromJson(new FileReader("EuskadiLatLon.json"), JsonObject.class); //	LECTURA DE JSON MEDIANTE GSON
             JsonArray array = root.getAsJsonArray("CENTROS");
 
             Type listType = new TypeToken<List<Centro>>(){}.getType();
@@ -30,7 +30,9 @@ public class CentroService {
             e.printStackTrace();
         }
     }
-
+    
+// FUNCIONES PARA EJECUTAR EN EL CONTROLADOR MEDIANTE POST GET Y DEMÁS
+    
     public List<Centro> getCentros() {
         return centros;
     }

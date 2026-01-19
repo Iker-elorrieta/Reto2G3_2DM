@@ -3,7 +3,6 @@ package controlador;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.security.MessageDigest;
 
 import modelo.Users;
 import modelo.UsersDAO;
@@ -15,19 +14,28 @@ public class ControladorServidor {
         try {
 
             
-            String userPlano = in.readUTF();
+            String userPlano = in.readUTF(); //LEER LO INTRODUCIDO POR EL CLIENTE
             String passPlano = in.readUTF();
 
-            String passHash = sha(passPlano);
-            String usuariohash = sha(userPlano);
+            String usuarioCifrado = CypherAES.encrypt(userPlano); // ENCRIPTACIÓN
+            String passwordcifrada = CypherAES.encrypt(passPlano);
+            
+            
             UsersDAO dao = new UsersDAO();
-            Users u = dao.login(usuariohash, passHash);
+            Users u = dao.login(usuarioCifrado, passwordcifrada);
+            
             if (u != null) {
                 if (u.getTipos().getId() == 3) {
                     out.writeUTF("OK");
-                    out.writeUTF(u.getUsername());
+                    out.writeUTF(CypherAES.decrypt(u.getUsername())); //DESENCRIPTACION PARA MOSTRAR EN EL MENU Y PERFIL
                     out.writeUTF(u.getNombre());
+                    out.writeUTF(u.getApellidos());
+                    out.writeUTF(u.getEmail());
+                    out.writeUTF(u.getDireccion());
+                    out.writeUTF(u.getTelefono1());
                     out.writeUTF(u.getTelefono2());
+                    out.writeUTF(u.getDni());
+
                 } else {
                     out.writeUTF("ERROR");
                     out.writeUTF("No tienes permisos para acceder");
@@ -42,24 +50,9 @@ public class ControladorServidor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
     }
 
-	
-	public static String sha(String texto) {
-	    try {
-	        MessageDigest md = MessageDigest.getInstance("SHA");
-	        byte[] hash = md.digest(texto.getBytes("UTF-8"));
-
-	        StringBuilder hex = new StringBuilder();
-	        for (byte b : hash) {
-	            hex.append(String.format("%02x", b));
-	        }
-	        return hex.toString();
-
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
-	}
 
 		
 	}

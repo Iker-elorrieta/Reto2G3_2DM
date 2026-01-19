@@ -8,14 +8,14 @@ import modelo.Centro;
 @RequestMapping("/api/centros")
 public class CentroController {
 
-    private final CentroService service;
+    private final LeerJson service;
 
-    public CentroController(CentroService service) {
+    public CentroController(LeerJson service) {
         this.service = service;
     }
 
-    @GetMapping
-    public List<Centro> getCentros() {
+    @GetMapping 
+    public List<Centro> getCentros() {            //EJECUCCION DE FUNCIONES DEPENDIENDO DE LO DESEADO
         return service.getCentros();
     }
 

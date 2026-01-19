@@ -1,6 +1,8 @@
-package Vista;
+package PrincipalElorES;
 
 import java.awt.EventQueue;
+
+import Vista.Login;
 import controlador.Controlador;
 
 public class Principal {
