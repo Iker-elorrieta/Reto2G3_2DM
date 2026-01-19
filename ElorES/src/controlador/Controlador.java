@@ -26,8 +26,8 @@ public class Controlador {
 	public boolean login(String usuariotexto, String contrasenatexto) {
 		boolean resultado = false;
 		try {
-	       // FUNCION LOGIN EN LA CUAL DEPENDIENDO DE LO QUE SE RECIBA DEVUELVE UN BOOLEANO SI SE HA INICIADO SESION O NO
-
+	       // FUNCION LOGIN EN LA CUAL DEPENDIENDO DE LO QUE SE RECIBA DEVUELVE UN BOOLEANO SI SE HA INICIADO SESION O NO.
+			
             out.writeUTF("LOGIN");      
             out.writeUTF(usuariotexto);     
             out.writeUTF(contrasenatexto);      
