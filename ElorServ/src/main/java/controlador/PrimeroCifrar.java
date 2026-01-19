@@ -1,11 +1,10 @@
-package sockets;
+package controlador;
 
 import java.util.List;
 
 import org.hibernate.Session;
 
 import bd.HibernateUtil;
-import controlador.CypherAES;
 import modelo.Users;
 
 //CIFRADO 1 SOLA VEZ POR ALUMNOS, IKER NO TIENES QUE TOCAR
