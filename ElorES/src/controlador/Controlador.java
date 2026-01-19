@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import conexion.ConexionServidor;
-import modelo.UsersDTO;
+import modelo.Users;
 
 public class Controlador {
 	
@@ -38,7 +38,7 @@ public class Controlador {
                 case "OK": {
                     resultado = true;
 
-                    UsersDTO usuario = new UsersDTO();
+                    Users usuario = new Users();
                     usuario.setUsername(in.readUTF());
                     usuario.setNombre(in.readUTF());
                     usuario.setTelefono2(in.readUTF());

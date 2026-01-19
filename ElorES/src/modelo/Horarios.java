@@ -3,7 +3,7 @@ package modelo;
 
 import java.io.Serializable;
 
-public class HorariosDTO implements Serializable {
+public class Horarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -15,10 +15,10 @@ public class HorariosDTO implements Serializable {
     private String aula;
     private String observaciones;
 
-    public HorariosDTO() {
+    public Horarios() {
     }
 
-    public HorariosDTO(Integer id, Integer idModulo, Integer idUser, String dia, byte hora,
+    public Horarios(Integer id, Integer idModulo, Integer idUser, String dia, byte hora,
                        String aula, String observaciones) {
         this.id = id;
         this.idModulo = idModulo;

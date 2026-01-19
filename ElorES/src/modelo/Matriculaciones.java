@@ -3,7 +3,7 @@ package modelo;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class MatriculacionesDTO implements Serializable {
+public class Matriculaciones implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -13,10 +13,10 @@ public class MatriculacionesDTO implements Serializable {
     private byte curso;
     private Date fecha;
 
-    public MatriculacionesDTO() {
+    public Matriculaciones() {
     }
 
-    public MatriculacionesDTO(Integer id, Integer idUser, Integer idCiclo, byte curso, Date fecha) {
+    public Matriculaciones(Integer id, Integer idUser, Integer idCiclo, byte curso, Date fecha) {
         this.id = id;
         this.idUser = idUser;
         this.idCiclo = idCiclo;

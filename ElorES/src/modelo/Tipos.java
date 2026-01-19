@@ -2,7 +2,7 @@ package modelo;
 
 import java.io.Serializable;
 
-public class TiposDTO implements Serializable {
+public class Tipos implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -10,10 +10,10 @@ public class TiposDTO implements Serializable {
     private String name;
     private String nameEu;
 
-    public TiposDTO() {
+    public Tipos() {
     }
 
-    public TiposDTO(Integer id, String name, String nameEu) {
+    public Tipos(Integer id, String name, String nameEu) {
         this.id = id;
         this.name = name;
         this.nameEu = nameEu;

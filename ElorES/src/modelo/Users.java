@@ -3,7 +3,7 @@ package modelo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class UsersDTO implements Serializable {
+public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,10 +21,10 @@ public class UsersDTO implements Serializable {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public UsersDTO() {
+    public Users() {
     }
 
-    public UsersDTO(Integer id, Integer idTipo, String email, String username, String nombre,
+    public Users(Integer id, Integer idTipo, String email, String username, String nombre,
                     String apellidos, String dni, String direccion, String telefono1,
                     String telefono2, String argazkiaUrl, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;

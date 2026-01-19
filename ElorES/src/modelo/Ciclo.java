@@ -2,7 +2,7 @@ package modelo;
 
 import java.io.Serializable;
 
-public class CicloDTO implements Serializable {
+public class Ciclo implements Serializable {
 
     /**
 	 * 
@@ -11,10 +11,10 @@ public class CicloDTO implements Serializable {
 	private Integer id;
     private String nombre;
 
-    public CicloDTO() {
+    public Ciclo() {
     }
 
-    public CicloDTO(Integer id, String nombre) {
+    public Ciclo(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }

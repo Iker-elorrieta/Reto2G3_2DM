@@ -2,7 +2,7 @@ package modelo;
 
 import java.io.Serializable;
 
-public class ModulosDTO implements Serializable {
+public class Modulos implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -13,10 +13,10 @@ public class ModulosDTO implements Serializable {
     private int horas;
     private byte curso;
 
-    public ModulosDTO() {
+    public Modulos() {
     }
 
-    public ModulosDTO(Integer id, Integer idCiclo, String nombre, String nombreEus, int horas, byte curso) {
+    public Modulos(Integer id, Integer idCiclo, String nombre, String nombreEus, int horas, byte curso) {
         this.id = id;
         this.idCiclo = idCiclo;
         this.nombre = nombre;

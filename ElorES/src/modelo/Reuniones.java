@@ -3,7 +3,7 @@ package modelo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class ReunionesDTO implements Serializable {
+public class Reuniones implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,10 +18,10 @@ public class ReunionesDTO implements Serializable {
     private String aula;
     private Timestamp fecha;
 
-    public ReunionesDTO() {
+    public Reuniones() {
     }
 
-    public ReunionesDTO(Integer idReunion, Integer idAlumno, Integer idProfesor, String estado,
+    public Reuniones(Integer idReunion, Integer idAlumno, Integer idProfesor, String estado,
                         String estadoEus, String idCentro, String titulo, String asunto,
                         String aula, Timestamp fecha) {
         this.idReunion = idReunion;
