@@ -25,8 +25,9 @@ public class ControladorServidor {
             String passPlano = in.readUTF();
 
             String passHash = sha256(passPlano);
+            String usuariohash = sha256(userPlano);
             UsersDAO dao = new UsersDAO();
-            Users u = dao.login(userPlano, passHash);
+            Users u = dao.login(usuariohash, passHash);
 
             if (u != null) {
                 if (u.getTipos().getId() == 3) {
@@ -53,7 +54,7 @@ public class ControladorServidor {
 	
 	public static String sha256(String texto) {
 	    try {
-	        MessageDigest md = MessageDigest.getInstance("SHA-256");
+	        MessageDigest md = MessageDigest.getInstance("SHA");
 	        byte[] hash = md.digest(texto.getBytes("UTF-8"));
 
 	        StringBuilder hex = new StringBuilder();
