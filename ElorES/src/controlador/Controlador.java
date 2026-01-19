@@ -43,10 +43,6 @@ public class Controlador {
                     usuario.setNombre(in.readUTF());
                     usuario.setTelefono2(in.readUTF());
 
-      
-                    System.out.println("Usuario: " + usuario.getUsername());
-                    System.out.println("Nombre: " + usuario.getNombre());
-                    System.out.println("Teléfono: " + usuario.getTelefono2());
                     break;
                 }
 

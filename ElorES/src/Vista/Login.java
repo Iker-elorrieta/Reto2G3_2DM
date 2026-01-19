@@ -81,6 +81,13 @@ public class Login extends JFrame {
 		lblUsuario.setBounds(0, 99, 324, 29);
 		panelLogin.add(lblUsuario);
 		
+		JLabel lblError = new JLabel("a");
+		lblError.setBounds(61, 292, 227, 14);
+		lblError.setForeground(Color.RED);
+		panelLogin.add(lblError);
+		lblError.setVisible(false);
+
+		
 		JLabel lblContrasena = new JLabel("Contraseña");
 		lblContrasena.setForeground(new Color(248, 188, 7));
 		lblContrasena.setToolTipText("");
@@ -109,18 +116,20 @@ public class Login extends JFrame {
 					menu.setVisible(true);
 					dispose();
 				} else {
-					System.out.println("Login fallido");
+					lblError.setVisible(true);
+					lblError.setText("Usuario o contraseña incorrectos");
 				}
 			}
 		});
 		btnIniciar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
-		btnIniciar.setBounds(107, 303, 120, 23);
+		btnIniciar.setBounds(107, 322, 120, 23);
 		panelLogin.add(btnIniciar);
 		
 		txtContrasena = new JPasswordField();
 		txtContrasena.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		txtContrasena.setBounds(21, 235, 281, 46);
 		panelLogin.add(txtContrasena);
+
 		
 		JLabel logo2 = new JLabel("logo2");
 		logo2.setBounds(408, 457, 45, 41);

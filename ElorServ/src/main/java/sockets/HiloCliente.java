@@ -7,10 +7,12 @@ import java.net.Socket;
 import controlador.ControladorServidor;
 
 
+
 public class HiloCliente extends Thread {
 
     private Socket socket;
     private ControladorServidor controlador = new ControladorServidor();
+
     public HiloCliente(Socket socket) {
         this.socket = socket;
     }
@@ -19,10 +21,10 @@ public class HiloCliente extends Thread {
         try {
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            
 
             while (true) { 
                 String accion = in.readUTF();
-                System.out.println("Acción recibida: " + accion);
 
                 switch (accion) {
 

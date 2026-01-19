@@ -10,17 +10,11 @@ import modelo.UsersDAO;
 
 public class ControladorServidor {
 
-    private boolean contrasenasConvertidas = false;
 
     public void login(DataInputStream in, DataOutputStream out) {
         try {
 
-            if (!contrasenasConvertidas) {
-                UsersDAO dao = new UsersDAO();
-                dao.encriptarTodasLasContrasenas();
-                contrasenasConvertidas = true;
-            }
-
+            
             String userPlano = in.readUTF();
             String passPlano = in.readUTF();
 
@@ -28,7 +22,6 @@ public class ControladorServidor {
             String usuariohash = sha(userPlano);
             UsersDAO dao = new UsersDAO();
             Users u = dao.login(usuariohash, passHash);
-
             if (u != null) {
                 if (u.getTipos().getId() == 3) {
                     out.writeUTF("OK");
