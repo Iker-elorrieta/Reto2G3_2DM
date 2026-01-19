@@ -149,6 +149,14 @@ public class Menu extends JFrame {
 		contentPane.add(lblBienvenidoUsuario);
 		
 		JButton btnPerfil = new JButton("");
+		btnPerfil.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				contentPane.setVisible(false);
+				Perfil perfil = new Perfil(controlador);
+				perfil.setVisible(true);
+				dispose();
+			}
+		});
 		btnPerfil.setBounds(770, 21, 62, 58);
 		contentPane.add(btnPerfil);
 		

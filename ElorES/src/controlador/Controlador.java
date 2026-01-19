@@ -11,6 +11,7 @@ public class Controlador {
 	private ConexionServidor con;
 	private DataOutputStream out;
 	private DataInputStream in;
+    Users usuario = new Users();
 
 	public Controlador() {
 	    try {
@@ -38,11 +39,10 @@ public class Controlador {
                 case "OK": {
                     resultado = true;
 
-                    Users usuario = new Users();
                     usuario.setUsername(in.readUTF());
                     usuario.setNombre(in.readUTF());
                     usuario.setTelefono2(in.readUTF());
-
+                   
                     break;
                 }
 
@@ -61,6 +61,12 @@ public class Controlador {
             e.printStackTrace();
         }
 		return resultado;
+	}
+
+	public Users leerUsuarioActual( ) {
+		Users usuarioactual = new Users();
+		usuarioactual.setUsername(usuario.getUsername());
+		return usuarioactual;
 	}
 
 }

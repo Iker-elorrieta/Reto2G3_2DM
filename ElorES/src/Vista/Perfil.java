@@ -25,21 +25,19 @@ public class Perfil extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	private JTextField textField;
+	private JTextField textField_usuario;
 
-	private JTextField textField_1;
+	private JTextField textField_nombre;
 
-	private JTextField textField_2;
+	private JTextField textField_apellido;
 
-	private JTextField textField_3;
+	private JTextField textField_correo;
 
-	private JTextField textField_4;
+	private JTextField textField_tlf1;
 
-	private JTextField textField_5;
+	private JTextField textField_tlf2;
 
-	private JTextField textField_6;
-
-	private JTextField textField_7;
+	private JTextField textField_dni;
 	
 	/**
 	 * Create the frame.
@@ -250,131 +248,131 @@ public class Perfil extends JFrame {
 
 			
 
-			textField = new JTextField();
+			textField_usuario = new JTextField();
 
-			textField.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+			textField_usuario.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+			textField_usuario.setText(controlador.leerUsuarioActual().getUsername());
+			textField_usuario.setEnabled(false);
 
-			textField.setEnabled(false);
+			textField_usuario.setEditable(false);
 
-			textField.setEditable(false);
+			textField_usuario.setBounds(92, 11, 364, 29);
 
-			textField.setBounds(92, 11, 364, 29);
+			panelLogin.add(textField_usuario);
 
-			panelLogin.add(textField);
-
-			textField.setColumns(10);
-
-			
-
-			textField_1 = new JTextField();
-
-			textField_1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
-
-			textField_1.setEnabled(false);
-
-			textField_1.setEditable(false);
-
-			textField_1.setColumns(10);
-
-			textField_1.setBounds(92, 51, 364, 29);
-
-			panelLogin.add(textField_1);
+			textField_usuario.setColumns(10);
 
 			
 
-			textField_2 = new JTextField();
+			textField_nombre = new JTextField();
 
-			textField_2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+			textField_nombre.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
 
-			textField_2.setEnabled(false);
+			textField_nombre.setEnabled(false);
 
-			textField_2.setEditable(false);
+			textField_nombre.setEditable(false);
 
-			textField_2.setColumns(10);
+			textField_nombre.setColumns(10);
 
-			textField_2.setBounds(92, 91, 364, 29);
+			textField_nombre.setBounds(92, 51, 364, 29);
 
-			panelLogin.add(textField_2);
-
-			
-
-			textField_3 = new JTextField();
-
-			textField_3.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
-
-			textField_3.setEnabled(false);
-
-			textField_3.setEditable(false);
-
-			textField_3.setColumns(10);
-
-			textField_3.setBounds(92, 131, 364, 29);
-
-			panelLogin.add(textField_3);
+			panelLogin.add(textField_nombre);
 
 			
 
-			textField_4 = new JTextField();
+			textField_apellido = new JTextField();
 
-			textField_4.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+			textField_apellido.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
 
-			textField_4.setEnabled(false);
+			textField_apellido.setEnabled(false);
 
-			textField_4.setEditable(false);
+			textField_apellido.setEditable(false);
 
-			textField_4.setColumns(10);
+			textField_apellido.setColumns(10);
 
-			textField_4.setBounds(92, 171, 364, 29);
+			textField_apellido.setBounds(92, 91, 364, 29);
 
-			panelLogin.add(textField_4);
-
-			
-
-			textField_5 = new JTextField();
-
-			textField_5.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
-
-			textField_5.setEnabled(false);
-
-			textField_5.setEditable(false);
-
-			textField_5.setColumns(10);
-
-			textField_5.setBounds(92, 211, 364, 29);
-
-			panelLogin.add(textField_5);
+			panelLogin.add(textField_apellido);
 
 			
 
-			textField_6 = new JTextField();
+			textField_correo = new JTextField();
 
-			textField_6.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+			textField_correo.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
 
-			textField_6.setEnabled(false);
+			textField_correo.setEnabled(false);
 
-			textField_6.setEditable(false);
+			textField_correo.setEditable(false);
 
-			textField_6.setColumns(10);
+			textField_correo.setColumns(10);
 
-			textField_6.setBounds(92, 251, 364, 29);
+			textField_correo.setBounds(92, 131, 364, 29);
 
-			panelLogin.add(textField_6);
+			panelLogin.add(textField_correo);
 
 			
 
-			textField_7 = new JTextField();
+			JTextField textField_direccion = new JTextField();
 
-			textField_7.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+			textField_direccion.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
 
-			textField_7.setEnabled(false);
+			textField_direccion.setEnabled(false);
 
-			textField_7.setEditable(false);
+			textField_direccion.setEditable(false);
 
-			textField_7.setColumns(10);
+			textField_direccion.setColumns(10);
 
-			textField_7.setBounds(92, 291, 364, 29);
+			textField_direccion.setBounds(92, 171, 364, 29);
 
-			panelLogin.add(textField_7);
+			panelLogin.add(textField_direccion);
+
+			
+
+			textField_tlf1 = new JTextField();
+
+			textField_tlf1.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+
+			textField_tlf1.setEnabled(false);
+
+			textField_tlf1.setEditable(false);
+
+			textField_tlf1.setColumns(10);
+
+			textField_tlf1.setBounds(92, 211, 364, 29);
+
+			panelLogin.add(textField_tlf1);
+
+			
+
+			textField_tlf2 = new JTextField();
+
+			textField_tlf2.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+
+			textField_tlf2.setEnabled(false);
+
+			textField_tlf2.setEditable(false);
+
+			textField_tlf2.setColumns(10);
+
+			textField_tlf2.setBounds(92, 251, 364, 29);
+
+			panelLogin.add(textField_tlf2);
+
+			
+
+			textField_dni = new JTextField();
+
+			textField_dni.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 14));
+
+			textField_dni.setEnabled(false);
+
+			textField_dni.setEditable(false);
+
+			textField_dni.setColumns(10);
+
+			textField_dni.setBounds(92, 291, 364, 29);
+
+			panelLogin.add(textField_dni);
 
 			
 
