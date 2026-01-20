@@ -3,6 +3,7 @@ package modelo;
 public class Acciones {
 
     public static final String LOGIN = "LOGIN";
+    public static final String GET_ALUMNOS = "GET_ALUMNOS";
     public static final String GET_HORARIOS = "GET_HORARIOS";
     public static final String GET_MODULOS = "GET_MODULOS";
     public static final String GET_REUNIONES = "GET_REUNIONES";

@@ -141,5 +141,19 @@ public class Alumnos extends JFrame {
 			}
 		}
 		
+		controlador.cargarAlumnos(this);
+
 	}
+
+
+
+	public void actualizarTabla(String[][] datos) {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0);
+
+	    for (String[] fila : datos) {
+	        model.addRow(fila);
+	    }
+	}
+
 }

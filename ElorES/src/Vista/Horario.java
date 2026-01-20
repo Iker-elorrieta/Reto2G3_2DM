@@ -65,13 +65,13 @@ public class Horario extends JFrame {
 		JPanel panelLogin = new JPanel();
 		panelLogin.setBackground(new Color(255, 255, 255));
 		panelLogin.setBorder(new LineBorder(new Color(0, 64, 128), 2, true));
-		panelLogin.setBounds(157, 90, 554, 313);
+		panelLogin.setBounds(51, 90, 785, 313);
 		contentPane.add(panelLogin);
 		panelLogin.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new LineBorder(new Color(0, 64, 128), 1, true));
-		scrollPane.setBounds(10, 11, 534, 291);
+		scrollPane.setBounds(0, 0, 798, 343);
 		panelLogin.add(scrollPane);
 		
 		table = new JTable();
@@ -129,7 +129,7 @@ public class Horario extends JFrame {
 		btnVolver.setBackground(new Color(221, 175, 55));
 		btnVolver.addActionListener(e -> controlador.abrirMenu(this));
 
-		btnVolver.setBounds(355, 424, 136, 31);
+		btnVolver.setBounds(354, 440, 136, 31);
 		contentPane.add(btnVolver);
 		
 		JLabel logo2 = new JLabel("logo");
@@ -152,6 +152,21 @@ public class Horario extends JFrame {
 				System.err.println("error en imagen.");
 			}
 		}
+		controlador.cargarHorarios(this);
+
 		
 	}
+
+
+
+	public void actualizarTablaHorarios(String[][] datos) {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0);
+
+	    for (int i = 0; i < datos.length; i++) {
+	        model.addRow(datos[i]);
+	    }
+	}
+
+
 }

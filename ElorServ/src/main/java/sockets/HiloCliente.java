@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 
 import controlador.ControladorServidor;
+import modelo.Acciones;
 
 
 
@@ -28,12 +29,18 @@ public class HiloCliente extends Thread {
 
                 switch (accion) { // SWITCH PARA ACCIONES EN EL SERVIDOR DEPENDIENDO DE LO QUE PIDA EL CLIENTE
 
-                    case "LOGIN":
+                    case Acciones.LOGIN:
                        controlador.login(in, out);
                     
                         break;
 
-                   
+                    case Acciones.GET_ALUMNOS:
+						controlador.getAlumnos(in, out);
+						break;
+                    case Acciones.GET_HORARIOS:
+                        controlador.getHorarios(in, out);
+                        break;
+
                     default:
                         out.writeUTF("ERROR");
                         out.writeUTF("Acción no reconocida");
