@@ -3,57 +3,57 @@ package controlador;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import modelo.Users;
 import modelo.DAO;
+import modelo.Horarios;
+import modelo.Modulos;
 
 public class ControladorServidor {
 
 
-    public void login(DataInputStream in, DataOutputStream out) {
-        try {
+	public void login(DataInputStream in, DataOutputStream out, ObjectOutputStream oos) {
+	    try {
 
-            
-            String userPlano = in.readUTF(); //LEER LO INTRODUCIDO POR EL CLIENTE
-            String passPlano = in.readUTF();
+	        String userPlano = in.readUTF(); //LEER LO INTRODUCIDO POR EL CLIENTE
+	        String passPlano = in.readUTF();
 
-            String usuarioCifrado = CypherAES.encrypt(userPlano); // ENCRIPTACIÓN
-            String passwordcifrada = CypherAES.encrypt(passPlano);
-            
-            
-            DAO dao = new DAO();
-            Users u = dao.login(usuarioCifrado, passwordcifrada);
-            
-            if (u != null) {
-                if (u.getTipos().getId() == 3) {
-                    out.writeUTF("OK");
-                    out.writeUTF(CypherAES.decrypt(u.getUsername())); //DESENCRIPTACION PARA MOSTRAR EN EL MENU Y PERFIL
-                    out.writeUTF(String.valueOf(u.getId()));
-                    out.writeUTF(u.getNombre());
-                    out.writeUTF(u.getApellidos());
-                    out.writeUTF(u.getEmail());
-                    out.writeUTF(u.getDireccion());
-                    out.writeUTF(u.getTelefono1());
-                    out.writeUTF(u.getTelefono2());
-                    out.writeUTF(u.getDni());
+	        String usuarioCifrado = CypherAES.encrypt(userPlano); // ENCRIPTACIÓN
+	        String passwordcifrada = CypherAES.encrypt(passPlano);
 
-                } else {
-                    out.writeUTF("ERROR");
-                    out.writeUTF("No tienes permisos para acceder");
-                }
-            } else {
-                out.writeUTF("ERROR");
-                out.writeUTF("Usuario o contraseña incorrectos");
-            }
+	        DAO dao = new DAO();
+	        Users u = dao.login(usuarioCifrado, passwordcifrada);
 
-            out.flush();
+	        if (u != null) {
+	            if (u.getTipos().getId() == 3) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-    }
+	                out.writeUTF("OK");
+	                out.flush();
+
+	                u.setUsername(CypherAES.decrypt(u.getUsername()));
+
+	                oos.writeObject(u);
+	                oos.flush();
+
+	            } else {
+	                out.writeUTF("ERROR");
+	                out.writeUTF("No tienes permisos para acceder");
+	            }
+	        } else {
+	            out.writeUTF("ERROR");
+	            out.writeUTF("Usuario o contraseña incorrectos");
+	        }
+
+	        out.flush();
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+
+	}
+
 
     public void getAlumnos(DataInputStream in, DataOutputStream out) {
         try {
@@ -61,14 +61,13 @@ public class ControladorServidor {
             List<Users> alumnos = dao.getAlumnos();
 
             out.writeUTF("OK");
-            out.writeUTF(String.valueOf(alumnos.size()));
-
-            for (Users alu : alumnos) {
-                out.writeUTF(alu.getNombre());
-                out.writeUTF(alu.getApellidos());
-            }
-
             out.flush();
+
+            Users[] array = alumnos.toArray(new Users[0]);
+
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+            oos.writeObject(array);
+            oos.flush();
 
         } catch (Exception e) {
             try {
@@ -87,24 +86,31 @@ public class ControladorServidor {
             List<Object[]> lista = dao.getHorariosUsuario(userId);
 
             out.writeUTF("OK");
-            out.writeUTF(String.valueOf(lista.size()));
+            out.flush();
 
-            for (Object[] row : lista) {
+            Horarios[] array = new Horarios[lista.size()];
+
+            for (int i = 0; i < lista.size(); i++) {
+                Object[] row = lista.get(i);
 
                 String dia = (String) row[0];
-                String hora = String.valueOf(row[1]);
-                String aula = row[2] == null ? "" : row[2].toString();   // ← EVITA NPE
-                String modulo = row[3] == null ? "" : row[3].toString(); // ← EVITA NPE
+                byte hora = Byte.parseByte(row[1].toString());
+                String aula = row[2] == null ? "" : row[2].toString();
+                String moduloNombre = row[3] == null ? "" : row[3].toString();
 
+                Modulos mod = new Modulos();
+                mod.setNombre(moduloNombre);
 
+                Users profe = new Users();
+                profe.setId(userId);
 
-                out.writeUTF(dia);
-                out.writeUTF(hora);
-                out.writeUTF(modulo);
-                out.writeUTF(aula);
+                array[i] = new Horarios(mod, profe, dia, hora);
+                array[i].setAula(aula);
             }
 
-            out.flush();
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+            oos.writeObject(array);
+            oos.flush();
 
         } catch (Exception e) {
             System.out.println("ERROR EN getHorarios: " + e.getMessage());
@@ -117,13 +123,4 @@ public class ControladorServidor {
     }
 
 
-
-
-
-
-
-
-		
-	}
-
-
+}

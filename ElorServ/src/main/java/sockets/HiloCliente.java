@@ -2,6 +2,7 @@ package sockets;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import controlador.ControladorServidor;
@@ -22,6 +23,7 @@ public class HiloCliente extends Thread {
         try {
             DataInputStream in = new DataInputStream(socket.getInputStream());  //CREACION SOCKET
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             
 
             while (true) { 
@@ -30,7 +32,7 @@ public class HiloCliente extends Thread {
                 switch (accion) { // SWITCH PARA ACCIONES EN EL SERVIDOR DEPENDIENDO DE LO QUE PIDA EL CLIENTE
 
                     case Acciones.LOGIN:
-                       controlador.login(in, out);
+                       controlador.login(in, out,oos);
                     
                         break;
 
