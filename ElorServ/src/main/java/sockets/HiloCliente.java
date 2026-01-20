@@ -34,12 +34,6 @@ public class HiloCliente extends Thread {
                     
                         break;
 
-                    case Acciones.GET_ALUMNOS:
-						controlador.getAlumnos(in, out);
-						break;
-                    case Acciones.GET_HORARIOS:
-                        controlador.getHorarios(in, out);
-                        break;
 
                     default:
                         out.writeUTF("ERROR");

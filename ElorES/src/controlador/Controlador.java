@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
 
 import javax.swing.JFrame;
 
@@ -49,15 +50,10 @@ public class Controlador {
             case "OK": {
                 resultado = true;
 
-                usuario.setUsername(in.readUTF());
-                usuario.setId(Integer.parseInt(in.readUTF()));
-                usuario.setNombre(in.readUTF());
-                usuario.setApellidos(in.readUTF());
-                usuario.setEmail(in.readUTF());
-                usuario.setDireccion(in.readUTF());
-                usuario.setTelefono1(in.readUTF());
-                usuario.setTelefono2(in.readUTF());
-                usuario.setDni(in.readUTF());
+                ObjectInputStream ois = new ObjectInputStream(in);
+                Users u = (Users) ois.readObject();
+
+                usuario = u;  
 
                 break;
             }
@@ -81,22 +77,8 @@ public class Controlador {
         }
         return resultado;
     }
-    
 
-    public Users leerUsuarioActual() {
-        // FUNCIÓN PARA GUARDAR EL USUARIO ACTIVO EN LOCAL
-        Users u = new Users();
-        u.setUsername(usuario.getUsername());
-        u.setId(usuario.getId());
-        u.setNombre(usuario.getNombre());
-        u.setApellidos(usuario.getApellidos());
-        u.setEmail(usuario.getEmail());
-        u.setDireccion(usuario.getDireccion());
-        u.setTelefono1(usuario.getTelefono1());
-        u.setTelefono2(usuario.getTelefono2());
-        u.setDni(usuario.getDni());
-        return u;
-    }
+    
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -168,122 +150,21 @@ public class Controlador {
 
     // MÉTODO PARA RELLENAR LOS DATOS DEL PERFIL
     public void rellenarPerfil(Perfil vista) {
-        Users u = leerUsuarioActual();
+        
 
-        vista.setUsuario(u.getUsername());
-        vista.setNombre(u.getNombre());
-        vista.setApellido(u.getApellidos());
-        vista.setCorreo(u.getEmail());
-        vista.setDireccion(u.getDireccion());
-        vista.setTelefono1(u.getTelefono1());
-        vista.setTelefono2(u.getTelefono2());
-        vista.setDni(u.getDni());
+        vista.setUsuario(usuario.getUsername());
+        vista.setNombre(usuario.getNombre());
+        vista.setApellido(usuario.getApellidos());
+        vista.setCorreo(usuario.getEmail());
+        vista.setDireccion(usuario.getDireccion());
+        vista.setTelefono1(usuario.getTelefono1());
+        vista.setTelefono2(usuario.getTelefono2());
+        vista.setDni(usuario.getDni());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    
-    //RECIBIR LISTA DE ALUMNOS
-    
-    public String[][] obtenerAlumnosDelServidor() {
-        try {
-            out.writeUTF("GET_ALUMNOS");
-
-            String estado = in.readUTF();
-
-            if (estado.equals("OK")) {
-                int cantidad = Integer.parseInt(in.readUTF());
-                String[][] datos = new String[cantidad][2];
-
-                for (int i = 0; i < cantidad; i++) {
-                    datos[i][0] = in.readUTF();
-                    datos[i][1] = in.readUTF();
-                }
-
-                return datos;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new String[0][0];
-    }
-
-    public void cargarAlumnos(Alumnos vista) {
-        String[][] datos = obtenerAlumnosDelServidor();
-        vista.actualizarTabla(datos);
-    }
-    
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //RECIBIR HORARIOS DE PROFESOR ELEGIDO
-    public String[][] obtenerHorariosDelServidor() {
-        try {
-            out.writeUTF("GET_HORARIOS");
-            out.writeUTF(String.valueOf(usuario.getId()));
-
-            String estado = in.readUTF();
-
-            if (estado.equals("OK")) {
-                int cantidad = Integer.parseInt(in.readUTF());
-
-                String[][] datos = new String[cantidad][4];
-
-                for (int i = 0; i < cantidad; i++) {
-                    datos[i][0] = in.readUTF(); // dia
-                    datos[i][1] = in.readUTF(); // hora
-                    datos[i][2] = in.readUTF(); // nombre del módulo
-                    datos[i][3] = in.readUTF(); // aula
-                }
-
-                return datos;
-            } else {
-                String msg = in.readUTF();
-                System.out.println("SERVIDOR RESPONDE ERROR: " + msg);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new String[0][0];
-    }
-
-
-    public void cargarHorarios(Horario vista) {
-        String[][] horariosServidor = obtenerHorariosDelServidor();
-
-        String[][] tabla = new String[6][6];
-
-        for (int i = 0; i < 6; i++) {
-            tabla[i][0] = String.valueOf(i + 1);
-            tabla[i][1] = "";
-            tabla[i][2] = "";
-            tabla[i][3] = "";
-            tabla[i][4] = "";
-            tabla[i][5] = "";
-        }
-
-        for (String[] h : horariosServidor) {
-            String dia = h[0];
-            int hora = Integer.parseInt(h[1]) - 1;
-            String modulo = h[2];
-            String aula = h[3];
-
-            String contenido = modulo + " - " + aula;
-
-            switch (dia.toUpperCase()) {
-                case "LUNES": tabla[hora][1] = contenido; break;
-                case "MARTES": tabla[hora][2] = contenido; break;
-                case "MIERCOLES": tabla[hora][3] = contenido; break;
-                case "JUEVES": tabla[hora][4] = contenido; break;
-                case "VIERNES": tabla[hora][5] = contenido; break;
-            }
-        }
-
-        vista.actualizarTablaHorarios(tabla);
-    }
-
+   
 
 
 }

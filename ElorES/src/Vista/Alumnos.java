@@ -141,7 +141,6 @@ public class Alumnos extends JFrame {
 			}
 		}
 		
-		controlador.cargarAlumnos(this);
 
 	}
 
