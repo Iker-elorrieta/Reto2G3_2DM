@@ -270,7 +270,7 @@ public class Controlador {
             String modulo = h[2];
             String aula = h[3];
 
-            String contenido = modulo + " - " + aula;
+            String contenido = modulo + " \n " + aula;
 
             switch (dia.toUpperCase()) {
                 case "LUNES": tabla[hora][1] = contenido; break;

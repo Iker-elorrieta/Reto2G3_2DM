@@ -65,21 +65,65 @@ public class Horario extends JFrame {
 		JPanel panelLogin = new JPanel();
 		panelLogin.setBackground(new Color(255, 255, 255));
 		panelLogin.setBorder(new LineBorder(new Color(0, 64, 128), 2, true));
-		panelLogin.setBounds(51, 90, 785, 313);
+		panelLogin.setBounds(31, 90, 805, 354);
 		contentPane.add(panelLogin);
 		panelLogin.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new LineBorder(new Color(0, 64, 128), 1, true));
-		scrollPane.setBounds(0, 0, 798, 343);
+		scrollPane.setBounds(0, 0, 805, 354);
 		panelLogin.add(scrollPane);
 		
 		table = new JTable();
 		table.setBorder(new LineBorder(new Color(0, 64, 128), 1, true));
-		table.setFont(new Font("Tahoma", Font.BOLD, 15));
+		table.setFont(new Font("Tahoma", Font.BOLD, 11));
 
-		// 🔹 ALTURA DE LAS FILAS
-		table.setRowHeight(40);
+	
+		table.setRowHeight(50);
+		// 🔹 PERMITIR TEXTO MULTILÍNEA EN LAS CELDAS
+		table.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public java.awt.Component getTableCellRendererComponent(
+		            JTable table, Object value, boolean isSelected, boolean hasFocus,
+		            int row, int column) {
+
+		        javax.swing.JTextArea area = new javax.swing.JTextArea();
+		        area.setText(value == null ? "" : value.toString());
+		        area.setLineWrap(true);
+		        area.setWrapStyleWord(true);
+		        area.setOpaque(true);
+		        area.setFont(table.getFont());
+
+		        // 🔹 CENTRAR TEXTO
+		        area.setAlignmentX(CENTER_ALIGNMENT);
+		        area.setAlignmentY(CENTER_ALIGNMENT);
+		        area.setMargin(new java.awt.Insets(5, 5, 5, 5)); // padding
+
+		        // 🔹 COLORES
+		        if (isSelected) {
+		            area.setBackground(table.getSelectionBackground());
+		            area.setForeground(table.getSelectionForeground());
+		        } else {
+		            area.setBackground(table.getBackground());
+		            area.setForeground(table.getForeground());
+		        }
+
+		        // 🔹 AJUSTAR ALTURA SEGÚN CONTENIDO
+		        int preferredHeight = area.getPreferredSize().height;
+		        if (table.getRowHeight(row) < preferredHeight) {
+		            table.setRowHeight(row, preferredHeight);
+		        }
+
+		        return area;
+		    }
+		});
+
+
 
 		scrollPane.setViewportView(table);
 
@@ -129,7 +173,7 @@ public class Horario extends JFrame {
 		btnVolver.setBackground(new Color(221, 175, 55));
 		btnVolver.addActionListener(e -> controlador.abrirMenu(this));
 
-		btnVolver.setBounds(354, 440, 136, 31);
+		btnVolver.setBounds(31, 469, 136, 31);
 		contentPane.add(btnVolver);
 		
 		JLabel logo2 = new JLabel("logo");
