@@ -20,8 +20,7 @@ import controlador.Controlador;
 
 import java.awt.Dimension;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
 
 public class Alumnos extends JFrame {
 
@@ -116,14 +115,8 @@ public class Alumnos extends JFrame {
 		btnVolver.setForeground(new Color(255, 255, 255));
 		btnVolver.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnVolver.setBackground(new Color(221, 175, 55));
-		btnVolver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				contentPane.setVisible(false);
-				Menu menu = new Menu(controlador);
-				menu.setVisible(true);
-				dispose();
-			}
-		});
+		btnVolver.addActionListener(e -> controlador.abrirMenu(this));
+
 		btnVolver.setBounds(355, 424, 136, 31);
 		contentPane.add(btnVolver);
 		

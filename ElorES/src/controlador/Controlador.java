@@ -3,86 +3,180 @@ package controlador;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
+import javax.swing.JFrame;
+
+import Vista.Login;
+import Vista.Menu;
+import Vista.Horario;
+import Vista.Alumnos;
+import Vista.Reuniones;
+import Vista.Perfil;
+
 import conexion.ConexionServidor;
 import modelo.Users;
 
 public class Controlador {
-	
-	private ConexionServidor con;
-	private DataOutputStream out;
-	private DataInputStream in;
+
+    private ConexionServidor con;
+    private DataOutputStream out;
+    private DataInputStream in;
     Users usuario = new Users();
 
-	public Controlador() {
-	    try {
-	        con = new ConexionServidor();          //CONEXION CON EL SERVIDOR
-	        out = con.getOut();
-	        in = con.getIn();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
+    public Controlador() {
+        try {
+            con = new ConexionServidor(); // CONEXION CON EL SERVIDOR
+            out = con.getOut();
+            in = con.getIn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public boolean login(String usuariotexto, String contrasenatexto) {
-		boolean resultado = false;
-		try {
-	       // FUNCION LOGIN EN LA CUAL DEPENDIENDO DE LO QUE SE RECIBA DEVUELVE UN BOOLEANO SI SE HA INICIADO SESION O NO.
-			
-            out.writeUTF("LOGIN");      
-            out.writeUTF(usuariotexto);     
-            out.writeUTF(contrasenatexto);      
+    public boolean login(String usuariotexto, String contrasenatexto) {
+        boolean resultado = false;
+        try {
+            // FUNCIÓN LOGIN EN LA CUAL DEPENDIENDO DE LO QUE SE RECIBA DEVUELVE UN BOOLEANO
+            // SI SE HA INICIADO SESIÓN O NO.
 
-            String estado = in.readUTF();   
+            out.writeUTF("LOGIN");
+            out.writeUTF(usuariotexto);
+            out.writeUTF(contrasenatexto);
+
+            String estado = in.readUTF();
 
             switch (estado) {
 
-                case "OK": {
-                    resultado = true;
+            case "OK": {
+                resultado = true;
 
-                    usuario.setUsername(in.readUTF());
-                    usuario.setNombre(in.readUTF());
-                    usuario.setApellidos(in.readUTF());
-                    usuario.setEmail(in.readUTF());
-                    usuario.setDireccion(in.readUTF());
-                    usuario.setTelefono1(in.readUTF());
-                    usuario.setTelefono2(in.readUTF());
-                    usuario.setDni(in.readUTF());
+                usuario.setUsername(in.readUTF());
+                usuario.setNombre(in.readUTF());
+                usuario.setApellidos(in.readUTF());
+                usuario.setEmail(in.readUTF());
+                usuario.setDireccion(in.readUTF());
+                usuario.setTelefono1(in.readUTF());
+                usuario.setTelefono2(in.readUTF());
+                usuario.setDni(in.readUTF());
 
-                   
-                    break;
-                }
+                break;
+            }
 
-                case "ERROR": { //COMENTARIOS PROPIOS PARA COMPROBACION DE QUE ERROR ES POR CONSOLA QUE NO AFECTA A CLIENTE. 
-                				//SI SIN PERMISOS O USU INCORRECTO.
-                    String mensaje = in.readUTF();
-                    
-                    System.out.println(mensaje);
-                    break;
-                }
+            case "ERROR": {
+                // COMENTARIOS PROPIOS PARA COMPROBACIÓN DE QUE ERROR ES POR CONSOLA QUE NO
+                // AFECTA A CLIENTE.
+                // SI SIN PERMISOS O USUARIO INCORRECTO.
+                String mensaje = in.readUTF();
 
-                default:
-                    System.out.println("Respuesta desconocida del servidor");
+                System.out.println(mensaje);
+                break;
+            }
+
+            default:
+                System.out.println("RESPUESTA DESCONOCIDA DEL SERVIDOR");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-		return resultado;
-	}
+        return resultado;
+    }
 
-	public Users leerUsuarioActual() {
-		// FUNCION PARA GUARDAR EL USUARIO ACTIVO EN LOCAL
-	    Users u = new Users();
-	    u.setUsername(usuario.getUsername());
-	    u.setNombre(usuario.getNombre());
-	    u.setApellidos(usuario.getApellidos());
-	    u.setEmail(usuario.getEmail());
-	    u.setDireccion(usuario.getDireccion());
-	    u.setTelefono1(usuario.getTelefono1());
-	    u.setTelefono2(usuario.getTelefono2());
-	    u.setDni(usuario.getDni());
-	    return u;
-	}
+    public Users leerUsuarioActual() {
+        // FUNCIÓN PARA GUARDAR EL USUARIO ACTIVO EN LOCAL
+        Users u = new Users();
+        u.setUsername(usuario.getUsername());
+        u.setNombre(usuario.getNombre());
+        u.setApellidos(usuario.getApellidos());
+        u.setEmail(usuario.getEmail());
+        u.setDireccion(usuario.getDireccion());
+        u.setTelefono1(usuario.getTelefono1());
+        u.setTelefono2(usuario.getTelefono2());
+        u.setDni(usuario.getDni());
+        return u;
+    }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // MÉTODO GENERAL PARA CAMBIAR DE VISTA
+    public void cambiarVista(JFrame vistaActual, JFrame vistaNueva) {
+        vistaActual.setVisible(false);
+        vistaNueva.setVisible(true);
+        vistaActual.dispose();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // LOGIN
+
+    // MÉTODO QUE GESTIONA EL INICIO DE SESIÓN DESDE LA VISTA LOGIN
+    public void iniciarSesion(Login vista) {
+        String usuarioTexto = vista.getUsuario();
+        String contrasenaTexto = vista.getContrasena();
+
+        if (login(usuarioTexto, contrasenaTexto)) {
+            abrirMenu(vista);
+        } else {
+            vista.mostrarError("Usuario o contraseña incorrectos");
+        }
+    }
+
+    // MÉTODO PARA ABRIR EL MENÚ
+    public void abrirMenu(JFrame vista) {
+        cambiarVista(vista, new Menu(this));
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // MENÚ
+
+    // MÉTODO PARA ABRIR MI HORARIO
+    public void abrirMiHorario(Menu vista) {
+        cambiarVista(vista, new Horario(this));
+    }
+
+    // MÉTODO PARA ABRIR OTROS HORARIOS
+    public void abrirOtrosHorarios(Menu vista) {
+        cambiarVista(vista, new Horario(this));
+    }
+
+    // MÉTODO PARA ABRIR ALUMNOS
+    public void abrirAlumnos(Menu vista) {
+        cambiarVista(vista, new Alumnos(this));
+    }
+
+    // MÉTODO PARA ABRIR REUNIONES
+    public void abrirReuniones(Menu vista) {
+        cambiarVista(vista, new Reuniones(this));
+    }
+
+    // MÉTODO PARA ABRIR PERFIL
+    public void abrirPerfil(Menu vista) {
+        cambiarVista(vista, new Perfil(this));
+    }
+
+    // MÉTODO PARA CERRAR SESIÓN
+    public void cerrarSesion(Menu vista) {
+        cambiarVista(vista, new Login(this));
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // PERFIL
+
+    // MÉTODO PARA RELLENAR LOS DATOS DEL PERFIL
+    public void rellenarPerfil(Perfil vista) {
+        Users u = leerUsuarioActual();
+
+        vista.setUsuario(u.getUsername());
+        vista.setNombre(u.getNombre());
+        vista.setApellido(u.getApellidos());
+        vista.setCorreo(u.getEmail());
+        vista.setDireccion(u.getDireccion());
+        vista.setTelefono1(u.getTelefono1());
+        vista.setTelefono2(u.getTelefono2());
+        vista.setDni(u.getDni());
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
