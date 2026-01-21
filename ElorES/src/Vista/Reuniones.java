@@ -111,7 +111,7 @@ public class Reuniones extends JFrame {
 			}
 		});
 
-		// 🔹 ALTURA Y FUENTE DEL ENCABEZADO
+		//  ALTURA Y FUENTE DEL ENCABEZADO
 		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 16));
 		table.getTableHeader().setPreferredSize(
 			new Dimension(table.getTableHeader().getWidth(), 45)

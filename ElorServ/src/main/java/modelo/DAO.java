@@ -50,6 +50,17 @@ public class DAO {
     }
 
 
+    public List<Users> getProfesoresTipo3() {
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
+
+        String hql = "FROM Users u WHERE u.tipos.id = 3";
+
+        Query<Users> q = sesion.createQuery(hql, Users.class);
+
+        List<Users> lista = q.list();
+        sesion.close();
+        return lista;
+    }
 
     
 

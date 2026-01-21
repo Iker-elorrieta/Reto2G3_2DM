@@ -2,12 +2,13 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 
 import Vista.Login;
 import Vista.Menu;
+import Vista.OtrosHorarios;
 import Vista.Horario;
 import Vista.Alumnos;
 import Vista.Reuniones;
@@ -121,7 +122,8 @@ public class Controlador {
 
     // MÉTODO PARA ABRIR OTROS HORARIOS
     public void abrirOtrosHorarios(Menu vista) {
-        cambiarVista(vista, new Horario(this));
+        cambiarVista(vista, new OtrosHorarios(this));
+        
     }
 
     // MÉTODO PARA ABRIR ALUMNOS
@@ -173,8 +175,8 @@ public class Controlador {
 
             if (estado.equals("OK")) {
 
-                ObjectInputStream ois = new ObjectInputStream(in);
-                Users[] lista = (Users[]) ois.readObject();
+            	Users[] lista = (Users[]) con.getOis().readObject();
+
 
                 String[][] datos = new String[lista.length][2];
 
@@ -202,17 +204,16 @@ public class Controlador {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //RECIBIR HORARIOS DE PROFESOR ELEGIDO
-    public String[][] obtenerHorariosDelServidor() {
+    public String[][] obtenerHorariosDelServidor(int idProfesor) {
         try {
             out.writeUTF("GET_HORARIOS");
-            out.writeUTF(String.valueOf(usuario.getId()));
+            out.writeUTF(String.valueOf(idProfesor));
 
             String estado = in.readUTF();
 
             if (estado.equals("OK")) {
 
-                ObjectInputStream ois = new ObjectInputStream(in);
-                Horarios[] lista = (Horarios[]) ois.readObject();
+                Horarios[] lista = (Horarios[]) con.getOis().readObject();
 
                 String[][] datos = new String[lista.length][4];
 
@@ -236,44 +237,86 @@ public class Controlador {
 
         return new String[0][0];
     }
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    public Users[] obtenerProfesores() {
+        try {
+            out.writeUTF("GET_PROFESORES");
 
+            String estado = in.readUTF();
 
+            if (estado.equals("OK")) {
+
+                Users[] lista = (Users[]) con.getOis().readObject();
+
+                // Filtrar para excluir al usuario logueado
+                return Arrays.stream(lista)
+                        .filter(u -> !u.getId().equals(usuario.getId()))
+                        .toArray(Users[]::new);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new Users[0];
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     public void cargarHorarios(Horario vista) {
-        String[][] horariosServidor = obtenerHorariosDelServidor();
-
-        String[][] tabla = new String[6][6];
-
-        for (int i = 0; i < 6; i++) {
-            tabla[i][0] = String.valueOf(i + 1);
-            tabla[i][1] = "";
-            tabla[i][2] = "";
-            tabla[i][3] = "";
-            tabla[i][4] = "";
-            tabla[i][5] = "";
-        }
-
-        for (String[] h : horariosServidor) {
-            String dia = h[0];
-            int hora = Integer.parseInt(h[1]) - 1;
-            String modulo = h[2];
-            String aula = h[3];
-
-            String contenido = modulo + " \n " + aula;
-
-            switch (dia.toUpperCase()) {
-                case "LUNES": tabla[hora][1] = contenido; break;
-                case "MARTES": tabla[hora][2] = contenido; break;
-                case "MIERCOLES": tabla[hora][3] = contenido; break;
-                case "JUEVES": tabla[hora][4] = contenido; break;
-                case "VIERNES": tabla[hora][5] = contenido; break;
-            }
-        }
-
-        vista.actualizarTablaHorarios(tabla);
+        String[][] horariosServidor = obtenerHorariosDelServidor(usuario.getId());
+        cargarHorarios(vista, horariosServidor);
     }
 
 
+    public void cargarHorarios(OtrosHorarios vista) {
+        int idProfesor = vista.getProfesorSeleccionado();
+        String[][] horariosServidor = obtenerHorariosDelServidor(idProfesor);
+        cargarHorarios(vista, horariosServidor);
+    }
 
-}
+		//CARGAR HORARIOS EN LA VISTA CORRESPONDIENTE
+
+		private void cargarHorarios(Object vista, String[][] horariosServidor) {
+		    String[][] tabla = new String[6][6];
+
+		    for (int i = 0; i < 6; i++) {
+		        tabla[i][0] = String.valueOf(i + 1);
+		        tabla[i][1] = "";
+		        tabla[i][2] = "";
+		        tabla[i][3] = "";
+		        tabla[i][4] = "";
+		        tabla[i][5] = "";
+		    }
+
+		    for (String[] h : horariosServidor) {
+		        String dia = h[0];
+		        int hora = Integer.parseInt(h[1]) - 1;
+		        String modulo = h[2];
+		        String aula = h[3];
+
+		        String contenido = modulo + " \n " + aula;
+
+		        switch (dia.toUpperCase()) {
+		            case "LUNES": tabla[hora][1] = contenido; break;
+		            case "MARTES": tabla[hora][2] = contenido; break;
+		            case "MIERCOLES": tabla[hora][3] = contenido; break;
+		            case "JUEVES": tabla[hora][4] = contenido; break;
+		            case "VIERNES": tabla[hora][5] = contenido; break;
+		        }
+		    }
+
+		    if (vista instanceof Horario h) h.actualizarTablaHorarios(tabla);
+		    if (vista instanceof OtrosHorarios o) o.actualizarTablaHorarios(tabla);
+		}
+
+
+		
+	}
+
+
+
+
