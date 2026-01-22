@@ -1,6 +1,7 @@
 package Vista;
 
 import java.awt.Image;
+import java.awt.Insets;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -11,9 +12,13 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Controlador;
@@ -84,18 +89,18 @@ public class OtrosHorarios extends JFrame {
 	
 		table.setRowHeight(50);
 		// 🔹 PERMITIR TEXTO MULTILÍNEA EN LAS CELDAS
-		table.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 		    /**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
-		    public java.awt.Component getTableCellRendererComponent(
+		    public Component getTableCellRendererComponent(
 		            JTable table, Object value, boolean isSelected, boolean hasFocus,
 		            int row, int column) {
 
-		        javax.swing.JTextArea area = new javax.swing.JTextArea();
+		        JTextArea area = new JTextArea();
 		        area.setText(value == null ? "" : value.toString());
 		        area.setLineWrap(true);
 		        area.setWrapStyleWord(true);
@@ -105,7 +110,7 @@ public class OtrosHorarios extends JFrame {
 		        // 🔹 CENTRAR TEXTO
 		        area.setAlignmentX(CENTER_ALIGNMENT);
 		        area.setAlignmentY(CENTER_ALIGNMENT);
-		        area.setMargin(new java.awt.Insets(5, 5, 5, 5)); // padding
+		        area.setMargin(new Insets(5, 5, 5, 5)); // padding
 
 		        // 🔹 COLORES
 		        if (isSelected) {
@@ -131,14 +136,8 @@ public class OtrosHorarios extends JFrame {
 		scrollPane.setViewportView(table);
 
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
+				new Object[][] {},
+
 			new String[] {
 				"Horas", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"
 			}
