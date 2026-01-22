@@ -133,7 +133,7 @@ public class Perfil extends JFrame {
         textField_dni = crearCampo(panelLogin, 92, 291);
 
         // TÍTULO
-        JLabel lblTitulo = new JLabel("Tu perfil");
+        JLabel lblTitulo = new JLabel("Mi perfil");
         lblTitulo.setBounds(10, 17, 858, 58);
         contentPane.add(lblTitulo);
         lblTitulo.setForeground(new Color(0, 64, 128));
@@ -142,10 +142,10 @@ public class Perfil extends JFrame {
 
         // BOTÓN VOLVER
         JButton btnVolver = new JButton("Volver");
-        btnVolver.setBackground(new Color(248, 188, 7));
         btnVolver.setForeground(new Color(255, 255, 255));
-        btnVolver.setBounds(55, 455, 98, 25);
-        btnVolver.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
+		btnVolver.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnVolver.setBackground(new Color(221, 175, 55));
+        btnVolver.setBounds(56, 461, 104, 31);
         contentPane.add(btnVolver);
 
         // EL CONTROLADOR GESTIONA LA ACCIÓN

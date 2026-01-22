@@ -163,7 +163,7 @@ public class OtrosHorarios extends JFrame {
 			new Dimension(table.getTableHeader().getWidth(), 45)
 		);
 		
-		JLabel lblHorario = new JLabel("Horario de usuario.");
+		JLabel lblHorario = new JLabel("Otros horarios");
 		lblHorario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHorario.setForeground(new Color(0, 64, 128));
 		lblHorario.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 40));

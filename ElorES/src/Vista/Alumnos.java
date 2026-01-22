@@ -66,13 +66,13 @@ public class Alumnos extends JFrame {
 		JPanel panelLogin = new JPanel();
 		panelLogin.setBackground(new Color(255, 255, 255));
 		panelLogin.setBorder(new LineBorder(new Color(0, 64, 128), 2, true));
-		panelLogin.setBounds(21, 92, 830, 366);
+		panelLogin.setBounds(31, 92, 820, 366);
 		contentPane.add(panelLogin);
 		panelLogin.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new LineBorder(new Color(0, 64, 128), 1, true));
-		scrollPane.setBounds(0, 0, 830, 366);
+		scrollPane.setBounds(0, 0, 820, 366);
 		panelLogin.add(scrollPane);
 		
 		table = new JTable();
@@ -111,7 +111,7 @@ public class Alumnos extends JFrame {
 		btnVolver.setBackground(new Color(221, 175, 55));
 		btnVolver.addActionListener(e -> controlador.abrirMenu(this));
 
-		btnVolver.setBounds(73, 469, 136, 31);
+		btnVolver.setBounds(26, 469, 136, 31);
 		contentPane.add(btnVolver);
 		
 		JLabel logo2 = new JLabel("logo");
