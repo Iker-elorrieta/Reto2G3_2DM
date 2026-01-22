@@ -170,7 +170,7 @@ public class Controlador {
     public String[][] obtenerAlumnosDelServidor() {
         try {
             out.writeUTF("GET_ALUMNOS");
-
+            out.writeUTF(String.valueOf(usuario.getId()));
             String estado = in.readUTF();
 
             if (estado.equals("OK")) {

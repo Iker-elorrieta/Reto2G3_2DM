@@ -56,7 +56,7 @@ public class ControladorServidor {
 	public void getAlumnos(DataInputStream in, DataOutputStream out, ObjectOutputStream oos) {
 		try {
 			DAO dao = new DAO();
-			List<Users> alumnos = dao.getAlumnos();
+			List<Users> alumnos = dao.getAlumnos(Integer.parseInt(in.readUTF()));
 
 			out.writeUTF("OK");
 			out.flush();

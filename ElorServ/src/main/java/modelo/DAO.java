@@ -23,16 +23,28 @@ public class DAO {
         return u;
     }
 
-    public List<Users> getAlumnos() {
+    public List<Users> getAlumnos(int profesorId) {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
 
-        String hql = "FROM Users u WHERE u.tipos.id = 4";
-        Query<Users> q = sesion.createQuery(hql, Users.class);
+        Query<Users> q = sesion.createQuery(
+            "SELECT DISTINCT mat.users " +
+            "FROM Matriculaciones mat " +
+            "WHERE mat.users.tipos.id = 4 " + 
+            "AND mat.ciclos.id IN (" +
+                "SELECT h.modulos.ciclos.id " +
+                "FROM Horarios h " +
+                "WHERE h.users.id = :profeId" + 
+            ")",
+            Users.class
+        );
+
+        q.setParameter("profeId", profesorId);
 
         List<Users> lista = q.list();
         sesion.close();
         return lista;
     }
+
 
     public List<Object[]> getHorariosUsuario(int userId) {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
