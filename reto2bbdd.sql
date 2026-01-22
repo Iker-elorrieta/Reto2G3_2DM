@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-01-2026 a las 09:55:10
+-- Tiempo de generación: 22-01-2026 a las 10:02:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -265,11 +265,11 @@ CREATE TABLE `modulos` (
 INSERT INTO `modulos` (`id`, `nombre`, `nombre_eus`, `horas`, `ciclo_id`, `curso`) VALUES
 (1, 'Tutoria', 'Tutoretza', 1, 1, 0),
 (2, 'Guardia', 'Zaintza', 1, 1, 0),
-(3, 'Sistemas Informaticos', 'Informatika-sistemak', 165, 1, 1),
-(4, 'Bases de datos', 'Datu-baseak', 198, 1, 1),
+(3, 'Sistemas Informaticos', 'Informatika-sistemak', 165, 3, 1),
+(4, 'Bases de datos', 'Datu-baseak', 198, 3, 1),
 (5, 'Programación', 'Programazioa', 264, 1, 1),
 (6, 'Lenguajes de marcas', 'Markatzeko lengoaiak', 132, 1, 1),
-(7, 'Entornos de desarrollo', 'Garapen-inguruneak', 99, 1, 1),
+(7, 'Entornos de desarrollo', 'Garapen-inguruneak', 99, 3, 1),
 (8, 'Acceso a datos', 'Datu-atzipena', 120, 1, 2),
 (9, 'Desarrollo de interfaces', 'Interfazeen garapena', 140, 1, 2),
 (10, 'Programación multimedia y dispositivos móviles', 'Multimedia-programazioa eta gailu mugikorrak', 100, 1, 2),
