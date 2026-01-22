@@ -178,11 +178,16 @@ public class Controlador {
             	Users[] lista = (Users[]) con.getOis().readObject();
 
 
-                String[][] datos = new String[lista.length][2];
+                String[][] datos = new String[lista.length][7];
 
                 for (int i = 0; i < lista.length; i++) {
                     datos[i][0] = lista[i].getNombre();
                     datos[i][1] = lista[i].getApellidos();
+                    datos[i][2] = lista[i].getEmail();
+                    datos[i][3] = lista[i].getTelefono1();
+                    datos[i][4] = lista[i].getTelefono2();
+                    datos[i][5] = lista[i].getDireccion();
+                    datos[i][6] = lista[i].getDni();
                 }
 
                 return datos;
