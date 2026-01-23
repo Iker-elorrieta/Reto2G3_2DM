@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import modelo.Users;
 import modelo.DAO;
@@ -56,13 +55,11 @@ public class ControladorServidor {
     public void getAlumnos(ObjectInputStream ois, ObjectOutputStream oos) {
         try {
             DAO dao = new DAO();
-            int id = Integer.parseInt((String) ois.readObject());
-            List<Users> alumnos = dao.getAlumnos(id);
+            int id = (Integer) ois.readObject();
+            ArrayList<Users> alumnos = dao.getAlumnos(id);
 
             oos.writeObject("OK");
             oos.flush();
-
-
 
             oos.writeObject(alumnos);
             oos.flush();
@@ -89,15 +86,15 @@ public class ControladorServidor {
             ArrayList<Horarios> lista2 = new ArrayList<>();
 
             for (int i = 0; i < lista.size(); i++) {
-                Horarios row = lista.get(i);
+                Horarios h = lista.get(i);
 
                 Modulos mod = new Modulos();
-                mod.setNombre(row.getModulos().getNombre());
+                mod.setNombre(h.getModulos().getNombre());
 
                 Users profe = new Users();
                 profe.setId(userId);
 
-                lista2.add(new Horarios(mod, profe, row.getDia(), row.getHora(), row.getAula()));
+                lista2.add(new Horarios(mod, profe, h.getDia(), h.getHora(), h.getAula()));
             }
 
 
@@ -118,12 +115,12 @@ public class ControladorServidor {
     public void getProfesores(ObjectInputStream ois, ObjectOutputStream oos) {
         try {
             DAO dao = new DAO();
-            List<Users> lista = dao.getProfesoresTipo3();
+            ArrayList<Users> lista = dao.getProfesoresTipo3();
 
             oos.writeObject("OK");
             oos.flush();
 
-            oos.writeObject(lista.toArray(new Users[0]));
+            oos.writeObject(lista);
             oos.flush();
 
         } catch (Exception e) {

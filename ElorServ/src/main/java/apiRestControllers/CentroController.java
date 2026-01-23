@@ -1,7 +1,9 @@
-package com.example.ElorServ;
+package apiRestControllers;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
+
+import apiDAO.LeerJson;
 import modelo.Centro;
 
 @RestController

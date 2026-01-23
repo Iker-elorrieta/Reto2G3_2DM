@@ -23,26 +23,21 @@ public class DAO {
         return u;
     }
 
-    public List<Users> getAlumnos(int profesorId) {
+    public ArrayList<Users> getAlumnos(int profesorId) {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
 
-        Query<Users> q = sesion.createQuery(
-            "SELECT DISTINCT mat.users " +
-            "FROM Matriculaciones mat " +
-            "WHERE mat.users.tipos.id = 4 " + 
-            "AND mat.ciclos.id IN (" +
-                "SELECT h.modulos.ciclos.id " +
-                "FROM Horarios h " +
-                "WHERE h.users.id = :profeId" + 
-            ")",
-            Users.class
-        );
+        String hql = 
+            "SELECT DISTINCT mat.users FROM Matriculaciones mat WHERE mat.users.tipos.name = 'alumno' " +
+            "AND mat.ciclos.id IN (SELECT h.modulos.ciclos.id FROM Horarios h WHERE h.users.id = :profeId)";
 
+        Query<Users> q = sesion.createQuery(hql, Users.class);
         q.setParameter("profeId", profesorId);
 
         List<Users> lista = q.list();
-        return lista;
+        return new ArrayList<>(lista);
+
     }
+
 
     public ArrayList<Horarios> getHorariosUsuario(int userId) {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -60,15 +55,18 @@ public class DAO {
     }
 
 
-    public List<Users> getProfesoresTipo3() {
+    public ArrayList<Users> getProfesoresTipo3() {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
 
-        String hql = "FROM Users u WHERE u.tipos.id = 3";
+        String hql = "FROM Users u WHERE u.tipos.name = 'profesor'";
 
         Query<Users> q = sesion.createQuery(hql, Users.class);
 
-        List<Users> lista = q.list();
-        return lista;
+        
+        List<Users> listaHibernate = q.list();
+
+        
+        return new ArrayList<>(listaHibernate);
     }
 
     
