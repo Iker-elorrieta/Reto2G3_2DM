@@ -27,11 +27,12 @@ public class Horarios implements java.io.Serializable {
 	public Horarios() {
 	}
 
-	public Horarios(Modulos modulos, Users users, String dia, byte hora) {
+	public Horarios(Modulos modulos, Users users, String dia, byte hora, String aula) {
 		this.modulos = modulos;
 		this.users = users;
 		this.dia = dia;
 		this.hora = hora;
+		this.aula = aula;
 	}
 
 	public Horarios(Modulos modulos, Users users, String dia, byte hora, String aula, String observaciones,

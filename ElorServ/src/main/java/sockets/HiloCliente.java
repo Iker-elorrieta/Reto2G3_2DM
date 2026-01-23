@@ -1,7 +1,7 @@
 package sockets;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
@@ -21,35 +21,34 @@ public class HiloCliente extends Thread {
 
     public void run() {
         try {
-            DataInputStream in = new DataInputStream(socket.getInputStream());  //CREACION SOCKET
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             
 
             while (true) { 
-                String accion = in.readUTF();
+                String accion = (String)ois.readObject();
 
                 switch (accion) { // SWITCH PARA ACCIONES EN EL SERVIDOR DEPENDIENDO DE LO QUE PIDA EL CLIENTE
 
                     case Acciones.LOGIN:
-                       controlador.login(in, out,oos);
+                       controlador.login(ois,oos);
                     
                         break;
 
                     case Acciones.GET_ALUMNOS:
-						controlador.getAlumnos(in, out, oos);
+						controlador.getAlumnos(ois,oos);
 						break;
                     case Acciones.GET_HORARIOS:
-                        controlador.getHorarios(in, out, oos);
+                        controlador.getHorarios(ois, oos);
                         break;
                     case Acciones.GET_PROFESORES:
-                        controlador.getProfesores(in, out, oos);
+                        controlador.getProfesores(ois,oos);
                         break;
 
                     default:
-                        out.writeUTF("ERROR");
-                        out.writeUTF("Acción no reconocida");
-                        out.flush();
+                        oos.writeObject("ERROR");
+                        oos.writeObject("Acción no reconocida");
+                        oos.flush();
                         break;
                 }
             }

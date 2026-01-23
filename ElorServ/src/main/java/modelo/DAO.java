@@ -1,6 +1,7 @@
 package modelo;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -19,7 +20,6 @@ public class DAO {
         q.setParameter("pass", password);
 
         Users u = q.uniqueResult();
-        sesion.close();
         return u;
     }
 
@@ -41,24 +41,22 @@ public class DAO {
         q.setParameter("profeId", profesorId);
 
         List<Users> lista = q.list();
-        sesion.close();
         return lista;
     }
 
-
-    public List<Object[]> getHorariosUsuario(int userId) {
+    public ArrayList<Horarios> getHorariosUsuario(int userId) {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
 
-        String hql = "SELECT h.dia, h.hora, h.aula, h.modulos.nombre "
-                   + "FROM Horarios h "
-                   + "WHERE h.users.id = :id";
+        String hql = "FROM Horarios h WHERE h.users.id = :id";
 
-        Query<Object[]> q = sesion.createQuery(hql, Object[].class);
+        Query<Horarios> q = sesion.createQuery(hql, Horarios.class);
         q.setParameter("id", userId);
 
-        List<Object[]> lista = q.list();
-        sesion.close();
-        return lista;
+        List<Horarios> listaHibernate = q.list();
+
+      
+        return new ArrayList<>(listaHibernate);
+ 
     }
 
 
@@ -70,7 +68,6 @@ public class DAO {
         Query<Users> q = sesion.createQuery(hql, Users.class);
 
         List<Users> lista = q.list();
-        sesion.close();
         return lista;
     }
 

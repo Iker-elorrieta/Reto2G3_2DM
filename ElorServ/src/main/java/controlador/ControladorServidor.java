@@ -1,9 +1,9 @@
 package controlador;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import modelo.Users;
@@ -13,133 +13,126 @@ import modelo.Modulos;
 
 public class ControladorServidor {
 
-	public void login(DataInputStream in, DataOutputStream out, ObjectOutputStream oos) {
-		try {
+    public void login(ObjectInputStream ois, ObjectOutputStream oos) throws ClassNotFoundException {
+        try {
 
-			String userPlano = in.readUTF(); // LEER LO INTRODUCIDO POR EL CLIENTE
-			String passPlano = in.readUTF();
+            String userPlano = (String) ois.readObject(); 
+            String passPlano = (String) ois.readObject();
 
-			String usuarioCifrado = CypherAES.encrypt(userPlano); // ENCRIPTACIÓN
-			String passwordcifrada = CypherAES.encrypt(passPlano);
+            String usuarioCifrado = CypherAES.encrypt(userPlano);
+            String passwordcifrada = CypherAES.encrypt(passPlano);
 
-			DAO dao = new DAO();
-			Users u = dao.login(usuarioCifrado, passwordcifrada);
+            DAO dao = new DAO();
+            Users u = dao.login(usuarioCifrado, passwordcifrada);
 
-			if (u != null) {
-				if (u.getTipos().getId() == 3) {
+            if (u != null) {
+                if (u.getTipos().getId() == 3) {
 
-					out.writeUTF("OK");
-					out.flush();
+                    oos.writeObject("OK");
+                    oos.flush();
 
-					u.setUsername(CypherAES.decrypt(u.getUsername()));
+                    u.setUsername(CypherAES.decrypt(u.getUsername()));
 
-					oos.writeObject(u);
-					oos.flush();
+                    oos.writeObject(u);
+                    oos.flush();
 
-				} else {
-					out.writeUTF("ERROR");
-					out.writeUTF("No tienes permisos para acceder");
-				}
-			} else {
-				out.writeUTF("ERROR");
-				out.writeUTF("Usuario o contraseña incorrectos");
-			}
+                } else {
+                    oos.writeObject("ERROR");
+                    oos.writeObject("No tienes permisos para acceder");
+                }
+            } else {
+                oos.writeObject("ERROR");
+                oos.writeObject("Usuario o contraseña incorrectos");
+            }
 
-			out.flush();
+            oos.flush();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	public void getAlumnos(DataInputStream in, DataOutputStream out, ObjectOutputStream oos) {
-		try {
-			DAO dao = new DAO();
-			List<Users> alumnos = dao.getAlumnos(Integer.parseInt(in.readUTF()));
+    public void getAlumnos(ObjectInputStream ois, ObjectOutputStream oos) {
+        try {
+            DAO dao = new DAO();
+            int id = Integer.parseInt((String) ois.readObject());
+            List<Users> alumnos = dao.getAlumnos(id);
 
-			out.writeUTF("OK");
-			out.flush();
-
-			Users[] array = alumnos.toArray(new Users[0]);
+            oos.writeObject("OK");
+            oos.flush();
 
 
-			oos.writeObject(array);
-			oos.flush();
 
-		} catch (Exception e) {
-			try {
-				out.writeUTF("ERROR");
-				out.writeUTF("No se pudieron obtener los alumnos");
-				out.flush();
-			} catch (IOException ex) {
-			}
-		}
-	}
+            oos.writeObject(alumnos);
+            oos.flush();
 
-	public void getHorarios(DataInputStream in, DataOutputStream out, ObjectOutputStream oos) {
-		try {
-			int userId = Integer.parseInt(in.readUTF());
+        } catch (Exception e) {
+            try {
+                oos.writeObject("ERROR");
+                oos.writeObject("No se pudieron obtener los alumnos");
+                oos.flush();
+            } catch (IOException ex) {}
+        }
+    }
 
-			DAO dao = new DAO();
-			List<Object[]> lista = dao.getHorariosUsuario(userId);
+    public void getHorarios(ObjectInputStream ois, ObjectOutputStream oos) {
+        try {
+        	int userId = (Integer) ois.readObject();
 
-			out.writeUTF("OK");
-			out.flush();
+            DAO dao = new DAO();
+            ArrayList<Horarios> lista = dao.getHorariosUsuario(userId);
 
-			Horarios[] array = new Horarios[lista.size()];
+            oos.writeObject("OK");
+            oos.flush();
 
-			for (int i = 0; i < lista.size(); i++) {
-				Object[] row = lista.get(i);
+            ArrayList<Horarios> lista2 = new ArrayList<>();
 
-				String dia = (String) row[0];
-				byte hora = Byte.parseByte(row[1].toString());
-				String aula = row[2] == null ? "" : row[2].toString();
-				String moduloNombre = row[3] == null ? "" : row[3].toString();
+            for (int i = 0; i < lista.size(); i++) {
+                Horarios row = lista.get(i);
 
-				Modulos mod = new Modulos();
-				mod.setNombre(moduloNombre);
+                Modulos mod = new Modulos();
+                mod.setNombre(row.getModulos().getNombre());
 
-				Users profe = new Users();
-				profe.setId(userId);
+                Users profe = new Users();
+                profe.setId(userId);
 
-				array[i] = new Horarios(mod, profe, dia, hora);
-				array[i].setAula(aula);
-			}
+                lista2.add(new Horarios(mod, profe, row.getDia(), row.getHora(), row.getAula()));
+            }
 
-			oos.writeObject(array);
-			oos.flush();
 
-		} catch (Exception e) {
-			System.out.println("ERROR EN getHorarios: " + e.getMessage());
-			try {
-				out.writeUTF("ERROR");
-				out.writeUTF("No se pudieron obtener los horarios");
-				out.flush();
-			} catch (Exception ex) {
-			}
-		}
-	}
+            oos.writeObject(lista2);
+            oos.flush();
 
-	public void getProfesores(DataInputStream in, DataOutputStream out, ObjectOutputStream oos) {
-		try {
-			DAO dao = new DAO();
-			List<Users> lista = dao.getProfesoresTipo3(); //DEVUELVE PROFESORES TIPO 3 USUARIOS COMPLETOS
+        } catch (Exception e) {
+            System.out.println("ERROR EN getHorarios: " + e.getMessage());
+            try {
+                oos.writeObject("ERROR");
+                oos.writeObject("No se pudieron obtener los horarios");
+                oos.flush();
+            } catch (Exception ex) {}
+        }
+    }
 
-			out.writeUTF("OK");
-			out.flush();
 
-			oos.writeObject(lista.toArray(new Users[0]));
-			oos.flush();
-			
-		} catch (Exception e) {
-			try {
-				out.writeUTF("ERROR");
-				out.writeUTF("No se pudieron obtener los profesores");
-				out.flush();
-			} catch (Exception ex) {
-			}
-		}
-	}
+    public void getProfesores(ObjectInputStream ois, ObjectOutputStream oos) {
+        try {
+            DAO dao = new DAO();
+            List<Users> lista = dao.getProfesoresTipo3();
+
+            oos.writeObject("OK");
+            oos.flush();
+
+            oos.writeObject(lista.toArray(new Users[0]));
+            oos.flush();
+
+        } catch (Exception e) {
+            try {
+                oos.writeObject("ERROR");
+                oos.writeObject("No se pudieron obtener los profesores");
+                oos.flush();
+            } catch (Exception ex) {}
+        }
+    }
 
 }
