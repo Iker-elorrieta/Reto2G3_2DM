@@ -1,5 +1,7 @@
 package conexion;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -7,33 +9,47 @@ import java.net.Socket;
 public class ConexionServidor {
 
     private Socket socket;
-	private ObjectOutputStream out ;
+
+    private ObjectOutputStream oos;
     private ObjectInputStream ois;
 
+    private DataOutputStream dos;
+    private DataInputStream dis;
+
     public ConexionServidor() throws Exception {
+
         socket = new Socket("localhost", 5000);
-        out = new ObjectOutputStream(socket.getOutputStream());
+
+        dos = new DataOutputStream(socket.getOutputStream());
+        dis = new DataInputStream(socket.getInputStream());
+
+        oos = new ObjectOutputStream(socket.getOutputStream());
+        oos.flush();
+
         ois = new ObjectInputStream(socket.getInputStream());
-        out.flush();
-        
     }
 
-    public ObjectOutputStream getOut() {
-        return out;
+    public ObjectOutputStream getOos() {
+        return oos;
     }
-
- 
 
     public ObjectInputStream getOis() {
         return ois;
     }
 
-    public void cerrar() throws Exception {
-        ois.close();
-        out.close();
-        socket.close();
+    public DataOutputStream getDos() {
+        return dos;
     }
 
-	
-}
+    public DataInputStream getDis() {
+        return dis;
+    }
 
+    public void cerrar() throws Exception {
+        dis.close();
+        dos.close();
+        ois.close();
+        oos.close();
+        socket.close();
+    }
+}

@@ -70,7 +70,7 @@ public class Horarios implements java.io.Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
+    
     public Modulos getModulos() {
         return this.modulos;
     }

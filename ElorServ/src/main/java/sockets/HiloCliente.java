@@ -1,14 +1,13 @@
 package sockets;
 
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import controlador.ControladorServidor;
 import modelo.Acciones;
-
-
 
 public class HiloCliente extends Thread {
 
@@ -21,28 +20,35 @@ public class HiloCliente extends Thread {
 
     public void run() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             
 
-            while (true) { 
-                String accion = (String)ois.readObject();
+            while (true) {
 
-                switch (accion) { // SWITCH PARA ACCIONES EN EL SERVIDOR DEPENDIENDO DE LO QUE PIDA EL CLIENTE
+                // LEER ACCIÓN COMO STRING (ObjectInputStream)
+                String accion = (String) dis.readUTF();
+
+                switch (accion) {
 
                     case Acciones.LOGIN:
-                       controlador.login(ois,oos);
-                    
+                        controlador.login(dis, dos,oos);
                         break;
 
                     case Acciones.GET_ALUMNOS:
-						controlador.getAlumnos(ois,oos);
-						break;
-                    case Acciones.GET_HORARIOS:
-                        controlador.getHorarios(ois, oos);
+                        controlador.getAlumnos(dis, dos,oos);
                         break;
+
+                    case Acciones.GET_HORARIOS:
+                        controlador.getHorarios(dis, dos,oos);
+                        break;
+
                     case Acciones.GET_PROFESORES:
-                        controlador.getProfesores(ois,oos);
+                        controlador.getProfesores(dis, dos,oos);
                         break;
 
                     default:
@@ -57,5 +63,4 @@ public class HiloCliente extends Thread {
             System.out.println("Cliente desconectado");
         }
     }
-
 }

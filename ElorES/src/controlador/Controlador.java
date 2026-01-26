@@ -1,5 +1,7 @@
 package controlador;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -8,7 +10,6 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import Vista.Login;
@@ -27,6 +28,8 @@ import modelo.Users;
 public class Controlador {
 
 	private ConexionServidor con;
+	private DataOutputStream dos;
+	private DataInputStream dis;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	Users usuario = new Users();
@@ -34,47 +37,49 @@ public class Controlador {
 	public Controlador() {
 		try {
 			con = new ConexionServidor();
-			out = con.getOut();
+			dos = con.getDos();
+			dis = con.getDis();
+			out = con.getOos();
 			in = con.getOis();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public boolean login(String usuariotexto, String contrasenatexto) {
-		boolean resultado = false;
-		try {
-			out.writeObject("LOGIN");
-			out.writeObject(usuariotexto);
-			out.writeObject(contrasenatexto);
+	    boolean resultado = false;
+	    try {
+	        dos.writeUTF("LOGIN");
+	        dos.writeUTF(usuariotexto);
+	        dos.writeUTF(contrasenatexto);
+	        dos.flush();
 
-			String estado = (String) in.readObject();
+	        String estado = dis.readUTF();
 
-			switch (estado) {
+	        switch (estado) {
 
-			case "OK": {
-				resultado = true;
+	            case "OK": {
+	                resultado = true;
 
-				Users u = (Users) in.readObject();
-				usuario = u;
-				break;
-			}
+	                Users u = (Users) in.readObject();
+	                usuario = u;
+	                break;
+	            }
 
-			case "ERROR": {
-				String mensaje = (String) in.readObject();
-				System.out.println(mensaje);
-				break;
-			}
+	            case "ERROR": {
+	                String mensaje = dis.readUTF();
+	                System.out.println(mensaje);
+	                break;
+	            }
+	        }
 
-			default:
-				System.out.println("RESPUESTA DESCONOCIDA DEL SERVIDOR");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return resultado;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return resultado;
 	}
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -143,51 +148,49 @@ public class Controlador {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public String[][] obtenerAlumnosDelServidor() {
-		try {
-			out.writeObject("GET_ALUMNOS");
-			out.writeObject(usuario.getId());
+	    try {
+	        dos.writeUTF("GET_ALUMNOS");
+	        dos.writeInt(usuario.getId());
+	        dos.flush();
 
-			String estado = (String) in.readObject();
+	        String estado = dis.readUTF();
 
-			if (estado.equals("OK")) {
+	        if (estado.equals("OK")) {
 
-				Object recibido = in.readObject();
+	            Object recibido = in.readObject();
 
-				if (recibido instanceof List<?>) {
+	            if (recibido instanceof List<?>) {
+	                List<?> listaGenerica = (List<?>) recibido;
+	                ArrayList<Users> lista = new ArrayList<>();
 
-					List<?> listaGenerica = (List<?>) recibido;
+	                for (Object o : listaGenerica) {
+	                    if (o instanceof Users u) lista.add(u);
+	                }
 
-					ArrayList<Users> lista = new ArrayList<>();
+	                String[][] datos = new String[lista.size()][7];
 
-					for (Object o : listaGenerica) {
-						if (o instanceof Users u) {
-							lista.add(u);
-						}
-					}
+	                for (int i = 0; i < lista.size(); i++) {
+	                    Users u = lista.get(i);
+	                    datos[i][0] = u.getNombre();
+	                    datos[i][1] = u.getApellidos();
+	                    datos[i][2] = u.getEmail();
+	                    datos[i][3] = u.getTelefono1();
+	                    datos[i][4] = u.getTelefono2();
+	                    datos[i][5] = u.getDireccion();
+	                    datos[i][6] = u.getDni();
+	                }
 
-					String[][] datos = new String[lista.size()][7];
+	                return datos;
+	            }
+	        }
 
-					for (int i = 0; i < lista.size(); i++) {
-						Users u = lista.get(i);
-						datos[i][0] = u.getNombre();
-						datos[i][1] = u.getApellidos();
-						datos[i][2] = u.getEmail();
-						datos[i][3] = u.getTelefono1();
-						datos[i][4] = u.getTelefono2();
-						datos[i][5] = u.getDireccion();
-						datos[i][6] = u.getDni();
-					}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-					return datos;
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new String[0][0];
+	    return new String[0][0];
 	}
+
 
 	public void cargarAlumnos(Alumnos vista) {
 		String[][] datos = obtenerAlumnosDelServidor();
@@ -225,23 +228,21 @@ public class Controlador {
 
 	public String[][] obtenerHorariosDelServidor(int idProfesor) {
 	    try {
-	        out.writeObject("GET_HORARIOS");
-	        out.writeObject(idProfesor);
+	        dos.writeUTF("GET_HORARIOS");
+	        dos.writeInt(idProfesor);
+	        dos.flush();
 
-	        String estado = (String) in.readObject();
+	        String estado = dis.readUTF();
 
 	        if (!estado.equals("OK")) {
-	            String msg = (String) in.readObject();
+	            String msg = dis.readUTF();
 	            System.out.println("SERVIDOR RESPONDE ERROR: " + msg);
 	            return new String[0][0];
 	        }
 
-	        String json = (String) in.readObject();
+	        String json = dis.readUTF();
 
-	        Gson gson = new GsonBuilder()
-	                .excludeFieldsWithoutExposeAnnotation()
-	                .create();
-
+	        Gson gson = new Gson();
 	        List<Horarios> listaHorarios = gson.fromJson(
 	                json,
 	                new TypeToken<List<Horarios>>(){}.getType()
@@ -266,40 +267,41 @@ public class Controlador {
 	    return new String[0][0];
 	}
 
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public Users[] obtenerProfesores() {
-		try {
-			out.writeObject("GET_PROFESORES");
+	    try {
+	        dos.writeUTF("GET_PROFESORES");
+	        dos.flush();
 
-			String estado = (String) in.readObject();
+	        String estado = dis.readUTF();
 
-			if (estado.equals("OK")) {
+	        if (estado.equals("OK")) {
 
-				Object recibido = in.readObject();
+	            Object recibido = in.readObject();
 
-				if (recibido instanceof List<?>) {
+	            if (recibido instanceof List<?>) {
+	                List<?> listaGenerica = (List<?>) recibido;
+	                ArrayList<Users> lista = new ArrayList<>();
 
-					List<?> listaGenerica = (List<?>) recibido;
+	                for (Object o : listaGenerica) {
+	                    if (o instanceof Users u) lista.add(u);
+	                }
 
-					ArrayList<Users> lista = new ArrayList<>();
+	                return lista.stream()
+	                        .filter(u -> u.getId() != usuario.getId())
+	                        .toArray(Users[]::new);
+	            }
+	        }
 
-					for (Object o : listaGenerica) {
-						if (o instanceof Users h) {
-							lista.add(h);
-						}
-					}
-					return lista.stream().filter(u -> u.getId() != usuario.getId()).toArray(Users[]::new);
-				}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new Users[0];
+	    return new Users[0];
 	}
+
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
