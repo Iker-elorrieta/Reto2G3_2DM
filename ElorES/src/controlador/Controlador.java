@@ -7,6 +7,10 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import Vista.Login;
 import Vista.Menu;
 import Vista.OtrosHorarios;
@@ -16,6 +20,7 @@ import Vista.Reuniones;
 import Vista.Perfil;
 
 import conexion.ConexionServidor;
+import modelo.Centros;
 import modelo.Horarios;
 import modelo.Users;
 
@@ -189,55 +194,76 @@ public class Controlador {
 		vista.actualizarTabla(datos);
 	}
 
+	public List<Centros> pedirCentros() {
+		ArrayList<Centros> listaCentros = new ArrayList<>();
+
+		try {
+			out.writeUTF("GET_CENTROS");
+			out.flush();
+
+			Object recibido = in.readObject();
+
+			if (recibido instanceof List<?>) {
+
+				List<?> listaGenerica = (List<?>) recibido;
+
+				for (Object o : listaGenerica) {
+					if (o instanceof Centros c) {
+						listaCentros.add(c);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			listaCentros = null;
+		}
+		return listaCentros;
+
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public String[][] obtenerHorariosDelServidor(int idProfesor) {
-		try {
-			out.writeObject("GET_HORARIOS");
-			out.writeObject(idProfesor);
+	    try {
+	        out.writeObject("GET_HORARIOS");
+	        out.writeObject(idProfesor);
 
-			String estado = (String) in.readObject();
+	        String estado = (String) in.readObject();
 
-			if (estado.equals("OK")) {
+	        if (!estado.equals("OK")) {
+	            String msg = (String) in.readObject();
+	            System.out.println("SERVIDOR RESPONDE ERROR: " + msg);
+	            return new String[0][0];
+	        }
 
-				Object recibido = in.readObject();
+	        String json = (String) in.readObject();
 
-				if (recibido instanceof List<?>) {
+	        Gson gson = new GsonBuilder()
+	                .excludeFieldsWithoutExposeAnnotation()
+	                .create();
 
-					List<?> listaGenerica = (List<?>) recibido;
+	        List<Horarios> listaHorarios = gson.fromJson(
+	                json,
+	                new TypeToken<List<Horarios>>(){}.getType()
+	        );
 
-					ArrayList<Horarios> listaHorarios = new ArrayList<>();
+	        String[][] datos = new String[listaHorarios.size()][4];
 
-					for (Object o : listaGenerica) {
-						if (o instanceof Horarios h) {
-							listaHorarios.add(h);
-						}
-					}
+	        for (int i = 0; i < listaHorarios.size(); i++) {
+	            Horarios h = listaHorarios.get(i);
+	            datos[i][0] = h.getDia();
+	            datos[i][1] = String.valueOf(h.getHora());
+	            datos[i][2] = h.getModulos().getNombre();
+	            datos[i][3] = (h.getAula() == null) ? "" : h.getAula();
+	        }
 
-					String[][] datos = new String[listaHorarios.size()][4];
+	        return datos;
 
-					for (int i = 0; i < listaHorarios.size(); i++) {
-						Horarios h = listaHorarios.get(i);
-						datos[i][0] = h.getDia();
-						datos[i][1] = String.valueOf(h.getHora());
-						datos[i][2] = h.getModulos().getNombre();
-						datos[i][3] = (h.getAula() == null) ? "" : h.getAula();
-					}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-					return datos;
-				}
-
-			} else {
-				String msg = (String) in.readObject();
-				System.out.println("SERVIDOR RESPONDE ERROR: " + msg);
-				return new String[0][0];
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new String[0][0];
+	    return new String[0][0];
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -263,9 +289,7 @@ public class Controlador {
 							lista.add(h);
 						}
 					}
-					return lista.stream()
-					        .filter(u -> u.getId() != usuario.getId())
-					        .toArray(Users[]::new);
+					return lista.stream().filter(u -> u.getId() != usuario.getId()).toArray(Users[]::new);
 				}
 
 			}
@@ -282,6 +306,11 @@ public class Controlador {
 	public void cargarHorarios(Horario vista) {
 		String[][] horariosServidor = obtenerHorariosDelServidor(usuario.getId());
 		cargarHorarios(vista, horariosServidor);
+	}
+
+	public void cargarHorarios(Reuniones vista) {
+		String[][] horariosServidor = obtenerHorariosDelServidor(usuario.getId());
+		cargarHorariosyReuniones(vista, horariosServidor);
 	}
 
 	public void cargarHorarios(OtrosHorarios vista) {
@@ -333,6 +362,51 @@ public class Controlador {
 			h.actualizarTablaHorarios(tabla);
 		if (vista instanceof OtrosHorarios o)
 			o.actualizarTablaHorarios(tabla);
+
+	}
+
+	private void cargarHorariosyReuniones(Object vista, String[][] horariosServidor) {
+		String[][] tabla = new String[6][6];
+
+		for (int i = 0; i < 6; i++) {
+			tabla[i][0] = String.valueOf(i + 1);
+			tabla[i][1] = "";
+			tabla[i][2] = "";
+			tabla[i][3] = "";
+			tabla[i][4] = "";
+			tabla[i][5] = "";
+		}
+
+		for (String[] h : horariosServidor) {
+			String dia = h[0];
+			int hora = Integer.parseInt(h[1]) - 1;
+			String modulo = h[2];
+			String aula = h[3];
+
+			String contenido = modulo + " \n " + aula;
+
+			switch (dia.toUpperCase()) {
+			case "LUNES":
+				tabla[hora][1] = contenido;
+				break;
+			case "MARTES":
+				tabla[hora][2] = contenido;
+				break;
+			case "MIERCOLES":
+				tabla[hora][3] = contenido;
+				break;
+			case "JUEVES":
+				tabla[hora][4] = contenido;
+				break;
+			case "VIERNES":
+				tabla[hora][5] = contenido;
+				break;
+			}
+		}
+
+		if (vista instanceof Reuniones r)
+			r.actualizarTablaHorarios(tabla);
+
 	}
 
 }

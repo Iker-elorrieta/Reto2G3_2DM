@@ -5,10 +5,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import modelo.Users;
 import modelo.DAO;
 import modelo.Horarios;
-import modelo.Modulos;
 
 public class ControladorServidor {
 
@@ -54,6 +56,7 @@ public class ControladorServidor {
 
     public void getAlumnos(ObjectInputStream ois, ObjectOutputStream oos) {
         try {
+        	
             DAO dao = new DAO();
             int id = (Integer) ois.readObject();
             ArrayList<Users> alumnos = dao.getAlumnos(id);
@@ -75,7 +78,12 @@ public class ControladorServidor {
 
     public void getHorarios(ObjectInputStream ois, ObjectOutputStream oos) {
         try {
-        	int userId = (Integer) ois.readObject();
+        	Gson gson = new GsonBuilder()
+        	        .excludeFieldsWithoutExposeAnnotation()
+        	        .create();
+
+
+            int userId = (Integer) ois.readObject();
 
             DAO dao = new DAO();
             ArrayList<Horarios> lista = dao.getHorariosUsuario(userId);
@@ -83,22 +91,10 @@ public class ControladorServidor {
             oos.writeObject("OK");
             oos.flush();
 
-            ArrayList<Horarios> lista2 = new ArrayList<>();
+            String json = gson.toJson(lista);
+            System.out.println("JSON SERVIDOR = " + json);
 
-            for (int i = 0; i < lista.size(); i++) {
-                Horarios h = lista.get(i);
-
-                Modulos mod = new Modulos();
-                mod.setNombre(h.getModulos().getNombre());
-
-                Users profe = new Users();
-                profe.setId(userId);
-
-                lista2.add(new Horarios(mod, profe, h.getDia(), h.getHora(), h.getAula()));
-            }
-
-
-            oos.writeObject(lista2);
+            oos.writeObject(json);
             oos.flush();
 
         } catch (Exception e) {
@@ -110,6 +106,7 @@ public class ControladorServidor {
             } catch (Exception ex) {}
         }
     }
+
 
 
     public void getProfesores(ObjectInputStream ois, ObjectOutputStream oos) {
