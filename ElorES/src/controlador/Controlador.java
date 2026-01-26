@@ -39,7 +39,6 @@ public class Controlador {
 			con = new ConexionServidor();
 			dos = con.getDos();
 			dis = con.getDis();
-			out = con.getOos();
 			in = con.getOis();
 			
 		} catch (Exception e) {

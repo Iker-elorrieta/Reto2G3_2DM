@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ import modelo.Horarios;
 
 public class ControladorServidor {
 
-	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
+	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos, ObjectInputStream ois) {
 	    try {
 	        String userPlano = dis.readUTF();
 	        String passPlano = dis.readUTF();

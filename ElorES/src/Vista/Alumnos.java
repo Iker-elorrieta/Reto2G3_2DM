@@ -85,11 +85,19 @@ public class Alumnos extends JFrame {
 		scrollPane.setViewportView(table);
 
 		table.setModel(new DefaultTableModel(
-			    new Object[][] {},
-			    new String[] {
-			        "Nombre", "Apellido", "Correo", "Teléfono1", "Teléfono2", "Dirección", "DNI"
-			    }
-			));
+			            new Object[][] {},
+			            new String[] {
+			            		"Nombre", "Apellido", "Correo", "Teléfono1", "Teléfono2", "Dirección", "DNI"			            }
+			    ) {
+			        private static final long serialVersionUID = 1L;
+
+			        @Override
+			        public boolean isCellEditable(int row, int column) {
+			            return false; // ninguna celda editable
+			        }
+			    });
+
+
 
 
 		// 🔹 ALTURA Y FUENTE DEL ENCABEZADO

@@ -133,25 +133,19 @@ public class Horario extends JFrame {
 		scrollPane.setViewportView(table);
 
 		table.setModel(new DefaultTableModel(
-				new Object[][] {},
-
-			new String[] {
-				"Horas", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"
-			}
+		        new Object[][] {},
+		        new String[] {
+		            "Horas", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes"
+		        }
 		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] {
-				false, true, true, true, true, true
-			};
+		    private static final long serialVersionUID = 1L;
 
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false; // ninguna celda editable
+		    }
 		});
+
 
 		// 🔹 ALTURA Y FUENTE DEL ENCABEZADO
 		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 16));
