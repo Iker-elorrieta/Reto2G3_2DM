@@ -1,7 +1,9 @@
-package com.example.ElorServ;
+package apiRestControllers;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
+
+import apiDAO.LeerJson;
 import modelo.Centro;
 
 @RestController
@@ -16,7 +18,7 @@ public class CentroController {
 
     @GetMapping 
     public List<Centro> getCentros() {            //EJECUCCION DE FUNCIONES DEPENDIENDO DE LO DESEADO 
-        return service.getCentros();
+        return LeerJson.getCentros();
     }
 
     @PostMapping

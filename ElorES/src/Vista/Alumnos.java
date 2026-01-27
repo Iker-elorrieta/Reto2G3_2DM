@@ -66,37 +66,39 @@ public class Alumnos extends JFrame {
 		JPanel panelLogin = new JPanel();
 		panelLogin.setBackground(new Color(255, 255, 255));
 		panelLogin.setBorder(new LineBorder(new Color(0, 64, 128), 2, true));
-		panelLogin.setBounds(157, 90, 554, 313);
+		panelLogin.setBounds(31, 92, 820, 366);
 		contentPane.add(panelLogin);
 		panelLogin.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new LineBorder(new Color(0, 64, 128), 1, true));
-		scrollPane.setBounds(10, 11, 534, 291);
+		scrollPane.setBounds(0, 0, 820, 366);
 		panelLogin.add(scrollPane);
 		
 		table = new JTable();
 		table.setBorder(new LineBorder(new Color(0, 64, 128), 1, true));
-		table.setFont(new Font("Tahoma", Font.BOLD, 15));
+		table.setFont(new Font("Tahoma", Font.BOLD, 11));
 
 		// 🔹 ALTURA DE LAS FILAS
-		table.setRowHeight(40);
+		table.setRowHeight(45);
 
 		scrollPane.setViewportView(table);
 
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-			},
-			new String[] {
-				"Nombre", "Apellido"
-			}
-		));
+			            new Object[][] {},
+			            new String[] {
+			            		"Nombre", "Apellido", "Correo", "Teléfono1", "Teléfono2", "Dirección", "DNI"			            }
+			    ) {
+			        private static final long serialVersionUID = 1L;
+
+			        @Override
+			        public boolean isCellEditable(int row, int column) {
+			            return false; // ninguna celda editable
+			        }
+			    });
+
+
+
 
 		// 🔹 ALTURA Y FUENTE DEL ENCABEZADO
 		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -117,7 +119,7 @@ public class Alumnos extends JFrame {
 		btnVolver.setBackground(new Color(221, 175, 55));
 		btnVolver.addActionListener(e -> controlador.abrirMenu(this));
 
-		btnVolver.setBounds(355, 424, 136, 31);
+		btnVolver.setBounds(26, 469, 136, 31);
 		contentPane.add(btnVolver);
 		
 		JLabel logo2 = new JLabel("logo");

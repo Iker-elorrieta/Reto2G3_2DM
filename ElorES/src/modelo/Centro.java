@@ -4,11 +4,16 @@ import java.io.Serializable;
 
 public class Centro implements Serializable{
 
-    /**
+    @Override
+	public String toString() {
+		return NOM ;
+	}
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer CCEN;
+
+    private Integer CCEN;
     private String NOM;
     private String NOME;
     private String DGENRC;

@@ -110,7 +110,7 @@ public class Menu extends JFrame {
         btnReuniones.addActionListener(e -> controlador.abrirReuniones(this));
 
         // TEXTO BIENVENIDA
-        JLabel lblBienvenidoUsuario = new JLabel("Bienvenido, usuario.");
+        JLabel lblBienvenidoUsuario = new JLabel("Bienvenido" );
         lblBienvenidoUsuario.setHorizontalAlignment(SwingConstants.CENTER);
         lblBienvenidoUsuario.setForeground(new Color(0, 64, 128));
         lblBienvenidoUsuario.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 40));
@@ -142,11 +142,11 @@ public class Menu extends JFrame {
 
         // BOTÓN CERRAR SESIÓN
         JButton btnCerrarSesion = new JButton("Cerrar Sesión");
-        btnCerrarSesion.setBounds(732, 102, 136, 25);
+        btnCerrarSesion.setBounds(721, 102, 147, 25);
         contentPane.add(btnCerrarSesion);
-        btnCerrarSesion.setForeground(new Color(0, 0, 0));
+        btnCerrarSesion.setForeground(new Color(255, 255, 255));
+        btnCerrarSesion.setFont(new Font("Tahoma", Font.PLAIN, 18));
         btnCerrarSesion.setBackground(new Color(221, 175, 55));
-        btnCerrarSesion.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 12));
 
         btnCerrarSesion.addActionListener(e -> controlador.cerrarSesion(this));
 

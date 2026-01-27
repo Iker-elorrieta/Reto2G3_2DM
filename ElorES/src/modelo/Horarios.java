@@ -7,81 +7,81 @@ public class Horarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
-    private Integer idModulo;
-    private Integer idUser;
-    private String dia;
-    private byte hora;
-    private String aula;
-    private String observaciones;
+        private Integer id;
+        private Modulos modulos;
+        private Users users;
+        private String dia;
+        private byte hora;
+        private String aula;
+    
 
     public Horarios() {
     }
 
-    public Horarios(Integer id, Integer idModulo, Integer idUser, String dia, byte hora,
-                       String aula, String observaciones) {
-        this.id = id;
-        this.idModulo = idModulo;
-        this.idUser = idUser;
-        this.dia = dia;
-        this.hora = hora;
-        this.aula = aula;
-        this.observaciones = observaciones;
-    }
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public Integer getIdModulo() {
-        return idModulo;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setIdModulo(Integer idModulo) {
-        this.idModulo = idModulo;
-    }
 
-    public Integer getIdUser() {
-        return idUser;
-    }
+	public Modulos getModulos() {
+		return modulos;
+	}
 
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
-    }
 
-    public String getDia() {
-        return dia;
-    }
+	public void setModulos(Modulos modulos) {
+		this.modulos = modulos;
+	}
 
-    public void setDia(String dia) {
-        this.dia = dia;
-    }
 
-    public byte getHora() {
-        return hora;
-    }
+	public Users getUsers() {
+		return users;
+	}
 
-    public void setHora(byte hora) {
-        this.hora = hora;
-    }
 
-    public String getAula() {
-        return aula;
-    }
+	public void setUsers(Users users) {
+		this.users = users;
+	}
 
-    public void setAula(String aula) {
-        this.aula = aula;
-    }
 
-    public String getObservaciones() {
-        return observaciones;
-    }
+	public String getDia() {
+		return dia;
+	}
 
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
+
+	public void setDia(String dia) {
+		this.dia = dia;
+	}
+
+
+	public byte getHora() {
+		return hora;
+	}
+
+
+	public void setHora(byte hora) {
+		this.hora = hora;
+	}
+
+
+	public String getAula() {
+		return aula;
+	}
+
+
+	public void setAula(String aula) {
+		this.aula = aula;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+    
 }

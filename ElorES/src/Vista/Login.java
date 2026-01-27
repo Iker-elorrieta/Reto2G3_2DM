@@ -104,10 +104,10 @@ public class Login extends JFrame {
         panelLogin.add(lblLogin);
         
         JButton btnIniciar = new JButton("Iniciar Sesión");
-        btnIniciar.setForeground(Color.WHITE);
-        btnIniciar.setBackground(new Color(248, 188, 7));
-        btnIniciar.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 12));
-        btnIniciar.setBounds(107, 322, 120, 23);
+        btnIniciar.setForeground(new Color(255, 255, 255));
+        btnIniciar.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 15));
+        btnIniciar.setBackground(new Color(221, 175, 55));
+        btnIniciar.setBounds(92, 316, 151, 29);
         panelLogin.add(btnIniciar);
 
         // EL CONTROLADOR GESTIONA EL LOGIN

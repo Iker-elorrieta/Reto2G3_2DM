@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-01-2026 a las 14:42:14
+-- Tiempo de generación: 22-01-2026 a las 10:02:54
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -84,7 +84,7 @@ INSERT INTO `horarios` (`id`, `dia`, `hora`, `profe_id`, `modulo_id`, `aula`, `o
 (16, 'MIERCOLES', 3, 12, 13, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-14 18:56:49'),
 (17, 'MIERCOLES', 4, 4, 11, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-12 16:51:59'),
 (18, 'MIERCOLES', 5, 4, 11, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-12 16:51:59'),
-(19, 'MIERCOLES', 6, 4, 11, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-12 16:51:59'),
+(19, 'MIERCOLES', 6, 6, 11, 'Aula B101', NULL, '2025-12-12 16:51:59', '2026-01-21 12:22:53'),
 (20, 'JUEVES', 1, 11, 12, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-12 16:51:59'),
 (21, 'JUEVES', 2, 11, 12, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-12 16:51:59'),
 (22, 'JUEVES', 3, 4, 8, 'Aula B101', NULL, '2025-12-12 16:51:59', '2025-12-14 14:20:46'),
@@ -239,7 +239,7 @@ CREATE TABLE `matriculaciones` (
 
 INSERT INTO `matriculaciones` (`id`, `alum_id`, `ciclo_id`, `curso`, `fecha`) VALUES
 (1, 7, 1, 1, '2025-01-10'),
-(2, 8, 2, 1, '2025-01-11'),
+(2, 8, 1, 1, '2025-01-11'),
 (3, 9, 3, 2, '2025-01-12'),
 (4, 10, 4, 2, '2025-01-13');
 
@@ -265,11 +265,11 @@ CREATE TABLE `modulos` (
 INSERT INTO `modulos` (`id`, `nombre`, `nombre_eus`, `horas`, `ciclo_id`, `curso`) VALUES
 (1, 'Tutoria', 'Tutoretza', 1, 1, 0),
 (2, 'Guardia', 'Zaintza', 1, 1, 0),
-(3, 'Sistemas Informaticos', 'Informatika-sistemak', 165, 1, 1),
-(4, 'Bases de datos', 'Datu-baseak', 198, 1, 1),
+(3, 'Sistemas Informaticos', 'Informatika-sistemak', 165, 3, 1),
+(4, 'Bases de datos', 'Datu-baseak', 198, 3, 1),
 (5, 'Programación', 'Programazioa', 264, 1, 1),
 (6, 'Lenguajes de marcas', 'Markatzeko lengoaiak', 132, 1, 1),
-(7, 'Entornos de desarrollo', 'Garapen-inguruneak', 99, 1, 1),
+(7, 'Entornos de desarrollo', 'Garapen-inguruneak', 99, 3, 1),
 (8, 'Acceso a datos', 'Datu-atzipena', 120, 1, 2),
 (9, 'Desarrollo de interfaces', 'Interfazeen garapena', 140, 1, 2),
 (10, 'Programación multimedia y dispositivos móviles', 'Multimedia-programazioa eta gailu mugikorrak', 100, 1, 2),

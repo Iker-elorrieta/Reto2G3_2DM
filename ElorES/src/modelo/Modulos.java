@@ -7,23 +7,13 @@ public class Modulos implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private Integer idCiclo;
+    private Ciclo ciclos;   
     private String nombre;
     private String nombreEus;
     private int horas;
     private byte curso;
 
-    public Modulos() {
-    }
-
-    public Modulos(Integer id, Integer idCiclo, String nombre, String nombreEus, int horas, byte curso) {
-        this.id = id;
-        this.idCiclo = idCiclo;
-        this.nombre = nombre;
-        this.nombreEus = nombreEus;
-        this.horas = horas;
-        this.curso = curso;
-    }
+    public Modulos() {}
 
     public Integer getId() {
         return id;
@@ -33,12 +23,12 @@ public class Modulos implements Serializable {
         this.id = id;
     }
 
-    public Integer getIdCiclo() {
-        return idCiclo;
+    public Ciclo getCiclos() {
+        return ciclos;
     }
 
-    public void setIdCiclo(Integer idCiclo) {
-        this.idCiclo = idCiclo;
+    public void setCiclos(Ciclo ciclos) {
+        this.ciclos = ciclos;
     }
 
     public String getNombre() {

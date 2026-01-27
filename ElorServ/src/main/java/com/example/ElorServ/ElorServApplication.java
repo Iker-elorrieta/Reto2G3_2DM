@@ -5,7 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import sockets.Servidor;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+	    "com.example.ElorServ",
+	    "apiRestControllers",
+	    "apiRestServices",
+	    "apiDAO"
+	})
+
 public class ElorServApplication {
 
     public static void main(String[] args) {
