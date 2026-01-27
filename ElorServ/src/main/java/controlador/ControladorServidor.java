@@ -7,8 +7,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -25,7 +23,6 @@ public class ControladorServidor {
 	    try {
 	        String userPlano = dis.readUTF();
 	        String passPlano = dis.readUTF();
-
 
 	        String usuarioCifrado = CypherAES.encrypt(userPlano);
 	        String passwordCifrada = CypherAES.encrypt(passPlano);

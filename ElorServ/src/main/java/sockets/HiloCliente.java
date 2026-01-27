@@ -39,11 +39,9 @@ public class HiloCliente extends Thread {
                         controlador.login(dis, dos,oos,ois);
                         break;
 
-
                     case Acciones.GET_ALUMNOS:
                         controlador.getAlumnos(dis, dos,oos);
                         break;
-
 
                     case Acciones.GET_HORARIOS:
                         controlador.getHorarios(dis, dos,oos);
