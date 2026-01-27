@@ -2,9 +2,13 @@ package modelo;
 
 import java.io.Serializable;
 
-public class Centros implements Serializable{
+public class Centro implements Serializable{
 
-    /**
+    @Override
+	public String toString() {
+		return NOM ;
+	}
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -34,7 +38,7 @@ public class Centros implements Serializable{
     private Double LATITUD;
     private Double LONGITUD;
 
-    public Centros() {}
+    public Centro() {}
 
     public Integer getCCEN() { return CCEN; }
     public void setCCEN(Integer CCEN) { this.CCEN = CCEN; }

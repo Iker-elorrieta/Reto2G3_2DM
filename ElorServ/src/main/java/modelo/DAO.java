@@ -60,4 +60,17 @@ public class DAO {
 		return new ArrayList<>(listaHibernate);
 	}
 
+	public ArrayList<Reuniones> getReunionesProfesor(int idProfesor) {
+		Session sesion = HibernateUtil.getSessionFactory().openSession();
+
+		String hql = "FROM Reuniones r WHERE r.usersByProfesorId = " + idProfesor;
+
+		Query<Reuniones> q = sesion.createQuery(hql, Reuniones.class);
+
+		List<Reuniones> listaHibernate = q.list();
+
+		return new ArrayList<>(listaHibernate);
+	
+	}
+
 }

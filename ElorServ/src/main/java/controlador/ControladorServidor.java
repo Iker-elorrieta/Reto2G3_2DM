@@ -15,6 +15,7 @@ import modelo.Users;
 import modelo.Centro;
 import modelo.DAO;
 import modelo.Horarios;
+import modelo.Reuniones;
 
 public class ControladorServidor {
 
@@ -119,6 +120,28 @@ public class ControladorServidor {
 	        } catch (Exception ex) {}
 	    }
 	}
+	public void getReuniones(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
+	    try {
+	        int idProfesor = dis.readInt();
+
+	        DAO dao = new DAO();
+	        ArrayList<Reuniones> lista = dao.getReunionesProfesor(idProfesor);
+
+	        dos.writeUTF("OK");
+	        dos.flush();
+
+	        oos.writeObject(lista);
+	        oos.flush();
+
+	    } catch (Exception e) {
+	        try {
+	            dos.writeUTF("ERROR");
+	            dos.writeUTF("No se pudieron obtener las reuniones");
+	            dos.flush();
+	        } catch (Exception ex) {}
+	    }
+	}
+
 
 	public void getProfesores(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
