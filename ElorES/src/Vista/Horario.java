@@ -189,7 +189,7 @@ public class Horario extends JFrame {
 				System.err.println("error en imagen.");
 			}
 		}
-		controlador.cargarHorarios(this);
+		
 
 		
 	}

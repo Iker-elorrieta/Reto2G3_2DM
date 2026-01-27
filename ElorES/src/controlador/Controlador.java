@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,6 +12,8 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+
 
 import javax.swing.JFrame;
 
@@ -73,6 +76,7 @@ public class Controlador {
 	                break;
 	            }
 
+
 	            case "ERROR": {
 	                String mensaje = dis.readUTF();
 	                System.out.println(mensaje);
@@ -89,11 +93,7 @@ public class Controlador {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void cambiarVista(JFrame vistaActual, JFrame vistaNueva) {
-		vistaActual.setVisible(false);
-		vistaNueva.setVisible(true);
-		vistaActual.dispose();
-	}
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -582,7 +582,22 @@ public class Controlador {
 		if (vista instanceof OtrosHorarios o)
 			o.actualizarTablaHorarios(tabla);
 
-	}
+	
+
+    }
+
+    
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // MÉTODO GENERAL PARA CAMBIAR DE VISTA
+    public void cambiarVista(JFrame vistaActual, JFrame vistaNueva) {
+        vistaActual.setVisible(false);
+        vistaNueva.setVisible(true);
+        vistaActual.dispose();
+    }
+
+
 
 
 }
