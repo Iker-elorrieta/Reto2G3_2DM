@@ -76,10 +76,9 @@ public class ApiDAO {
     public List<Horarios> getHorariosProfesor(int profeId) {
         Session session = getSession();
         Query<Horarios> q = session.createQuery(
-            "FROM Horarios h WHERE h.users.id = :id",
+            "FROM Horarios h WHERE h.users = " + profeId,
             Horarios.class
         );
-        q.setParameter("id", profeId);
 
         List<Horarios> lista = q.list();
         session.close();
@@ -92,14 +91,13 @@ public class ApiDAO {
 
         Query<Horarios> q = session.createQuery(
             "SELECT h FROM Horarios h " +
-            "WHERE h.modulos.ciclos.id IN (" +
+            "WHERE h.modulos.ciclos IN (" +
                 "SELECT mat.ciclos.id FROM Matriculaciones mat " +
-                "WHERE mat.users.id = :id" +
+                "WHERE mat.users = " + alumnoId+
             ")",
             Horarios.class
         );
 
-        q.setParameter("id", alumnoId);
 
         List<Horarios> lista = q.list();
         session.close();
