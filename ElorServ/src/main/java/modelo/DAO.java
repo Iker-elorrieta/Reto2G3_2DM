@@ -26,7 +26,7 @@ public class DAO {
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
 
 		String hql = "SELECT DISTINCT mat.users FROM Matriculaciones mat WHERE mat.users.tipos.name = 'alumno' "
-				+ "AND mat.ciclos.id IN (SELECT h.modulos.ciclos.id FROM Horarios h WHERE h.users = " + profesorId
+				+ "AND mat.ciclos IN (SELECT h.modulos.ciclos FROM Horarios h WHERE h.users = " + profesorId
 				+ ")";
 		Query<Users> q = sesion.createQuery(hql, Users.class);
 

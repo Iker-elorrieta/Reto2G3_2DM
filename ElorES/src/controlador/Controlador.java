@@ -300,7 +300,37 @@ public class Controlador {
 
 	    return new Users[0];
 	}
+	public ArrayList<Centros> obtenerCentros() {
+		ArrayList<Centros> lista = new ArrayList<>();
+	    try {
+            
+	        dos.writeUTF("GET_CENTROS");
+	        dos.flush();
 
+	        String estado = dis.readUTF();
+
+	        if (estado.equals("OK")) {
+
+	            Object recibido = in.readObject();
+
+	            if (recibido instanceof List<?>) {
+	                List<?> listaGenerica = (List<?>) recibido;
+
+	                for (Object o : listaGenerica) {
+	                    if (o instanceof Centros c) lista.add(c);
+	                }
+	               System.out.println(lista);
+	            }
+	        }else {
+	        	System.out.println("No se han cargado los Centros en cliente");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return lista;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

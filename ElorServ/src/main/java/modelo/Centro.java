@@ -1,8 +1,14 @@
 package modelo;
 
-public class Centro {
+import java.io.Serializable;
 
-    private Integer CCEN;
+public class Centro implements Serializable{
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer CCEN;
     private String NOM;
     private String NOME;
     private String DGENRC;

@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class LeerJson {
 
-    private List<Centro> centros;
+    private static List<Centro> centros;
 
     public LeerJson() {
         try {
@@ -33,7 +33,7 @@ public class LeerJson {
     
 // FUNCIONES PARA EJECUTAR EN EL CONTROLADOR MEDIANTE POST GET Y DEMÁS
     
-    public List<Centro> getCentros() {
+    public static List<Centro> getCentros() {
         return centros;
     }
 

@@ -246,7 +246,6 @@ public class Reuniones extends JFrame {
 			}
 		}
 		controlador.cargarHorarios(this);
-
 		
 	}
 

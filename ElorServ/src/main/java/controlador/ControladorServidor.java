@@ -5,11 +5,14 @@ import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import apiDAO.LeerJson;
 import modelo.Users;
+import modelo.Centro;
 import modelo.DAO;
 import modelo.Horarios;
 
@@ -99,8 +102,23 @@ public class ControladorServidor {
 	    }
 	}
 
+	public void getCentros(DataOutputStream dos, ObjectOutputStream oos) {
+	    try {
+	        List<Centro> lista =  LeerJson.getCentros(); 
+	        dos.writeUTF("OK");
+	        dos.flush();
 
+	        oos.writeObject(lista);
+	        oos.flush();
 
+	    } catch (Exception e) {
+	        try {
+	            dos.writeUTF("ERROR");
+	            dos.writeUTF("No se pudieron obtener los centros");
+	            dos.flush();
+	        } catch (Exception ex) {}
+	    }
+	}
 
 	public void getProfesores(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {

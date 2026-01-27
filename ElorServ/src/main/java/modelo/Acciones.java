@@ -9,4 +9,5 @@ public class Acciones {
     public static final String GET_REUNIONES = "GET_REUNIONES";
     public static final String GET_MATRICULACIONES = "GET_MATRICULACIONES";
 	public static final String GET_PROFESORES = "GET_PROFESORES";
+	public static final String GET_CENTROS = "GET_CENTROS";
 }

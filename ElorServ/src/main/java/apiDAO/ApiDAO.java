@@ -92,7 +92,7 @@ public class ApiDAO {
         Query<Horarios> q = session.createQuery(
             "SELECT h FROM Horarios h " +
             "WHERE h.modulos.ciclos IN (" +
-                "SELECT mat.ciclos.id FROM Matriculaciones mat " +
+                "SELECT mat.ciclos FROM Matriculaciones mat " +
                 "WHERE mat.users = " + alumnoId+
             ")",
             Horarios.class

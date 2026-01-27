@@ -50,7 +50,9 @@ public class HiloCliente extends Thread {
                     case Acciones.GET_PROFESORES:
                         controlador.getProfesores(dis, dos,oos);
                         break;
-
+                    case Acciones.GET_CENTROS:
+                        controlador.getCentros(dos,oos);
+                        break;
                     default:
                         oos.writeObject("ERROR");
                         oos.writeObject("Acción no reconocida");
