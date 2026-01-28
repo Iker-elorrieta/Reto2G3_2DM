@@ -7,7 +7,8 @@ import com.google.gson.reflect.TypeToken;
 import modelo.Centro;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -20,7 +21,14 @@ public class LeerJson {
         try {
             Gson gson = new Gson();
 
-            JsonObject root = gson.fromJson(new FileReader("EuskadiLatLon.json"), JsonObject.class); //	LECTURA DE JSON MEDIANTE GSON
+            // Cargar JSON desde el classpath (funciona dentro del JAR)
+            InputStream is = getClass().getClassLoader().getResourceAsStream("EuskadiLatLon.json");
+
+            if (is == null) {
+                throw new RuntimeException("No se encontró el archivo EuskadiLatLon.json en resources");
+            }
+
+            JsonObject root = gson.fromJson(new InputStreamReader(is), JsonObject.class);
             JsonArray array = root.getAsJsonArray("CENTROS");
 
             Type listType = new TypeToken<List<Centro>>(){}.getType();
@@ -30,9 +38,7 @@ public class LeerJson {
             e.printStackTrace();
         }
     }
-    
-// FUNCIONES PARA EJECUTAR EN EL CONTROLADOR MEDIANTE POST GET Y DEMÁS
-    
+
     public static List<Centro> getCentros() {
         return centros;
     }

@@ -18,7 +18,7 @@ public class ConexionServidor {
 
     public ConexionServidor() throws Exception {
 
-        socket = new Socket("localhost", 5000);
+    	socket = new Socket("10.5.13.234", 5000);
 
         dos = new DataOutputStream(socket.getOutputStream());
         dis = new DataInputStream(socket.getInputStream());

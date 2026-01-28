@@ -12,10 +12,11 @@ import modelo.Acciones;
 public class HiloCliente extends Thread {
 
     private Socket socket;
-    private ControladorServidor controlador = new ControladorServidor();
+    private ControladorServidor controlador;
 
-    public HiloCliente(Socket socket) {
+    public HiloCliente(Socket socket, ControladorServidor controlador) {
         this.socket = socket;
+        this.controlador = controlador;
     }
 
     public void run() {
@@ -30,32 +31,34 @@ public class HiloCliente extends Thread {
 
             while (true) {
 
-                // LEER ACCIÓN COMO STRING (ObjectInputStream)
-                String accion = (String) dis.readUTF();
+                String accion = dis.readUTF();
 
                 switch (accion) {
 
                     case Acciones.LOGIN:
-                        controlador.login(dis, dos,oos,ois);
+                        controlador.login(dis, dos, oos, ois);
                         break;
 
                     case Acciones.GET_ALUMNOS:
-                        controlador.getAlumnos(dis, dos,oos);
+                        controlador.getAlumnos(dis, dos, oos);
                         break;
 
                     case Acciones.GET_HORARIOS:
-                        controlador.getHorarios(dis, dos,oos);
+                        controlador.getHorarios(dis, dos, oos);
                         break;
 
                     case Acciones.GET_PROFESORES:
-                        controlador.getProfesores(dis, dos,oos);
+                        controlador.getProfesores(dis, dos, oos);
                         break;
+
                     case Acciones.GET_CENTROS:
-                        controlador.getCentros(dos,oos);
+                        controlador.getCentros(dos, oos);
                         break;
+
                     case Acciones.GET_REUNIONES:
-                        controlador.getReuniones(dis, dos,oos);
+                        controlador.getReuniones(dis, dos, oos);
                         break;
+
                     default:
                         oos.writeObject("ERROR");
                         oos.writeObject("Acción no reconocida");

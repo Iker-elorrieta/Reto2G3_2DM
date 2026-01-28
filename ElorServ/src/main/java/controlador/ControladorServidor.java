@@ -7,6 +7,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,7 +20,11 @@ import modelo.DAO;
 import modelo.Horarios;
 import modelo.Reuniones;
 
+@Component
 public class ControladorServidor {
+	@Autowired
+	private DAO dao;
+
 
 	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos, ObjectInputStream ois) {
 	    try {
@@ -27,7 +34,6 @@ public class ControladorServidor {
 	        String usuarioCifrado = CypherAES.encrypt(userPlano);
 	        String passwordCifrada = CypherAES.encrypt(passPlano);
 
-	        DAO dao = new DAO();
 	        Users u = dao.login(usuarioCifrado, passwordCifrada);
 
 	        if (u != null) {
@@ -57,7 +63,6 @@ public class ControladorServidor {
 	    try {
 	        int id = dis.readInt();
 
-	        DAO dao = new DAO();
 	        ArrayList<Users> alumnos = dao.getAlumnos(id);
 
 	        dos.writeUTF("OK");
@@ -84,7 +89,6 @@ public class ControladorServidor {
 
 	        int userId = dis.readInt();
 
-	        DAO dao = new DAO();
 	        ArrayList<Horarios> lista = dao.getHorariosUsuario(userId);
 
 	        dos.writeUTF("OK");
@@ -124,7 +128,6 @@ public class ControladorServidor {
 	    try {
 	        int idProfesor = dis.readInt();
 
-	        DAO dao = new DAO();
 	        ArrayList<Reuniones> lista = dao.getReunionesProfesor(idProfesor);
 
 	        dos.writeUTF("OK");
@@ -145,7 +148,6 @@ public class ControladorServidor {
 
 	public void getProfesores(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
-	        DAO dao = new DAO();
 	        ArrayList<Users> lista = dao.getProfesoresTipo3();
 
 	        dos.writeUTF("OK");
