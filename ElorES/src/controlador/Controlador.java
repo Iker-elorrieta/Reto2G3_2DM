@@ -353,21 +353,43 @@ public class Controlador {
 	        String estado = r.getEstado().trim().toUpperCase();  // pendiente / aceptada / rechazada
 
 	        if (hayClase) {
+	            // Conflicto detectado
 	            tabla[hora][col] = tabla[hora][col] + "\n" + reunionTexto;
 	            colores[hora][col] = "GRIS";
+
 	        } else {
 	            tabla[hora][col] = reunionTexto;
 
-	            switch (estado.toUpperCase()) {
+	            switch (estado) {
 	                case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
 	                case "ACEPTADA": colores[hora][col] = "VERDE"; break;
 	                case "DENEGADA": colores[hora][col] = "ROJO"; break;
+	                case "CONFLICTO": colores[hora][col] = "GRIS"; break;
 	                default: colores[hora][col] = "AMARILLO"; break;
 	            }
 	        }
+
 	    }
 
 	    vista.actualizarTablaHorarios(tabla, colores);
+	}
+
+	public Reuniones buscarReunionPorTexto(String textoCelda) {
+
+	    for (Reuniones r : listaReuniones) {
+
+	        String centro = nombreCentro(r.getIdCentro(), obtenerCentros());
+	        String reunionTexto = r.getTitulo() + "\n" + centro;
+
+	        // Si la celda contiene el texto de la reunión, es esta
+	        if (textoCelda.contains(reunionTexto)) {
+	            return r;
+	        }
+
+
+	    
+	}
+	    return null;
 	}
 
 
@@ -511,13 +533,8 @@ public class Controlador {
 	    return lista;
 	}
 
-	public boolean actualizarEstadoReunion(int row, int col, String estado) {
+	public boolean actualizarEstadoReunionPorId(int idReunion, String estado) {
 	    try {
-	        Reuniones r = buscarReunionPorCelda(row, col);
-	        if (r == null) return false;
-
-	        int idReunion = r.getIdReunion();
-
 	        dos.writeUTF("ACTUALIZAR_ESTADO_REUNION");
 	        dos.writeInt(idReunion);
 	        dos.writeUTF(estado);
@@ -532,42 +549,8 @@ public class Controlador {
 	    }
 	}
 
-	private Reuniones buscarReunionPorCelda(int row, int col) {
-	    if (listaReuniones == null) return null;
 
-	    Locale locale = Locale.forLanguageTag("es-ES");
-
-	    for (Reuniones r : listaReuniones) {
-
-	        LocalDateTime fecha = r.getFecha().toLocalDateTime();
-
-	        // MISMO CÓDIGO QUE EN cargarHorariosyReuniones()
-	        String dia = fecha.getDayOfWeek()
-	                          .getDisplayName(TextStyle.FULL, locale)
-	                          .toUpperCase();
-
-	        dia = Normalizer.normalize(dia, Normalizer.Form.NFD)
-	                        .replaceAll("\\p{M}", "");
-
-	        int horaReal = fecha.getHour();
-	        int hora = horaReal - 7;
-
-	        if (hora != row) continue;
-
-	        int colReunion = switch (dia) {
-	            case "LUNES" -> 1;
-	            case "MARTES" -> 2;
-	            case "MIERCOLES" -> 3;
-	            case "JUEVES" -> 4;
-	            case "VIERNES" -> 5;
-	            default -> -1;
-	        };
-
-	        if (colReunion == col) return r;
-	    }
-
-	    return null;
-	}
+	
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

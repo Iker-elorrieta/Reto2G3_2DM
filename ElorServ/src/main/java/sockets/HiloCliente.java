@@ -59,7 +59,7 @@ public class HiloCliente extends Thread {
                         controlador.getReuniones(dis, dos, oos);
                         break;
                     case Acciones.ACTUALIZAR_REUNIONES:
-                    	controlador.actualizarReuniones(dis,dos);
+                    	controlador.actualizarEstadoReunion(dis,dos);
                     	break;
                     case Acciones.CREAR_REUNION:
                     	controlador.crearReunion(dis, dos, ois);

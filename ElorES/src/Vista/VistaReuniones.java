@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Controlador;
+import modelo.Reuniones;
 import modelo.Users;
 
 import java.awt.Dimension;
@@ -166,12 +167,21 @@ public class VistaReuniones extends JFrame {
             int col = table.getSelectedColumn();
             if (row == -1 || col == -1) return;
 
-            boolean ok = controlador.actualizarEstadoReunion(row, col, "ACEPTADA");
+            String contenido = table.getValueAt(row, col).toString();
+            Reuniones r = controlador.buscarReunionPorTexto(contenido);
+            if (r == null) return;
 
-            if (ok) {
-                controlador.cargarHorariosyReuniones(this); // recarga desde BD
+         String estado = r.getEstado().trim().toLowerCase();
+         if (estado.equals("aceptada") || estado.equals("denegada")) {
+             return;
+         }
+
+            if (r != null) {
+                boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "aceptada");
+                if (ok) controlador.cargarHorariosyReuniones(this);
             }
         });
+
 
 
         btnRechazar.addActionListener(e -> {
@@ -179,12 +189,19 @@ public class VistaReuniones extends JFrame {
             int col = table.getSelectedColumn();
             if (row == -1 || col == -1) return;
 
-            boolean ok = controlador.actualizarEstadoReunion(row, col, "DENEGADA");
-
-            if (ok) {
-                controlador.cargarHorariosyReuniones(this); // recarga desde BD
+            String contenido = table.getValueAt(row, col).toString();
+            Reuniones r = controlador.buscarReunionPorTexto(contenido);
+            String estado = r.getEstado().trim().toLowerCase();
+            if (estado.equals("aceptada") || estado.equals("denegada")) {
+                return;
+            }
+            if (r != null) {
+                boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "denegada");
+                if (ok) controlador.cargarHorariosyReuniones(this);
             }
         });
+
+
 
 
         controlador.cargarHorariosyReuniones(this);

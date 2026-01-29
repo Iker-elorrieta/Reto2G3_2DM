@@ -174,10 +174,10 @@ public class ControladorServidor {
 
 
 
-	public void actualizarReuniones(DataInputStream dis, DataOutputStream dos) {
+	public void actualizarEstadoReunion(DataInputStream dis, DataOutputStream dos) {
 	    try {
 	        int idReunion = dis.readInt();
-	        String estado = dis.readUTF();
+	        String estado = dis.readUTF(); // viene en minúsculas del cliente
 
 	        boolean ok = dao.actualizarEstadoReunion(idReunion, estado);
 
@@ -192,15 +192,12 @@ public class ControladorServidor {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        try {
-				dos.writeUTF("ERROR");
-			
-	        dos.flush();
-	    } catch (IOException e1) {
-			e1.printStackTrace();
-		}
+	            dos.writeUTF("ERROR");
+	            dos.flush();
+	        } catch (IOException ignored) {}
 	    }
-
 	}
+
 
 
 
