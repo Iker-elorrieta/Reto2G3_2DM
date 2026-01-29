@@ -58,7 +58,12 @@ public class HiloCliente extends Thread {
                     case Acciones.GET_REUNIONES:
                         controlador.getReuniones(dis, dos, oos);
                         break;
-
+                    case Acciones.ACTUALIZAR_REUNIONES:
+                    	controlador.actualizarReuniones(dis,dos);
+                    	break;
+                    case Acciones.CREAR_REUNION:
+                    	controlador.crearReunion(dis, dos, ois);
+                    	break;
                     default:
                         oos.writeObject("ERROR");
                         oos.writeObject("Acción no reconocida");

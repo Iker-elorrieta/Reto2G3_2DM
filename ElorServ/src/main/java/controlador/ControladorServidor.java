@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -126,6 +127,10 @@ public class ControladorServidor {
 	}
 	public void getReuniones(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
+	        Gson gson = new GsonBuilder()
+	                .excludeFieldsWithoutExposeAnnotation()
+	                .create();
+
 	        int idProfesor = dis.readInt();
 
 	        ArrayList<Reuniones> lista = dao.getReunionesProfesor(idProfesor);
@@ -133,8 +138,9 @@ public class ControladorServidor {
 	        dos.writeUTF("OK");
 	        dos.flush();
 
-	        oos.writeObject(lista);
-	        oos.flush();
+	        String json = gson.toJson(lista);
+	        dos.writeUTF(json);
+	        dos.flush();
 
 	    } catch (Exception e) {
 	        try {
@@ -144,6 +150,7 @@ public class ControladorServidor {
 	        } catch (Exception ex) {}
 	    }
 	}
+
 
 
 	public void getProfesores(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
@@ -164,6 +171,63 @@ public class ControladorServidor {
 	        } catch (Exception ex) {}
 	    }
 	}
+
+
+
+	public void actualizarReuniones(DataInputStream dis, DataOutputStream dos) {
+	    try {
+	        int idReunion = dis.readInt();
+	        String estado = dis.readUTF();
+
+	        boolean ok = dao.actualizarEstadoReunion(idReunion, estado);
+
+	        if (ok) {
+	            dos.writeUTF("OK");
+	        } else {
+	            dos.writeUTF("ERROR");
+	        }
+
+	        dos.flush();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        try {
+				dos.writeUTF("ERROR");
+			
+	        dos.flush();
+	    } catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	    }
+
+	}
+
+
+
+	public void crearReunion(DataInputStream dis, DataOutputStream dos, ObjectInputStream ois) {
+	    try {
+	        Reuniones r = (Reuniones) ois.readObject();
+
+	        boolean ok = dao.crearReunionObjeto(r);
+
+	        if (ok) {
+	            dos.writeUTF("OK");
+	        } else {
+	            dos.writeUTF("ERROR");
+	        }
+
+	        dos.flush();
+
+	    } catch (Exception e) {
+	        try {
+	            dos.writeUTF("ERROR");
+	            dos.flush();
+	        } catch (IOException ignored) {}
+	    }
+	}
+
+	
+	
 
 
 }

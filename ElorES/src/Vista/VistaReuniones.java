@@ -164,24 +164,28 @@ public class VistaReuniones extends JFrame {
         btnAceptarReunion.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
-
             if (row == -1 || col == -1) return;
 
-            //controlador.actualizarEstadoReunion(row, col, "ACEPTADA");
-            colores[row][col] = "VERDE";
-            table.repaint();
+            boolean ok = controlador.actualizarEstadoReunion(row, col, "ACEPTADA");
+
+            if (ok) {
+                controlador.cargarHorariosyReuniones(this); // recarga desde BD
+            }
         });
+
 
         btnRechazar.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
-
             if (row == -1 || col == -1) return;
 
-            //controlador.actualizarEstadoReunion(row, col, "RECHAZADA");
-            colores[row][col] = "ROJO";
-            table.repaint();
+            boolean ok = controlador.actualizarEstadoReunion(row, col, "DENEGADA");
+
+            if (ok) {
+                controlador.cargarHorariosyReuniones(this); // recarga desde BD
+            }
         });
+
 
         controlador.cargarHorariosyReuniones(this);
     }

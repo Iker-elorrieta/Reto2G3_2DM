@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -78,5 +79,55 @@ public class DAO {
         return new ArrayList<>(listaHibernate);
     
     }
+
+    public boolean actualizarEstadoReunion(int idReunion, String estado) {
+        Transaction tx = null;
+
+        try {
+        Session session = hibernateUtil.getSessionFactory().openSession();
+
+            tx = session.beginTransaction();
+
+            Reuniones r = session.get(Reuniones.class, idReunion);
+            if (r == null) {
+                return false;
+            }
+
+            r.setEstado(estado);
+
+            session.merge(r);
+            tx.commit();
+
+            return true;
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    
+
+    }
+
+    public boolean crearReunionObjeto(Reuniones r) {
+        Transaction tx = null;
+
+        try {
+        Session session = hibernateUtil.getSessionFactory().openSession();
+
+            tx = session.beginTransaction();
+            session.persist(r);
+            tx.commit();
+
+            return true;
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 }

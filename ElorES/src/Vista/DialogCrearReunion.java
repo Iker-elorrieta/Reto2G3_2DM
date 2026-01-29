@@ -19,6 +19,7 @@ import com.toedter.calendar.JCalendar;
 
 import controlador.Controlador;
 import modelo.Centro;
+import modelo.Reuniones;
 import modelo.Users;
 
 public class DialogCrearReunion extends JDialog {
@@ -99,8 +100,38 @@ public class DialogCrearReunion extends JDialog {
 		
 
         btnCrear.addActionListener(e -> {
-            // Lógica de crear la reunión
+            Reuniones nueva = controlador.construirReunionDesdeDialog(
+                    lblDiaHoraValor.getText(),
+                    txtTitulo.getText(),
+                    txtTema.getText(),
+                    txtAula.getText(),
+                    (Centro) comboUbicacion.getSelectedItem(),
+                    (Users) comboAlumnos.getSelectedItem()
+            );
+
+            boolean ok = controlador.crearReunion(nueva);
+
+            if (ok) {
+                // Recargar reuniones y horarios
+                controlador.cargarHorariosyReuniones((VistaReuniones) getParent());
+               /* Hace:
+
+                	obtenerReuniones() → ahora lee JSON del servidor
+
+                	obtenerHorariosDelServidor()
+
+                	mezcla horarios + reuniones
+
+                	actualiza colores*/
+
+                dispose(); 
+            } else {
+                System.out.println("Error creando reunión");
+            }
+
         });
+
+
     }
 
     private void abrirSelectorFechaHora(JLabel lblDiaHoraValor) {
