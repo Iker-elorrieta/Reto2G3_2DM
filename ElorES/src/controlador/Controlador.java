@@ -346,6 +346,62 @@ public class Controlador {
 	        };
 
 	        if (col == -1) continue;
+	     // Detectar si ya hay una reunión en la celda
+	        boolean hayReunion = tabla[hora][col].contains("\n") ||
+	                             (!tabla[hora][col].isBlank() && !tabla[hora][col].matches(".*\\d.*"));
+
+	        if (hayReunion) {
+
+	            // Buscar la reunión anterior en esa celda
+	            Reuniones reunionAnterior = null;
+	            for (Reuniones r2 : listaReuniones) {
+	                String centro2 = nombreCentro(r2.getIdCentro(), centros);
+	                String texto2 = r2.getTitulo() + "\n" + centro2;
+
+	                if (tabla[hora][col].contains(texto2)) {
+	                    reunionAnterior = r2;
+	                    break;
+	                }
+	            }
+
+	            if (reunionAnterior != null) {
+
+	                String estadoAnterior = reunionAnterior.getEstado().trim().toUpperCase();
+	                String nuevoEstado;
+
+	                // Lógica de conflicto entre reuniones
+	                switch (estadoAnterior) {
+	                    case "ACEPTADA":
+	                        nuevoEstado = "CONFLICTO";
+	                        break;
+
+	                    case "DENEGADA":
+	                        nuevoEstado = "PENDIENTE";
+	                        break;
+
+	                    default: // pendiente o cualquier otro
+	                        nuevoEstado = "CONFLICTO";
+	                        break;
+	                }
+
+	                // Actualizar estado en BD
+	                actualizarEstadoReunionPorId(r.getIdReunion(), nuevoEstado);
+	                r.setEstado(nuevoEstado);
+
+	                // Pintar color según estado final
+	                switch (nuevoEstado) {
+	                    case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
+	                    case "ACEPTADA": colores[hora][col] = "VERDE"; break;
+	                    case "DENEGADA": colores[hora][col] = "ROJO"; break;
+	                    case "CONFLICTO": colores[hora][col] = "GRIS"; break;
+	                }
+
+	                // Añadir texto de la nueva reunión
+	                tabla[hora][col] += "\n" + reunionTexto;
+
+	                continue; // Saltar lógica normal
+	            }
+	        }
 
 	        boolean hayClase = !tabla[hora][col].isBlank();
 
@@ -353,9 +409,16 @@ public class Controlador {
 	        String estado = r.getEstado().trim().toUpperCase();  // pendiente / aceptada / rechazada
 
 	        if (hayClase) {
-	            // Conflicto detectado
 	            tabla[hora][col] = tabla[hora][col] + "\n" + reunionTexto;
-	            colores[hora][col] = "GRIS";
+
+	            switch (estado) {
+	                case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
+	                case "ACEPTADA": colores[hora][col] = "VERDE"; break;
+	                case "DENEGADA": colores[hora][col] = "ROJO"; break;
+	                default: colores[hora][col] = "GRIS"; break;
+	            
+	        }
+
 
 	        } else {
 	            tabla[hora][col] = reunionTexto;
@@ -647,7 +710,7 @@ public class Controlador {
 	        Calendar cal = Calendar.getInstance();
 	        cal.setTime(new Date());
 
-	        String[] dias = {"Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"};
+	        String[] dias = {"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado"};
 	        int indice = -1;
 	        for (int i = 0; i < dias.length; i++) {
 	            if (dias[i].equalsIgnoreCase(dia)) indice = i;
@@ -679,6 +742,7 @@ public class Controlador {
 	        return null;
 	    }
 	}
+
 
 
 
