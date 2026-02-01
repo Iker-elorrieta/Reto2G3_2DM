@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import controlador.Controlador;
 import modelo.Centro;
 import modelo.Reuniones;
-import modelo.Users;
 
 public class DialogVerReunion extends JDialog {
 
@@ -46,8 +45,6 @@ public class DialogVerReunion extends JDialog {
         scroll.getViewport().setBackground(new Color(240, 240, 240));
         getContentPane().add(scroll);
 
-        // Cargar alumnos una sola vez
-        ArrayList<Users> alumnos = controlador.cargarAlumnosDialog();
 
         for (Reuniones r : reuniones) {
 
@@ -66,28 +63,13 @@ public class DialogVerReunion extends JDialog {
                     .map(Centro::getNOM)
                     .orElse("Desconocido");
 
-    
-
-         // Si la reunión tiene alumno asignado, usar su ID
-            Users alumno = null;
-
-         if (r.getUsersByAlumnoId() != null) {
-
-             int idAlumno = r.getUsersByAlumnoId().getId();
-
-             alumno = alumnos.stream()
-                     .filter(a -> a.getId() == idAlumno)
-                     .findFirst()
-                     .orElse(null);
-         }
-
 
 
             card.add(new JLabel("Título: " + r.getTitulo()));
             card.add(new JLabel("Tema: " + r.getAsunto()));
             card.add(new JLabel("Aula: " + r.getAula()));
             card.add(new JLabel("Centro: " + centro));
-            card.add(new JLabel("Alumno: " + (alumno != null ? alumno.getNombre() + " "+ alumno.getApellidos() : "No asignado")));
+            card.add(new JLabel("Alumno: " + (r.getUsersByAlumnoId().getNombre() + " " + r.getUsersByAlumnoId().getApellidos())));
             card.add(new JLabel("Estado: " + r.getEstado()));
 
             panelLista.add(card);
