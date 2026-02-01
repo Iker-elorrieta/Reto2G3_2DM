@@ -26,7 +26,6 @@ import Vista.Menu;
 import Vista.OtrosHorarios;
 import Vista.Horario;
 import Vista.Alumnos;
-import Vista.DialogCrearReunion;
 import Vista.VistaReuniones;
 import Vista.Perfil;
 
@@ -202,7 +201,7 @@ public class Controlador {
 
 	    return new String[0][0];
 	}
-	public ArrayList<Users> cargarAlumnosDialog(DialogCrearReunion vista) {
+	public ArrayList<Users> cargarAlumnosDialog() {
         ArrayList<Users> lista = new ArrayList<>();
 
 		  try {
@@ -334,7 +333,13 @@ public class Controlador {
 	        if (hora < 0 || hora >= 6) continue;
 
 	        String nombreCentro = nombreCentro(r.getIdCentro(), centros);
-	        String reunionTexto = r.getTitulo() + "\n" + nombreCentro;
+	        String estado = r.getEstado().trim().toUpperCase();
+	        String sufijo = "";
+
+	        if (estado.equals("ACEPTADA")) sufijo = " *ACEPTADA*";
+	        else if (estado.equals("DENEGADA")) sufijo = " *DENEGADA*";
+
+	        String reunionTexto = r.getTitulo() + sufijo + "\n" + nombreCentro;
 
 	        int col = switch (dia) {
 	            case "LUNES" -> 1;
@@ -346,84 +351,46 @@ public class Controlador {
 	        };
 
 	        if (col == -1) continue;
-	     // Detectar si ya hay una reunión en la celda
-	        boolean hayReunion = tabla[hora][col].contains("\n") ||
-	                             (!tabla[hora][col].isBlank() && !tabla[hora][col].matches(".*\\d.*"));
 
-	        if (hayReunion) {
+	        // Detectar si ya hay una reunión en la celda
+	        boolean hayReunion = tabla[hora][col].contains("\n");
 
-	            // Buscar la reunión anterior en esa celda
-	            Reuniones reunionAnterior = null;
-	            for (Reuniones r2 : listaReuniones) {
-	                String centro2 = nombreCentro(r2.getIdCentro(), centros);
-	                String texto2 = r2.getTitulo() + "\n" + centro2;
+	     // Si la reunión ya está resuelta, NO debe entrar en conflicto
+	     String estadoActual = r.getEstado().trim().toUpperCase();
+	     if (estadoActual.equals("ACEPTADA") || estadoActual.equals("DENEGADA")) {
+	         hayReunion = false;
+	     }
 
-	                if (tabla[hora][col].contains(texto2)) {
-	                    reunionAnterior = r2;
-	                    break;
-	                }
-	            }
+	     if (hayReunion) {
+	         // Segunda reunión → conflicto
+	         actualizarEstadoReunionPorId(r.getIdReunion(), "CONFLICTO");
+	         r.setEstado("CONFLICTO");
 
-	            if (reunionAnterior != null) {
+	         colores[hora][col] = "GRIS";
+	         tabla[hora][col] += "\n\n" + reunionTexto;
+	         continue;
+	     }
 
-	                String estadoAnterior = reunionAnterior.getEstado().trim().toUpperCase();
-	                String nuevoEstado;
-
-	                // Lógica de conflicto entre reuniones
-	                switch (estadoAnterior) {
-	                    case "ACEPTADA":
-	                        nuevoEstado = "CONFLICTO";
-	                        break;
-
-	                    case "DENEGADA":
-	                        nuevoEstado = "PENDIENTE";
-	                        break;
-
-	                    default: // pendiente o cualquier otro
-	                        nuevoEstado = "CONFLICTO";
-	                        break;
-	                }
-
-	                // Actualizar estado en BD
-	                actualizarEstadoReunionPorId(r.getIdReunion(), nuevoEstado);
-	                r.setEstado(nuevoEstado);
-
-	                // Pintar color según estado final
-	                switch (nuevoEstado) {
-	                    case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
-	                    case "ACEPTADA": colores[hora][col] = "VERDE"; break;
-	                    case "DENEGADA": colores[hora][col] = "ROJO"; break;
-	                    case "CONFLICTO": colores[hora][col] = "GRIS"; break;
-	                }
-
-	                // Añadir texto de la nueva reunión
-	                tabla[hora][col] += "\n" + reunionTexto;
-
-	                continue; // Saltar lógica normal
-	            }
-	        }
 
 	        boolean hayClase = !tabla[hora][col].isBlank();
 
 	        // Determinar color según estado
-	        String estado = r.getEstado().trim().toUpperCase();  // pendiente / aceptada / rechazada
+	        String estadoColor = r.getEstado().trim().toUpperCase();
 
 	        if (hayClase) {
-	            tabla[hora][col] = tabla[hora][col] + "\n" + reunionTexto;
+	            tabla[hora][col] = tabla[hora][col] + "\n\n" + reunionTexto;
 
-	            switch (estado) {
+	            switch (estadoColor) {
 	                case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
 	                case "ACEPTADA": colores[hora][col] = "VERDE"; break;
 	                case "DENEGADA": colores[hora][col] = "ROJO"; break;
 	                default: colores[hora][col] = "GRIS"; break;
-	            
-	        }
-
+	            }
 
 	        } else {
 	            tabla[hora][col] = reunionTexto;
 
-	            switch (estado) {
+	            switch (estadoColor) {
 	                case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
 	                case "ACEPTADA": colores[hora][col] = "VERDE"; break;
 	                case "DENEGADA": colores[hora][col] = "ROJO"; break;
@@ -431,11 +398,11 @@ public class Controlador {
 	                default: colores[hora][col] = "AMARILLO"; break;
 	            }
 	        }
-
 	    }
 
 	    vista.actualizarTablaHorarios(tabla, colores);
 	}
+
 
 	public Reuniones buscarReunionPorTexto(String textoCelda) {
 
@@ -742,6 +709,44 @@ public class Controlador {
 	        return null;
 	    }
 	}
+	public Reuniones buscarUltimaReunionPendienteEnCelda(String textoCelda) {
+
+	    Reuniones ultima = null;
+
+	    for (Reuniones r : listaReuniones) {
+
+	        String centro = nombreCentro(r.getIdCentro(), obtenerCentros());
+	        String reunionTexto = r.getTitulo() + "\n" + centro;
+
+	        if (textoCelda.contains(reunionTexto)) {
+
+	            String estado = r.getEstado().trim().toUpperCase();
+
+	            // Solo reuniones NO resueltas
+	            if (!estado.equals("ACEPTADA") && !estado.equals("DENEGADA")) {
+	                ultima = r;
+	            }
+	        }
+	    }
+
+	    return ultima;
+	}
+
+
+
+	public ArrayList<Reuniones> buscarTodasLasReunionesEnCelda(String textoCelda) {
+	    ArrayList<Reuniones> lista = new ArrayList<>();
+
+	    for (Reuniones r : listaReuniones) {
+	        if (textoCelda.contains(r.getTitulo())) {
+	            lista.add(r);
+	        }
+	    }
+
+	    return lista;
+	}
+
+
 
 
 

@@ -2,6 +2,8 @@ package Vista;
 
 import java.awt.Image;
 import java.awt.Insets;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -44,18 +46,28 @@ public class VistaReuniones extends JFrame {
         contentPane.setLayout(null);
 
         JLabel logo1 = new JLabel("logo");
-        logo1.setBounds(21, 21, 162, 58);
-        contentPane.add(logo1);
+		logo1.setBounds(21, 21, 162, 58);
+		contentPane.add(logo1);
 
-        java.net.URL imgURL = getClass().getResource("/media/logo1.png");
-        if (imgURL != null) {
-            ImageIcon iconoOriginal = new ImageIcon(imgURL);
-            Image imagen = iconoOriginal.getImage();
-            Image imagenEscalada = imagen.getScaledInstance(
-                logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
-            );
-            logo1.setIcon(new ImageIcon(imagenEscalada));
-        }
+		java.net.URL imgURL = getClass().getResource("/media/logo1.png");
+		if (imgURL != null) {
+			ImageIcon iconoOriginal = new ImageIcon(imgURL);
+			Image imagen = iconoOriginal.getImage();
+			Image imagenEscalada = imagen.getScaledInstance(
+				logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
+			);
+			logo1.setIcon(new ImageIcon(imagenEscalada));
+		} else {
+			File f = new File("media/logo1.png");
+			if (f.exists()) {
+				ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+				Image imagen = iconoOriginal.getImage();
+				Image imagenEscalada = imagen.getScaledInstance(
+					logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
+				);
+				logo1.setIcon(new ImageIcon(imagenEscalada));
+			}
+		}
 
         JPanel panelLogin = new JPanel();
         panelLogin.setBackground(new Color(255, 255, 255));
@@ -127,6 +139,37 @@ public class VistaReuniones extends JFrame {
         btnCrear.setBackground(new Color(221, 175, 55));
         btnCrear.setBounds(689, 32, 147, 31);
         contentPane.add(btnCrear);
+        JButton btnVerDatos = new JButton("Ver datos");
+        btnVerDatos.setForeground(Color.WHITE);
+        btnVerDatos.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        btnVerDatos.setBackground(new Color(0, 64, 128));
+        btnVerDatos.setBounds(350, 469, 147, 31);
+        contentPane.add(btnVerDatos);
+        
+        btnVerDatos.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            int col = table.getSelectedColumn();
+            if (row == -1 || col == -1) return;
+
+            String contenido = table.getValueAt(row, col).toString();
+
+            ArrayList<Reuniones> reunionesCelda =
+                    controlador.buscarTodasLasReunionesEnCelda(contenido);
+
+            if (reunionesCelda.isEmpty()) return;
+
+            String diaTabla = table.getColumnName(col);
+            int horaTabla = Integer.parseInt(table.getValueAt(row, 0).toString());
+
+            DialogVerReunion dialog =
+                    new DialogVerReunion(this, reunionesCelda, controlador, diaTabla, horaTabla);
+            dialog.setVisible(true);
+        });
+
+
+
+
+
 
         btnCrear.addActionListener(e -> {
             int row = table.getSelectedRow();
@@ -168,18 +211,14 @@ public class VistaReuniones extends JFrame {
             if (row == -1 || col == -1) return;
 
             String contenido = table.getValueAt(row, col).toString();
-            Reuniones r = controlador.buscarReunionPorTexto(contenido);
+            Reuniones r = controlador.buscarUltimaReunionPendienteEnCelda(contenido);
             if (r == null) return;
 
-         String estado = r.getEstado().trim().toLowerCase();
-         if (estado.equals("aceptada") || estado.equals("denegada")) {
-             return;
-         }
+            String estado = r.getEstado().trim().toLowerCase();
+            if (estado.equals("aceptada") || estado.equals("denegada")) return;
 
-            if (r != null) {
-                boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "aceptada");
-                if (ok) controlador.cargarHorariosyReuniones(this);
-            }
+            boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "aceptada");
+            if (ok) controlador.cargarHorariosyReuniones(this);
         });
 
 
@@ -190,15 +229,14 @@ public class VistaReuniones extends JFrame {
             if (row == -1 || col == -1) return;
 
             String contenido = table.getValueAt(row, col).toString();
-            Reuniones r = controlador.buscarReunionPorTexto(contenido);
+            Reuniones r = controlador.buscarUltimaReunionPendienteEnCelda(contenido);
+            if (r == null) return;
+
             String estado = r.getEstado().trim().toLowerCase();
-            if (estado.equals("aceptada") || estado.equals("denegada")) {
-                return;
-            }
-            if (r != null) {
-                boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "denegada");
-                if (ok) controlador.cargarHorariosyReuniones(this);
-            }
+            if (estado.equals("aceptada") || estado.equals("denegada")) return;
+
+            boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "denegada");
+            if (ok) controlador.cargarHorariosyReuniones(this);
         });
 
 

@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -34,7 +35,7 @@ public class DialogCrearReunion extends JDialog {
         getContentPane().setLayout(null);
 
         ArrayList<Centro> centros = controlador.obtenerCentros();
-        ArrayList<Users> alumnos = controlador.cargarAlumnosDialog(this);
+        ArrayList<Users> alumnos = controlador.cargarAlumnosDialog();
 
         JLabel lblDiaHora = new JLabel("Día y hora:");
         lblDiaHora.setBounds(20, 20, 120, 25);
@@ -116,11 +117,22 @@ public class DialogCrearReunion extends JDialog {
 
         btnCrear.addActionListener(e -> {
 
-            if (lblDiaHoraValor.getText().equals("No seleccionado")) {
-                System.out.println("Debes seleccionar un día y una hora antes de crear la reunión");
+            // VALIDACIÓN SIMPLE
+            if (lblDiaHoraValor.getText().equals("No seleccionado") ||
+                txtTitulo.getText().trim().isEmpty() ||
+                txtTema.getText().trim().isEmpty() ||
+                txtAula.getText().trim().isEmpty() ||
+                comboUbicacion.getSelectedItem() == null ||
+                comboAlumnos.getSelectedItem() == null) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Debes rellenar todos los campos",
+                        "Datos incompletos",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
+            // SI TODO ESTÁ OK → CREAR REUNIÓN
             Reuniones nueva = controlador.construirReunionDesdeDialog(
                     lblDiaHoraValor.getText(),
                     txtTitulo.getText(),
@@ -138,8 +150,8 @@ public class DialogCrearReunion extends JDialog {
             } else {
                 System.out.println("Error creando reunión");
             }
-
         });
+
     }
 
     private void abrirSelectorFechaHora(JLabel lblDiaHoraValor, JButton btnCrear) {
