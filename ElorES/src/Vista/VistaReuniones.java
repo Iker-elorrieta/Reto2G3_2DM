@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.Color;
 import java.awt.Component;
 
@@ -24,10 +26,10 @@ import javax.swing.table.DefaultTableModel;
 
 import controlador.Controlador;
 import modelo.Reuniones;
-import modelo.Users;
 
 import java.awt.Dimension;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class VistaReuniones extends JFrame {
 
@@ -46,28 +48,28 @@ public class VistaReuniones extends JFrame {
         contentPane.setLayout(null);
 
         JLabel logo1 = new JLabel("logo");
-		logo1.setBounds(21, 21, 162, 58);
-		contentPane.add(logo1);
+        logo1.setBounds(21, 21, 162, 58);
+        contentPane.add(logo1);
 
-		java.net.URL imgURL = getClass().getResource("/media/logo1.png");
-		if (imgURL != null) {
-			ImageIcon iconoOriginal = new ImageIcon(imgURL);
-			Image imagen = iconoOriginal.getImage();
-			Image imagenEscalada = imagen.getScaledInstance(
-				logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
-			);
-			logo1.setIcon(new ImageIcon(imagenEscalada));
-		} else {
-			File f = new File("media/logo1.png");
-			if (f.exists()) {
-				ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
-				Image imagen = iconoOriginal.getImage();
-				Image imagenEscalada = imagen.getScaledInstance(
-					logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
-				);
-				logo1.setIcon(new ImageIcon(imagenEscalada));
-			}
-		}
+        java.net.URL imgURL = getClass().getResource("/media/logo1.png");
+        if (imgURL != null) {
+            ImageIcon iconoOriginal = new ImageIcon(imgURL);
+            Image imagen = iconoOriginal.getImage();
+            Image imagenEscalada = imagen.getScaledInstance(
+                logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
+            );
+            logo1.setIcon(new ImageIcon(imagenEscalada));
+        } else {
+            File f = new File("media/logo1.png");
+            if (f.exists()) {
+                ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+                Image imagen = iconoOriginal.getImage();
+                Image imagenEscalada = imagen.getScaledInstance(
+                    logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
+                );
+                logo1.setIcon(new ImageIcon(imagenEscalada));
+            }
+        }
 
         JPanel panelLogin = new JPanel();
         panelLogin.setBackground(new Color(255, 255, 255));
@@ -99,7 +101,6 @@ public class VistaReuniones extends JFrame {
             }
         });
 
-        // Renderer con colores + multilinea
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(new MultiLineCellRenderer());
         }
@@ -139,6 +140,7 @@ public class VistaReuniones extends JFrame {
         btnCrear.setBackground(new Color(221, 175, 55));
         btnCrear.setBounds(689, 32, 147, 31);
         contentPane.add(btnCrear);
+
         JButton btnVerDatos = new JButton("Ver datos");
         btnVerDatos.setForeground(Color.WHITE);
         btnVerDatos.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -147,43 +149,30 @@ public class VistaReuniones extends JFrame {
         contentPane.add(btnVerDatos);
         
         btnVerDatos.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            int col = table.getSelectedColumn();
-            if (row == -1 || col == -1) return;
-
-            String contenido = table.getValueAt(row, col).toString();
-
-            ArrayList<Reuniones> reunionesCelda =
-                    controlador.buscarTodasLasReunionesEnCelda(contenido);
-
-            if (reunionesCelda.isEmpty()) return;
-
-            String diaTabla = table.getColumnName(col);
-            int horaTabla = Integer.parseInt(table.getValueAt(row, 0).toString());
-
+            ArrayList<Reuniones> todas = controlador.obtenerReuniones();
             DialogVerReunion dialog =
-                    new DialogVerReunion(this, reunionesCelda, controlador, diaTabla, horaTabla);
+                    new DialogVerReunion(this, todas, controlador);
             dialog.setVisible(true);
         });
-
-
-
-
-
 
         btnCrear.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
-            String dia = "";
-            int hora = 0;
 
-            if (row != -1 && col != -1) {
-                dia = table.getColumnName(col);
-                hora = Integer.parseInt(table.getValueAt(row, 0).toString());
+            if (row == -1 || col == -1) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar una casilla del horario para crear una reunión.",
+                        "Sin selección",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            Users alumno = new Users();
-            alumno.setId(10);
+            String dia = table.getColumnName(col);
+            int hora = Integer.parseInt(table.getValueAt(row, 0).toString());
+
+            
 
             DialogCrearReunion dialog = new DialogCrearReunion(
                 this, hora, dia, controlador
@@ -221,8 +210,6 @@ public class VistaReuniones extends JFrame {
             if (ok) controlador.cargarHorariosyReuniones(this);
         });
 
-
-
         btnRechazar.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
@@ -239,9 +226,6 @@ public class VistaReuniones extends JFrame {
             if (ok) controlador.cargarHorariosyReuniones(this);
         });
 
-
-
-
         controlador.cargarHorariosyReuniones(this);
     }
 
@@ -254,24 +238,44 @@ public class VistaReuniones extends JFrame {
         }
 
         this.colores = colores;
-        ajustarAlturaFilas();
+
+        // Esperar a que Swing repinte la tabla antes de ajustar altura
+        SwingUtilities.invokeLater(() -> {
+            table.repaint(); // fuerza repintado
+            ajustarAlturaFilas(); // luego ajusta altura
+        });
+
     }
+
 
     private void ajustarAlturaFilas() {
         for (int row = 0; row < table.getRowCount(); row++) {
-            int maxHeight = table.getRowHeight();
 
-            for (int column = 0; column < table.getColumnCount(); column++) {
-                Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
-                int height = comp.getPreferredSize().height;
-                maxHeight = Math.max(maxHeight, height);
+            int maxHeight = 0;
+
+            for (int col = 0; col < table.getColumnCount(); col++) {
+
+                Component comp = table.prepareRenderer(
+                        table.getCellRenderer(row, col), row, col
+                );
+
+                // Forzar ancho real para que calcule bien el alto
+                int colWidth = table.getColumnModel().getColumn(col).getWidth();
+                comp.setBounds(0, 0, colWidth, Integer.MAX_VALUE);
+
+                // Forzar layout
+                comp.doLayout();
+
+                int preferred = comp.getPreferredSize().height;
+
+                maxHeight = Math.max(maxHeight, preferred);
             }
 
-            table.setRowHeight(row, maxHeight);
+            table.setRowHeight(row, maxHeight + 1);
         }
     }
 
-    // Renderer multilinea + colores
+
     class MultiLineCellRenderer extends DefaultTableCellRenderer {
 
         private static final long serialVersionUID = 1L;
@@ -289,7 +293,7 @@ public class VistaReuniones extends JFrame {
             area.setFont(table.getFont());
             area.setMargin(new Insets(5, 5, 5, 5));
 
-            // Colores según estado
+            // Colores
             if (colores != null && row < colores.length && column < colores[row].length) {
                 switch (colores[row][column]) {
                     case "GRIS": area.setBackground(Color.LIGHT_GRAY); break;
@@ -305,10 +309,14 @@ public class VistaReuniones extends JFrame {
                 area.setForeground(table.getSelectionForeground());
             }
 
-            int columnWidth = table.getColumnModel().getColumn(column).getWidth();
-            area.setSize(columnWidth, Short.MAX_VALUE);
+            // darle el ancho real ANTES de calcular altura
+            int colWidth = table.getColumnModel().getColumn(column).getWidth();
+            area.setSize(colWidth, Short.MAX_VALUE);
+            area.doLayout();
 
             return area;
-        }
+        
+    }
+
     }
 }

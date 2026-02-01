@@ -360,16 +360,51 @@ public class Controlador {
 	     if (estadoActual.equals("ACEPTADA") || estadoActual.equals("DENEGADA")) {
 	         hayReunion = false;
 	     }
+	  
 
 	     if (hayReunion) {
-	         // Segunda reunión → conflicto
-	         actualizarEstadoReunionPorId(r.getIdReunion(), "CONFLICTO");
-	         r.setEstado("CONFLICTO");
 
-	         colores[hora][col] = "GRIS";
-	         tabla[hora][col] += "\n\n" + reunionTexto;
-	         continue;
-	     }
+	    	    // Buscar reuniones anteriores en esa celda
+	    	    for (Reuniones otra : listaReuniones) {
+
+	    	        LocalDateTime f = otra.getFecha().toLocalDateTime();
+	    	        int h = f.getHour() - 7;
+
+	    	        String d = f.getDayOfWeek()
+	    	                    .getDisplayName(TextStyle.FULL, locale)
+	    	                    .toUpperCase();
+	    	        d = Normalizer.normalize(d, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+
+	    	        int c = switch (d) {
+	    	            case "LUNES" -> 1;
+	    	            case "MARTES" -> 2;
+	    	            case "MIERCOLES" -> 3;
+	    	            case "JUEVES" -> 4;
+	    	            case "VIERNES" -> 5;
+	    	            default -> -1;
+	    	        };
+
+	    	        //Si coincide con la celda y está pendiente → poner en conflicto
+	    	        if (h == hora && c == col) {
+
+	    	            String estadoOtra = otra.getEstado().trim().toUpperCase();
+
+	    	            if (estadoOtra.equals("PENDIENTE")) {
+	    	                actualizarEstadoReunionPorId(otra.getIdReunion(), "CONFLICTO");
+	    	                otra.setEstado("CONFLICTO");
+	    	            }
+	    	        }
+	    	    }
+
+	    	    //  Marcar la nueva reunión como conflicto
+	    	    actualizarEstadoReunionPorId(r.getIdReunion(), "CONFLICTO");
+	    	    r.setEstado("CONFLICTO");
+
+	    	    colores[hora][col] = "GRIS";
+	    	    tabla[hora][col] += "\n\n" + reunionTexto;
+	    	    continue;
+	    	}
+
 
 
 	        boolean hayClase = !tabla[hora][col].isBlank();

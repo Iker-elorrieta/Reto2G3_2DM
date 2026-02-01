@@ -1,8 +1,6 @@
 package Vista;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,10 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JSpinner;
-
-import com.toedter.calendar.JCalendar;
 
 import controlador.Controlador;
 import modelo.Centro;
@@ -42,20 +36,14 @@ public class DialogCrearReunion extends JDialog {
         getContentPane().add(lblDiaHora);
 
         JLabel lblDiaHoraValor = new JLabel();
-        lblDiaHoraValor.setBounds(150, 20, 200, 25);
+        lblDiaHoraValor.setBounds(150, 20, 250, 25);
         getContentPane().add(lblDiaHoraValor);
 
-        // Si viene de la tabla → usar esa fecha
         if (dia != null && !dia.isBlank() && hora > 0) {
             lblDiaHoraValor.setText(dia + " - " + hora);
         } else {
             lblDiaHoraValor.setText("No seleccionado");
         }
-
-        // Botón para seleccionar fecha y hora
-        JButton btnSeleccionarFecha = new JButton("Seleccionar fecha y hora");
-        btnSeleccionarFecha.setBounds(150, 50, 200, 25);
-        getContentPane().add(btnSeleccionarFecha);
 
         JLabel lblTitulo = new JLabel("Título:");
         lblTitulo.setBounds(20, 90, 120, 25);
@@ -103,21 +91,10 @@ public class DialogCrearReunion extends JDialog {
         btnCrear.setBounds(150, 350, 150, 35);
         getContentPane().add(btnCrear);
 
-        // Activar o desactivar según si viene de la tabla
-        if (dia != null && !dia.isBlank() && hora > 0) {
-            btnCrear.setEnabled(true);
-        } else {
-            btnCrear.setEnabled(false);
-        }
-
-        // Abrir selector manualmente
-        btnSeleccionarFecha.addActionListener(e ->
-                abrirSelectorFechaHora(lblDiaHoraValor, btnCrear)
-        );
+        btnCrear.setEnabled(!lblDiaHoraValor.getText().equals("No seleccionado"));
 
         btnCrear.addActionListener(e -> {
 
-            // VALIDACIÓN SIMPLE
             if (lblDiaHoraValor.getText().equals("No seleccionado") ||
                 txtTitulo.getText().trim().isEmpty() ||
                 txtTema.getText().trim().isEmpty() ||
@@ -132,7 +109,6 @@ public class DialogCrearReunion extends JDialog {
                 return;
             }
 
-            // SI TODO ESTÁ OK → CREAR REUNIÓN
             Reuniones nueva = controlador.construirReunionDesdeDialog(
                     lblDiaHoraValor.getText(),
                     txtTitulo.getText(),
@@ -151,50 +127,5 @@ public class DialogCrearReunion extends JDialog {
                 System.out.println("Error creando reunión");
             }
         });
-
-    }
-
-    private void abrirSelectorFechaHora(JLabel lblDiaHoraValor, JButton btnCrear) {
-
-        JDialog selector = new JDialog(this, "Seleccionar día y hora", true);
-        selector.setSize(350, 350);
-        selector.setLayout(null);
-        selector.setLocationRelativeTo(this);
-
-        JCalendar calendar = new JCalendar();
-        calendar.setBounds(20, 20, 300, 200);
-        selector.add(calendar);
-
-        JLabel lblHora = new JLabel("Hora:");
-        lblHora.setBounds(20, 230, 80, 25);
-        selector.add(lblHora);
-
-        JSpinner spinnerHora = new JSpinner(new SpinnerNumberModel(1, 1, 6, 1));
-        spinnerHora.setBounds(80, 230, 60, 25);
-        selector.add(spinnerHora);
-
-        JButton btnAceptar = new JButton("Aceptar");
-        btnAceptar.setBounds(120, 270, 100, 30);
-        selector.add(btnAceptar);
-
-        btnAceptar.addActionListener(e -> {
-
-            Date fecha = calendar.getDate();
-            int horaSel = (int) spinnerHora.getValue();
-
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(fecha);
-
-            String[] dias = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
-            String diaSel = dias[cal.get(Calendar.DAY_OF_WEEK) - 1];
-
-            lblDiaHoraValor.setText(diaSel + " - " + horaSel);
-
-            btnCrear.setEnabled(true);
-
-            selector.dispose();
-        });
-
-        selector.setVisible(true);
     }
 }

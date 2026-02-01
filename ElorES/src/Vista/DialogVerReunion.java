@@ -9,76 +9,60 @@ import modelo.Reuniones;
 
 public class DialogVerReunion extends JDialog {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public DialogVerReunion(JFrame parent,
-                            ArrayList<Reuniones> reuniones,
-                            Controlador controlador,
-                            String diaTabla,
-                            int horaTabla) {
+	public DialogVerReunion(JFrame parent, ArrayList<Reuniones> reuniones, Controlador controlador) {
 
-        super(parent, "Datos de las reuniones", true);
-        setSize(520, 520);
-        setLocationRelativeTo(parent);
-        getContentPane().setLayout(null);
+		super(parent, "Todas las reuniones", true);
+		setSize(520, 520);
+		setLocationRelativeTo(parent);
+		getContentPane().setLayout(null);
 
-        JLabel lblDiaHora = new JLabel("Día y hora:");
-        lblDiaHora.setBounds(20, 20, 120, 25);
-        getContentPane().add(lblDiaHora);
+		JLabel lblTitulo = new JLabel("Todas las reuniones del profesor:");
+		lblTitulo.setBounds(20, 20, 400, 25);
+		getContentPane().add(lblTitulo);
 
-        JLabel lblDiaHoraValor = new JLabel(diaTabla + " - " + horaTabla);
-        lblDiaHoraValor.setBounds(150, 20, 200, 25);
-        getContentPane().add(lblDiaHoraValor);
+		JPanel panelLista = new JPanel();
+		panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
+		panelLista.setBackground(new Color(240, 240, 240));
 
-        JLabel lblLista = new JLabel("Reuniones en esta hora:");
-        lblLista.setBounds(20, 60, 200, 25);
-        getContentPane().add(lblLista);
+		JScrollPane scroll = new JScrollPane(panelLista);
+		scroll.setBounds(20, 60, 470, 360);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
+		scroll.setBorder(null);
+		scroll.getViewport().setBackground(new Color(240, 240, 240));
+		getContentPane().add(scroll);
 
-        JPanel panelLista = new JPanel();
-        panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
-        panelLista.setBackground(new Color(240, 240, 240));
+		for (Reuniones r : reuniones) {
 
-        JScrollPane scroll = new JScrollPane(panelLista);
-        scroll.setBounds(20, 90, 470, 330);
-        scroll.getVerticalScrollBar().setUnitIncrement(16);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(new Color(240, 240, 240));
-        getContentPane().add(scroll);
+			JPanel card = new JPanel();
+			card.setLayout(new GridLayout(0, 1));
+			card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
+			card.setBorder(
+					BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+							BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+			card.setBackground(Color.WHITE);
 
+			String centro = controlador.obtenerCentros().stream()
+					.filter(c -> String.valueOf(c.getCCEN()).equals(r.getIdCentro())).findFirst().map(Centro::getNOM)
+					.orElse("Desconocido");
 
-        for (Reuniones r : reuniones) {
+			card.add(new JLabel("Título: " + r.getTitulo()));
+			card.add(new JLabel("Fecha: " + r.getFecha().toString()));
+			card.add(new JLabel("Tema: " + r.getAsunto()));
+			card.add(new JLabel("Aula: " + r.getAula()));
+			card.add(new JLabel("Centro: " + centro));
+			card.add(new JLabel(
+					"Alumno: " + r.getUsersByAlumnoId().getNombre() + " " + r.getUsersByAlumnoId().getApellidos()));
+			card.add(new JLabel("Estado: " + r.getEstado()));
 
-            JPanel card = new JPanel();
-            card.setLayout(new GridLayout(0, 1));
-            card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
-            card.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
-            card.setBackground(Color.WHITE);
+			panelLista.add(card);
+			panelLista.add(Box.createVerticalStrut(10));
+		}
 
-            String centro = controlador.obtenerCentros().stream()
-                    .filter(c -> String.valueOf(c.getCCEN()).equals(r.getIdCentro()))
-                    .findFirst()
-                    .map(Centro::getNOM)
-                    .orElse("Desconocido");
-
-
-
-            card.add(new JLabel("Título: " + r.getTitulo()));
-            card.add(new JLabel("Tema: " + r.getAsunto()));
-            card.add(new JLabel("Aula: " + r.getAula()));
-            card.add(new JLabel("Centro: " + centro));
-            card.add(new JLabel("Alumno: " + (r.getUsersByAlumnoId().getNombre() + " " + r.getUsersByAlumnoId().getApellidos())));
-            card.add(new JLabel("Estado: " + r.getEstado()));
-
-            panelLista.add(card);
-            panelLista.add(Box.createVerticalStrut(10));
-        }
-
-        JButton btnVolver = new JButton("Volver");
-        btnVolver.setBounds(180, 430, 150, 35);
-        btnVolver.addActionListener(e -> dispose());
-        getContentPane().add(btnVolver);
-    }
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setBounds(180, 430, 150, 35);
+		btnVolver.addActionListener(e -> dispose());
+		getContentPane().add(btnVolver);
+	}
 }
