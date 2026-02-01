@@ -70,7 +70,7 @@ public class DAO {
     public ArrayList<Reuniones> getReunionesProfesor(int idProfesor) {
         Session sesion = hibernateUtil.getSessionFactory().openSession();
 
-        String hql = "SELECT r FROM Reuniones r JOIN FETCH r.usersByAlumnoId JOIN FETCH r.usersByProfesorId WHERE r.usersByProfesorId.id = :idProfesor ";
+        String hql = "FROM Reuniones r JOIN FETCH r.usersByAlumnoId JOIN FETCH r.usersByProfesorId WHERE r.usersByProfesorId.id = :idProfesor ";
 
         Query<Reuniones> q = sesion.createQuery(hql, Reuniones.class);
         q.setParameter("idProfesor", idProfesor);
