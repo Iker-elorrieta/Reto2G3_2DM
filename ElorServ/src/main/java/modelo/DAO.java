@@ -70,15 +70,16 @@ public class DAO {
     public ArrayList<Reuniones> getReunionesProfesor(int idProfesor) {
         Session sesion = hibernateUtil.getSessionFactory().openSession();
 
-        String hql = "FROM Reuniones r WHERE r.usersByProfesorId = " + idProfesor;
+        String hql = "SELECT r FROM Reuniones r JOIN FETCH r.usersByAlumnoId JOIN FETCH r.usersByProfesorId WHERE r.usersByProfesorId.id = :idProfesor ";
 
         Query<Reuniones> q = sesion.createQuery(hql, Reuniones.class);
+        q.setParameter("idProfesor", idProfesor);
 
         List<Reuniones> listaHibernate = q.list();
 
         return new ArrayList<>(listaHibernate);
-    
     }
+
 
     public boolean actualizarEstadoReunion(int idReunion, String estado) {
         Transaction tx = null;

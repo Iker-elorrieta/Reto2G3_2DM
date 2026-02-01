@@ -31,11 +31,10 @@ public class DialogVerReunion extends JDialog {
         lblDiaHoraValor.setBounds(150, 20, 200, 25);
         getContentPane().add(lblDiaHoraValor);
 
-        JLabel lblLista = new JLabel("Reuniones en esta celda:");
+        JLabel lblLista = new JLabel("Reuniones en esta hora:");
         lblLista.setBounds(20, 60, 200, 25);
         getContentPane().add(lblLista);
 
-        // Panel contenedor con fondo gris claro
         JPanel panelLista = new JPanel();
         panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
         panelLista.setBackground(new Color(240, 240, 240));
@@ -47,7 +46,9 @@ public class DialogVerReunion extends JDialog {
         scroll.getViewport().setBackground(new Color(240, 240, 240));
         getContentPane().add(scroll);
 
-        // Crear tarjetas por cada reunión
+        // Cargar alumnos una sola vez
+        ArrayList<Users> alumnos = controlador.cargarAlumnosDialog();
+
         for (Reuniones r : reuniones) {
 
             JPanel card = new JPanel();
@@ -65,13 +66,28 @@ public class DialogVerReunion extends JDialog {
                     .map(Centro::getNOM)
                     .orElse("Desconocido");
 
-            Users alumno = r.getUsersByAlumnoId();
+    
+
+         // Si la reunión tiene alumno asignado, usar su ID
+            Users alumno = null;
+
+         if (r.getUsersByAlumnoId() != null) {
+
+             int idAlumno = r.getUsersByAlumnoId().getId();
+
+             alumno = alumnos.stream()
+                     .filter(a -> a.getId() == idAlumno)
+                     .findFirst()
+                     .orElse(null);
+         }
+
+
 
             card.add(new JLabel("Título: " + r.getTitulo()));
             card.add(new JLabel("Tema: " + r.getAsunto()));
             card.add(new JLabel("Aula: " + r.getAula()));
             card.add(new JLabel("Centro: " + centro));
-            card.add(new JLabel("Alumno: " + (alumno != null ? alumno.getNombre() : "N/A")));
+            card.add(new JLabel("Alumno: " + (alumno != null ? alumno.getNombre() + " "+ alumno.getApellidos() : "No asignado")));
             card.add(new JLabel("Estado: " + r.getEstado()));
 
             panelLista.add(card);

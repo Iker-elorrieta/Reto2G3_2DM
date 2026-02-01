@@ -256,7 +256,7 @@ public class Controlador {
 	                json,
 	                new TypeToken<List<Reuniones>>(){}.getType()
 	            );
-
+       
 	            reuniones.addAll(lista);
 	        }
 

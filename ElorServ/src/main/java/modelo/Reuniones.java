@@ -17,7 +17,9 @@ public class Reuniones implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	@Expose
 	private Integer idReunion;
+	@Expose
 	private Users usersByAlumnoId;
+	@Expose
 	private Users usersByProfesorId;
 	@Expose
 	private String estado;
