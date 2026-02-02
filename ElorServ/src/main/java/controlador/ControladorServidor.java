@@ -27,7 +27,7 @@ public class ControladorServidor {
 	private DAO dao;
 
 
-	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos, ObjectInputStream ois) {
+	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
 	        String userPlano = dis.readUTF();
 	        String passPlano = dis.readUTF();

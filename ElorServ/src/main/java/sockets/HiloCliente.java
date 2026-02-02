@@ -36,7 +36,7 @@ public class HiloCliente extends Thread {
                 switch (accion) {
 
                     case Acciones.LOGIN:
-                        controlador.login(dis, dos, oos, ois);
+                        controlador.login(dis, dos, oos);
                         break;
 
                     case Acciones.GET_ALUMNOS:
