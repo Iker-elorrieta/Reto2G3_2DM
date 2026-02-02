@@ -2,6 +2,8 @@ package Vista;
 
 import java.awt.Image;
 import java.awt.Insets;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -10,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.Color;
 import java.awt.Component;
 
@@ -21,10 +25,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Controlador;
-import modelo.Users;
+import modelo.Reuniones;
 
 import java.awt.Dimension;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class VistaReuniones extends JFrame {
 
@@ -54,6 +59,16 @@ public class VistaReuniones extends JFrame {
                 logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
             );
             logo1.setIcon(new ImageIcon(imagenEscalada));
+        } else {
+            File f = new File("media/logo1.png");
+            if (f.exists()) {
+                ImageIcon iconoOriginal = new ImageIcon(f.getAbsolutePath());
+                Image imagen = iconoOriginal.getImage();
+                Image imagenEscalada = imagen.getScaledInstance(
+                    logo1.getWidth(), logo1.getHeight(), Image.SCALE_SMOOTH
+                );
+                logo1.setIcon(new ImageIcon(imagenEscalada));
+            }
         }
 
         JPanel panelLogin = new JPanel();
@@ -86,7 +101,6 @@ public class VistaReuniones extends JFrame {
             }
         });
 
-        // Renderer con colores + multilinea
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(new MultiLineCellRenderer());
         }
@@ -127,19 +141,38 @@ public class VistaReuniones extends JFrame {
         btnCrear.setBounds(689, 32, 147, 31);
         contentPane.add(btnCrear);
 
+        JButton btnVerDatos = new JButton("Ver datos");
+        btnVerDatos.setForeground(Color.WHITE);
+        btnVerDatos.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        btnVerDatos.setBackground(new Color(0, 64, 128));
+        btnVerDatos.setBounds(350, 469, 147, 31);
+        contentPane.add(btnVerDatos);
+        
+        btnVerDatos.addActionListener(e -> {
+            ArrayList<Reuniones> todas = controlador.obtenerReuniones();
+            DialogVerReunion dialog =
+                    new DialogVerReunion(this, todas, controlador);
+            dialog.setVisible(true);
+        });
+
         btnCrear.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
-            String dia = "";
-            int hora = 0;
 
-            if (row != -1 && col != -1) {
-                dia = table.getColumnName(col);
-                hora = Integer.parseInt(table.getValueAt(row, 0).toString());
+            if (row == -1 || col == -1) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar una casilla del horario para crear una reunión.",
+                        "Sin selección",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            Users alumno = new Users();
-            alumno.setId(10);
+            String dia = table.getColumnName(col);
+            int hora = Integer.parseInt(table.getValueAt(row, 0).toString());
+
+            
 
             DialogCrearReunion dialog = new DialogCrearReunion(
                 this, hora, dia, controlador
@@ -164,23 +197,33 @@ public class VistaReuniones extends JFrame {
         btnAceptarReunion.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
-
             if (row == -1 || col == -1) return;
 
-            //controlador.actualizarEstadoReunion(row, col, "ACEPTADA");
-            colores[row][col] = "VERDE";
-            table.repaint();
+            String contenido = table.getValueAt(row, col).toString();
+            Reuniones r = controlador.buscarUltimaReunionPendienteEnCelda(contenido);
+            if (r == null) return;
+
+            String estado = r.getEstado().trim().toLowerCase();
+            if (estado.equals("aceptada") || estado.equals("denegada")) return;
+
+            boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "aceptada");
+            if (ok) controlador.cargarHorariosyReuniones(this);
         });
 
         btnRechazar.addActionListener(e -> {
             int row = table.getSelectedRow();
             int col = table.getSelectedColumn();
-
             if (row == -1 || col == -1) return;
 
-            //controlador.actualizarEstadoReunion(row, col, "RECHAZADA");
-            colores[row][col] = "ROJO";
-            table.repaint();
+            String contenido = table.getValueAt(row, col).toString();
+            Reuniones r = controlador.buscarUltimaReunionPendienteEnCelda(contenido);
+            if (r == null) return;
+
+            String estado = r.getEstado().trim().toLowerCase();
+            if (estado.equals("aceptada") || estado.equals("denegada")) return;
+
+            boolean ok = controlador.actualizarEstadoReunionPorId(r.getIdReunion(), "denegada");
+            if (ok) controlador.cargarHorariosyReuniones(this);
         });
 
         controlador.cargarHorariosyReuniones(this);
@@ -195,24 +238,44 @@ public class VistaReuniones extends JFrame {
         }
 
         this.colores = colores;
-        ajustarAlturaFilas();
+
+        // Esperar a que Swing repinte la tabla antes de ajustar altura
+        SwingUtilities.invokeLater(() -> {
+            table.repaint(); // fuerza repintado
+            ajustarAlturaFilas(); // luego ajusta altura
+        });
+
     }
+
 
     private void ajustarAlturaFilas() {
         for (int row = 0; row < table.getRowCount(); row++) {
-            int maxHeight = table.getRowHeight();
 
-            for (int column = 0; column < table.getColumnCount(); column++) {
-                Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
-                int height = comp.getPreferredSize().height;
-                maxHeight = Math.max(maxHeight, height);
+            int maxHeight = 0;
+
+            for (int col = 0; col < table.getColumnCount(); col++) {
+
+                Component comp = table.prepareRenderer(
+                        table.getCellRenderer(row, col), row, col
+                );
+
+                // Forzar ancho real para que calcule bien el alto
+                int colWidth = table.getColumnModel().getColumn(col).getWidth();
+                comp.setBounds(0, 0, colWidth, Integer.MAX_VALUE);
+
+                // Forzar layout
+                comp.doLayout();
+
+                int preferred = comp.getPreferredSize().height;
+
+                maxHeight = Math.max(maxHeight, preferred);
             }
 
-            table.setRowHeight(row, maxHeight);
+            table.setRowHeight(row, maxHeight + 1);
         }
     }
 
-    // Renderer multilinea + colores
+
     class MultiLineCellRenderer extends DefaultTableCellRenderer {
 
         private static final long serialVersionUID = 1L;
@@ -230,7 +293,7 @@ public class VistaReuniones extends JFrame {
             area.setFont(table.getFont());
             area.setMargin(new Insets(5, 5, 5, 5));
 
-            // Colores según estado
+            // Colores
             if (colores != null && row < colores.length && column < colores[row].length) {
                 switch (colores[row][column]) {
                     case "GRIS": area.setBackground(Color.LIGHT_GRAY); break;
@@ -246,10 +309,14 @@ public class VistaReuniones extends JFrame {
                 area.setForeground(table.getSelectionForeground());
             }
 
-            int columnWidth = table.getColumnModel().getColumn(column).getWidth();
-            area.setSize(columnWidth, Short.MAX_VALUE);
+            // darle el ancho real ANTES de calcular altura
+            int colWidth = table.getColumnModel().getColumn(column).getWidth();
+            area.setSize(colWidth, Short.MAX_VALUE);
+            area.doLayout();
 
             return area;
-        }
+        
+    }
+
     }
 }

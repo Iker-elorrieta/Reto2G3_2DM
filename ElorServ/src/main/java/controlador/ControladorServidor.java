@@ -2,12 +2,14 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,18 +21,20 @@ import modelo.DAO;
 import modelo.Horarios;
 import modelo.Reuniones;
 
+@Component
 public class ControladorServidor {
+	@Autowired
+	private DAO dao;
 
-	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos, ObjectInputStream ois) {
+
+	public void login(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
 	        String userPlano = dis.readUTF();
 	        String passPlano = dis.readUTF();
 
-
 	        String usuarioCifrado = CypherAES.encrypt(userPlano);
 	        String passwordCifrada = CypherAES.encrypt(passPlano);
 
-	        DAO dao = new DAO();
 	        Users u = dao.login(usuarioCifrado, passwordCifrada);
 
 	        if (u != null) {
@@ -60,7 +64,6 @@ public class ControladorServidor {
 	    try {
 	        int id = dis.readInt();
 
-	        DAO dao = new DAO();
 	        ArrayList<Users> alumnos = dao.getAlumnos(id);
 
 	        dos.writeUTF("OK");
@@ -87,7 +90,6 @@ public class ControladorServidor {
 
 	        int userId = dis.readInt();
 
-	        DAO dao = new DAO();
 	        ArrayList<Horarios> lista = dao.getHorariosUsuario(userId);
 
 	        dos.writeUTF("OK");
@@ -125,16 +127,20 @@ public class ControladorServidor {
 	}
 	public void getReuniones(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
+	        Gson gson = new GsonBuilder()
+	                .excludeFieldsWithoutExposeAnnotation()
+	                .create();
+
 	        int idProfesor = dis.readInt();
 
-	        DAO dao = new DAO();
 	        ArrayList<Reuniones> lista = dao.getReunionesProfesor(idProfesor);
 
 	        dos.writeUTF("OK");
 	        dos.flush();
 
-	        oos.writeObject(lista);
-	        oos.flush();
+	        String json = gson.toJson(lista);
+	        dos.writeUTF(json);
+	        dos.flush();
 
 	    } catch (Exception e) {
 	        try {
@@ -146,9 +152,9 @@ public class ControladorServidor {
 	}
 
 
+
 	public void getProfesores(DataInputStream dis, DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
-	        DAO dao = new DAO();
 	        ArrayList<Users> lista = dao.getProfesoresTipo3();
 
 	        dos.writeUTF("OK");
@@ -165,6 +171,60 @@ public class ControladorServidor {
 	        } catch (Exception ex) {}
 	    }
 	}
+
+
+
+	public void actualizarEstadoReunion(DataInputStream dis, DataOutputStream dos) {
+	    try {
+	        int idReunion = dis.readInt();
+	        String estado = dis.readUTF(); // viene en minúsculas del cliente
+
+	        boolean ok = dao.actualizarEstadoReunion(idReunion, estado);
+
+	        if (ok) {
+	            dos.writeUTF("OK");
+	        } else {
+	            dos.writeUTF("ERROR");
+	        }
+
+	        dos.flush();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        try {
+	            dos.writeUTF("ERROR");
+	            dos.flush();
+	        } catch (IOException ignored) {}
+	    }
+	}
+
+
+
+
+	public void crearReunion(DataInputStream dis, DataOutputStream dos, ObjectInputStream ois) {
+	    try {
+	        Reuniones r = (Reuniones) ois.readObject();
+
+	        boolean ok = dao.crearReunionObjeto(r);
+
+	        if (ok) {
+	            dos.writeUTF("OK");
+	        } else {
+	            dos.writeUTF("ERROR");
+	        }
+
+	        dos.flush();
+
+	    } catch (Exception e) {
+	        try {
+	            dos.writeUTF("ERROR");
+	            dos.flush();
+	        } catch (IOException ignored) {}
+	    }
+	}
+
+	
+	
 
 
 }

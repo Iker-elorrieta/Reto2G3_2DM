@@ -2,18 +2,19 @@ package controlador;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Timestamp;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-
 
 import javax.swing.JFrame;
 
@@ -25,7 +26,6 @@ import Vista.Menu;
 import Vista.OtrosHorarios;
 import Vista.Horario;
 import Vista.Alumnos;
-import Vista.DialogCrearReunion;
 import Vista.VistaReuniones;
 import Vista.Perfil;
 
@@ -43,12 +43,14 @@ public class Controlador {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	Users usuario = new Users();
+	private ArrayList<Reuniones> listaReuniones;
 
 	public Controlador() {
 		try {
 			con = new ConexionServidor();
 			dos = con.getDos();
 			dis = con.getDis();
+			out = con.getOos();
 			in = con.getOis();
 			
 		} catch (Exception e) {
@@ -76,7 +78,6 @@ public class Controlador {
 	                break;
 	            }
 
-
 	            case "ERROR": {
 	                String mensaje = dis.readUTF();
 	                System.out.println(mensaje);
@@ -93,7 +94,11 @@ public class Controlador {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+	public void cambiarVista(JFrame vistaActual, JFrame vistaNueva) {
+		vistaActual.setVisible(false);
+		vistaNueva.setVisible(true);
+		vistaActual.dispose();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -196,7 +201,7 @@ public class Controlador {
 
 	    return new String[0][0];
 	}
-	public ArrayList<Users> cargarAlumnosDialog(DialogCrearReunion vista) {
+	public ArrayList<Users> cargarAlumnosDialog() {
         ArrayList<Users> lista = new ArrayList<>();
 
 		  try {
@@ -232,8 +237,9 @@ public class Controlador {
 		}
 		  return lista;
 	}
-	public 	ArrayList<Reuniones> obtenerReuniones() {
-		ArrayList<Reuniones> reuniones = new ArrayList<Reuniones>();
+	public ArrayList<Reuniones> obtenerReuniones() {
+	    ArrayList<Reuniones> reuniones = new ArrayList<>();
+
 	    try {
 	        dos.writeUTF("GET_REUNIONES");
 	        dos.writeInt(usuario.getId());
@@ -242,28 +248,25 @@ public class Controlador {
 	        String estado = dis.readUTF();
 
 	        if (estado.equals("OK")) {
-	        	Object recibido = in.readObject();
 
-				if (recibido instanceof List<?>) {
+	            String json = dis.readUTF();
 
-					List<?> listaGenerica = (List<?>) recibido;
-
-					for (Object o : listaGenerica) {
-						if (o instanceof Reuniones r) {
-							reuniones.add(r);
-						}
-					}
-				}
-			
-	        
+	            Gson gson = new Gson();
+	            List<Reuniones> lista = gson.fromJson(
+	                json,
+	                new TypeToken<List<Reuniones>>(){}.getType()
+	            );
+       
+	            reuniones.addAll(lista);
 	        }
+
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+
 	    return reuniones;
-
-
 	}
+
 	private String nombreCentro(String idCentro, ArrayList<Centro> centros) {
 	    for (Centro c : centros) {
 	        if (String.valueOf(c.getCCEN()).equals(idCentro)) {
@@ -276,7 +279,7 @@ public class Controlador {
 	public void cargarHorariosyReuniones(VistaReuniones vista) {
 
 	    ArrayList<Centro> centros = obtenerCentros();
-	    ArrayList<Reuniones> reuniones = obtenerReuniones();
+	    listaReuniones = obtenerReuniones();
 	    String[][] horario = obtenerHorariosDelServidor(usuario.getId());
 
 	    String[][] tabla = new String[6][6];
@@ -314,7 +317,7 @@ public class Controlador {
 	    // Mezclar reuniones
 	    Locale locale = Locale.forLanguageTag("es-ES");
 
-	    for (Reuniones r : reuniones) {
+	    for (Reuniones r : listaReuniones) {
 
 	        LocalDateTime fecha = r.getFecha().toLocalDateTime();
 
@@ -330,7 +333,13 @@ public class Controlador {
 	        if (hora < 0 || hora >= 6) continue;
 
 	        String nombreCentro = nombreCentro(r.getIdCentro(), centros);
-	        String reunionTexto = r.getTitulo() + "\n" + nombreCentro;
+	        String estado = r.getEstado().trim().toUpperCase();
+	        String sufijo = "";
+
+	        if (estado.equals("ACEPTADA")) sufijo = " *ACEPTADA*";
+	        else if (estado.equals("DENEGADA")) sufijo = " *DENEGADA*";
+
+	        String reunionTexto = r.getTitulo() + sufijo + "\n" + nombreCentro;
 
 	        int col = switch (dia) {
 	            case "LUNES" -> 1;
@@ -343,27 +352,109 @@ public class Controlador {
 
 	        if (col == -1) continue;
 
+	        // Detectar si ya hay una reunión en la celda
+	        boolean hayReunion = tabla[hora][col].contains("\n");
+
+	     // Si la reunión ya está resuelta, NO debe entrar en conflicto
+	     String estadoActual = r.getEstado().trim().toUpperCase();
+	     if (estadoActual.equals("ACEPTADA") || estadoActual.equals("DENEGADA")) {
+	         hayReunion = false;
+	     }
+	  
+
+	     if (hayReunion) {
+
+	    	    // Buscar reuniones anteriores en esa celda
+	    	    for (Reuniones otra : listaReuniones) {
+
+	    	        LocalDateTime f = otra.getFecha().toLocalDateTime();
+	    	        int h = f.getHour() - 7;
+
+	    	        String d = f.getDayOfWeek()
+	    	                    .getDisplayName(TextStyle.FULL, locale)
+	    	                    .toUpperCase();
+	    	        d = Normalizer.normalize(d, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+
+	    	        int c = switch (d) {
+	    	            case "LUNES" -> 1;
+	    	            case "MARTES" -> 2;
+	    	            case "MIERCOLES" -> 3;
+	    	            case "JUEVES" -> 4;
+	    	            case "VIERNES" -> 5;
+	    	            default -> -1;
+	    	        };
+
+	    	        //Si coincide con la celda y está pendiente → poner en conflicto
+	    	        if (h == hora && c == col) {
+
+	    	            String estadoOtra = otra.getEstado().trim().toUpperCase();
+
+	    	            if (estadoOtra.equals("PENDIENTE")) {
+	    	                actualizarEstadoReunionPorId(otra.getIdReunion(), "CONFLICTO");
+	    	                otra.setEstado("CONFLICTO");
+	    	            }
+	    	        }
+	    	    }
+
+	    	    //  Marcar la nueva reunión como conflicto
+	    	    actualizarEstadoReunionPorId(r.getIdReunion(), "CONFLICTO");
+	    	    r.setEstado("CONFLICTO");
+
+	    	    colores[hora][col] = "GRIS";
+	    	    tabla[hora][col] += "\n\n" + reunionTexto;
+	    	    continue;
+	    	}
+
+
+
 	        boolean hayClase = !tabla[hora][col].isBlank();
 
 	        // Determinar color según estado
-	        String estado = r.getEstado(); // pendiente / aceptada / rechazada
+	        String estadoColor = r.getEstado().trim().toUpperCase();
 
 	        if (hayClase) {
-	            tabla[hora][col] = tabla[hora][col] + "\n" + reunionTexto;
-	            colores[hora][col] = "GRIS";
+	            tabla[hora][col] = tabla[hora][col] + "\n\n" + reunionTexto;
+
+	            switch (estadoColor) {
+	                case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
+	                case "ACEPTADA": colores[hora][col] = "VERDE"; break;
+	                case "DENEGADA": colores[hora][col] = "ROJO"; break;
+	                default: colores[hora][col] = "GRIS"; break;
+	            }
+
 	        } else {
 	            tabla[hora][col] = reunionTexto;
 
-	            switch (estado.toUpperCase()) {
+	            switch (estadoColor) {
 	                case "PENDIENTE": colores[hora][col] = "AMARILLO"; break;
 	                case "ACEPTADA": colores[hora][col] = "VERDE"; break;
-	                case "RECHAZADA": colores[hora][col] = "ROJO"; break;
+	                case "DENEGADA": colores[hora][col] = "ROJO"; break;
+	                case "CONFLICTO": colores[hora][col] = "GRIS"; break;
 	                default: colores[hora][col] = "AMARILLO"; break;
 	            }
 	        }
 	    }
 
 	    vista.actualizarTablaHorarios(tabla, colores);
+	}
+
+
+	public Reuniones buscarReunionPorTexto(String textoCelda) {
+
+	    for (Reuniones r : listaReuniones) {
+
+	        String centro = nombreCentro(r.getIdCentro(), obtenerCentros());
+	        String reunionTexto = r.getTitulo() + "\n" + centro;
+
+	        // Si la celda contiene el texto de la reunión, es esta
+	        if (textoCelda.contains(reunionTexto)) {
+	            return r;
+	        }
+
+
+	    
+	}
+	    return null;
 	}
 
 
@@ -507,24 +598,26 @@ public class Controlador {
 	    return lista;
 	}
 
-	public void actualizarEstadoReunion(int fila, int columna, String nuevoEstado) {
+	public boolean actualizarEstadoReunionPorId(int idReunion, String estado) {
 	    try {
-	        dos.writeUTF("UPDATE_ESTADO_REUNION");
-	        dos.writeInt(usuario.getId());
-	        dos.writeInt(fila);
-	        dos.writeInt(columna);
-	        dos.writeUTF(nuevoEstado);
+	        dos.writeUTF("ACTUALIZAR_ESTADO_REUNION");
+	        dos.writeInt(idReunion);
+	        dos.writeUTF(estado);
 	        dos.flush();
 
 	        String respuesta = dis.readUTF();
-	        if (!respuesta.equals("OK")) {
-	            System.out.println("Error actualizando estado de reunión");
-	        }
+	        return respuesta.equals("OK");
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        return false;
 	    }
 	}
+
+
+	
+
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public void cargarHorarios(Horario vista) {
@@ -582,20 +675,113 @@ public class Controlador {
 		if (vista instanceof OtrosHorarios o)
 			o.actualizarTablaHorarios(tabla);
 
-	
+	}
+	public boolean crearReunion(Reuniones r) {
+	    try {
+	        dos.writeUTF("CREAR_REUNION");
+	        dos.flush();
 
-    }
+	        out.reset();
+	        out.writeObject(r);
+	        out.flush();
 
-    
+	        String respuesta = dis.readUTF();
+	        return respuesta.equals("OK");
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 
-    // MÉTODO GENERAL PARA CAMBIAR DE VISTA
-    public void cambiarVista(JFrame vistaActual, JFrame vistaNueva) {
-        vistaActual.setVisible(false);
-        vistaNueva.setVisible(true);
-        vistaActual.dispose();
-    }
+	public Reuniones construirReunionDesdeDialog(
+	        String textoDiaHora,
+	        String titulo,
+	        String tema,
+	        String aula,
+	        Centro centro,
+	        Users alumno
+	) {
+	    try {
+	        // textoDiaHora = "Lunes - 3"
+	        String[] partes = textoDiaHora.split(" - ");
+	        String dia = partes[0];
+	        int hora = Integer.parseInt(partes[1]);
+
+	        // Convertir día + hora a LocalDateTime
+	        Calendar cal = Calendar.getInstance();
+	        cal.setTime(new Date());
+
+	        String[] dias = {"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado"};
+	        int indice = -1;
+	        for (int i = 0; i < dias.length; i++) {
+	            if (dias[i].equalsIgnoreCase(dia)) indice = i;
+	        }
+
+	        cal.set(Calendar.DAY_OF_WEEK, indice + 1);
+	        cal.set(Calendar.HOUR_OF_DAY, 7 + (hora - 1));
+	        cal.set(Calendar.MINUTE, 0);
+	        cal.set(Calendar.SECOND, 0);
+
+	        LocalDateTime fecha = cal.toInstant()
+	                                 .atZone(ZoneId.systemDefault())
+	                                 .toLocalDateTime();
+
+	        Reuniones r = new Reuniones();
+	        r.setTitulo(titulo);
+	        r.setAsunto(tema);
+	        r.setAula(aula);
+	        r.setFecha(Timestamp.valueOf(fecha));
+	        r.setEstado("PENDIENTE");
+	        r.setUsersByProfesorId(usuario);
+	        r.setUsersByAlumnoId(alumno);
+	        r.setIdCentro(String.valueOf(centro.getCCEN()));
+
+	        return r;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	public Reuniones buscarUltimaReunionPendienteEnCelda(String textoCelda) {
+
+	    Reuniones ultima = null;
+
+	    for (Reuniones r : listaReuniones) {
+
+	        String centro = nombreCentro(r.getIdCentro(), obtenerCentros());
+	        String reunionTexto = r.getTitulo() + "\n" + centro;
+
+	        if (textoCelda.contains(reunionTexto)) {
+
+	            String estado = r.getEstado().trim().toUpperCase();
+
+	            // Solo reuniones NO resueltas
+	            if (!estado.equals("ACEPTADA") && !estado.equals("DENEGADA")) {
+	                ultima = r;
+	            }
+	        }
+	    }
+
+	    return ultima;
+	}
+
+
+
+	public ArrayList<Reuniones> buscarTodasLasReunionesEnCelda(String textoCelda) {
+	    ArrayList<Reuniones> lista = new ArrayList<>();
+
+	    for (Reuniones r : listaReuniones) {
+	        if (textoCelda.contains(r.getTitulo())) {
+	            lista.add(r);
+	        }
+	    }
+
+	    return lista;
+	}
+
+
 
 
 
