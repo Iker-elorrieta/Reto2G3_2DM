@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -20,7 +21,9 @@ public class Users implements java.io.Serializable {
 	@Expose
 	private Integer id;
 	@Expose
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Tipos tipos;
+
 	@Expose
 	private String email;
 	@Expose

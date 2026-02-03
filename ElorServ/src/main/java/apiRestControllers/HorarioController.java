@@ -24,4 +24,9 @@ public class HorarioController {
     public List<Horarios> horariosAlumno(@PathVariable int id) {
         return service.horariosAlumno(id);
     }
+
+    @PostMapping
+    public void crear(@RequestBody Horarios h) {
+        service.crearHorario(h);
+    }
 }

@@ -4,6 +4,7 @@ package modelo;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -18,8 +19,10 @@ public class Reuniones implements java.io.Serializable {
 	@Expose
 	private Integer idReunion;
 	@Expose
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Users usersByAlumnoId;
 	@Expose
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Users usersByProfesorId;
 	@Expose
 	private String estado;

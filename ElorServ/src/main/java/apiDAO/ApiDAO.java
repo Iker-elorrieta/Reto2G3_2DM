@@ -135,4 +135,13 @@ public class ApiDAO {
         tx.commit();
         session.close();
     }
+
+    public void insertHorario(Horarios h) {
+        Session session = getSession();
+        Transaction tx = session.beginTransaction();
+        session.persist(h);
+        tx.commit();
+        session.close();
+    }
+
 }

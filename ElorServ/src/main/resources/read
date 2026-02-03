@@ -1,0 +1,47 @@
+GET http://localhost:8080/api/usuarios
+
+POST http://localhost:8080/api/usuarios
+{
+  "email": "nuevo@mail.com",
+  "username": "nuevoUser",
+  "password": "1234",
+  "nombre": "Nuevo",
+  "apellidos": "Usuario",
+  "dni": "12345678A",
+  "direccion": "Calle 1",
+  "telefono1": "600000000",
+  "telefono2": "600000001",
+  "argazkiaUrl": "foto.jpg",
+  "tipos": { "id": 3 }
+}
+PUT http://localhost:8080/api/usuarios/ID
+DELETE http://localhost:8080/api/usuarios/ID
+-------------------------------------
+GET http://localhost:8080/api/reuniones
+POST http://localhost:8080/api/reuniones
+{
+  "titulo": "Tutoría",
+  "estado": "PENDIENTE",
+  "fecha": "2026-02-10T10:00:00",
+  "usersByAlumnoId": { "id": 7 },
+  "usersByProfesorId": { "id": 3 }
+}
+
+PUT http://localhost:8080/api/reuniones/ID
+DELETE http://localhost:8080/api/reuniones/ID
+-------------------------------------
+GET http://localhost:8080/api/horarios/profesor/ID
+GET http://localhost:8080/api/horarios/alumno/ID
+POST http://localhost:8080/api/horarios
+{
+  "dia": "MIERCOLES",
+  "hora": 1,
+  "users": { "id": 14 },
+  "modulos": { "id": 3 },
+  "aula": "Aula B101",
+  "observaciones": null
+}
+
+-------------
+GET http://localhost:8080/api/centros
+
