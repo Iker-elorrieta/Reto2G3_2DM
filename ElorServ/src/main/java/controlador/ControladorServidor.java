@@ -110,7 +110,8 @@ public class ControladorServidor {
 
 	public void getCentros(DataOutputStream dos, ObjectOutputStream oos) {
 	    try {
-	        List<Centro> lista =  LeerJson.getCentros(); 
+	    	LeerJson lj = new LeerJson();
+	    	List<Centro> lista = lj.getCentros();
 	        dos.writeUTF("OK");
 	        dos.flush();
 

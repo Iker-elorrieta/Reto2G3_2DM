@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class LeerJson {
 
-    private static List<Centro> centros;
+    private List<Centro> centros;
 
     public LeerJson() {
         try {
@@ -39,7 +39,7 @@ public class LeerJson {
         }
     }
 
-    public static List<Centro> getCentros() {
+    public List<Centro> getCentros() {
         return centros;
     }
 

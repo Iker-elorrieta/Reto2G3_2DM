@@ -467,8 +467,8 @@ public class Controlador {
 		ArrayList<Centro> listaCentros = new ArrayList<>();
 
 		try {
-			out.writeUTF("GET_CENTROS");
-			out.flush();
+			dos.writeUTF("GET_CENTROS");
+			dos.flush();
 
 			Object recibido = in.readObject();
 
