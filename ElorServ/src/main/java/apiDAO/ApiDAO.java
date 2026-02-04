@@ -3,6 +3,7 @@ package apiDAO;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import bd.HibernateUtil;
@@ -15,13 +16,14 @@ import java.util.List;
 @Repository
 public class ApiDAO {
 
+    @Autowired
+    private HibernateUtil hibernateUtil;
+
     private Session getSession() {
-        return HibernateUtil.getSessionFactory().openSession();
+        return hibernateUtil.getSessionFactory().openSession();
     }
 
-  
     //  USUARIOS
-
 
     public List<Users> getAllUsers() {
         Session session = getSession();
@@ -47,7 +49,7 @@ public class ApiDAO {
     public void insertUser(Users u) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
-        session.persist(u);   
+        session.persist(u);
         tx.commit();
         session.close();
     }
@@ -55,7 +57,7 @@ public class ApiDAO {
     public void updateUser(Users u) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
-        session.merge(u);     
+        session.merge(u);
         tx.commit();
         session.close();
     }
@@ -64,14 +66,12 @@ public class ApiDAO {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         Users u = session.get(Users.class, id);
-        if (u != null) session.remove(u);   
+        if (u != null) session.remove(u);
         tx.commit();
         session.close();
     }
 
-
     //  HORARIOS
-
 
     public List<Horarios> getHorariosProfesor(int profeId) {
         Session session = getSession();
@@ -85,7 +85,6 @@ public class ApiDAO {
         return lista;
     }
 
-
     public List<Horarios> getHorariosAlumno(int alumnoId) {
         Session session = getSession();
 
@@ -93,21 +92,17 @@ public class ApiDAO {
             "SELECT h FROM Horarios h " +
             "WHERE h.modulos.ciclos IN (" +
                 "SELECT mat.ciclos FROM Matriculaciones mat " +
-                "WHERE mat.users = " + alumnoId+
+                "WHERE mat.users = " + alumnoId +
             ")",
             Horarios.class
         );
-
 
         List<Horarios> lista = q.list();
         session.close();
         return lista;
     }
 
-
-
     //  REUNIONES
-
 
     public List<Reuniones> getAllReuniones() {
         Session session = getSession();
@@ -119,7 +114,7 @@ public class ApiDAO {
     public void insertReunion(Reuniones r) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
-        session.persist(r);   
+        session.persist(r);
         tx.commit();
         session.close();
     }
@@ -127,7 +122,7 @@ public class ApiDAO {
     public void updateReunion(Reuniones r) {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
-        session.merge(r);     
+        session.merge(r);
         tx.commit();
         session.close();
     }
@@ -136,8 +131,17 @@ public class ApiDAO {
         Session session = getSession();
         Transaction tx = session.beginTransaction();
         Reuniones r = session.get(Reuniones.class, idReunion);
-        if (r != null) session.remove(r);   
+        if (r != null) session.remove(r);
         tx.commit();
         session.close();
     }
+
+    public void insertHorario(Horarios h) {
+        Session session = getSession();
+        Transaction tx = session.beginTransaction();
+        session.persist(h);
+        tx.commit();
+        session.close();
+    }
+
 }

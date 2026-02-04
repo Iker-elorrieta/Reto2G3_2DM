@@ -3,13 +3,14 @@ package modelo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+
 public class Reuniones implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     private Integer idReunion;
-    private Integer idAlumno;
-    private Integer idProfesor;
+    private Users usersByAlumnoId;
+    private Users usersByProfesorId;
     private String estado;
     private String estadoEus;
     private String idCentro;
@@ -21,12 +22,12 @@ public class Reuniones implements Serializable {
     public Reuniones() {
     }
 
-    public Reuniones(Integer idReunion, Integer idAlumno, Integer idProfesor, String estado,
+    public Reuniones(Integer idReunion, Users usersByAlumnoId, Users usersByProfesorId, String estado,
                         String estadoEus, String idCentro, String titulo, String asunto,
                         String aula, Timestamp fecha) {
         this.idReunion = idReunion;
-        this.idAlumno = idAlumno;
-        this.idProfesor = idProfesor;
+        this.usersByAlumnoId = usersByAlumnoId;
+        this.usersByProfesorId = usersByProfesorId;
         this.estado = estado;
         this.estadoEus = estadoEus;
         this.idCentro = idCentro;
@@ -36,83 +37,83 @@ public class Reuniones implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getIdReunion() {
-        return idReunion;
-    }
+	public Integer getIdReunion() {
+		return idReunion;
+	}
 
-    public void setIdReunion(Integer idReunion) {
-        this.idReunion = idReunion;
-    }
+	public void setIdReunion(Integer idReunion) {
+		this.idReunion = idReunion;
+	}
 
-    public Integer getIdAlumno() {
-        return idAlumno;
-    }
+	public Users getUsersByAlumnoId() {
+		return usersByAlumnoId;
+	}
 
-    public void setIdAlumno(Integer idAlumno) {
-        this.idAlumno = idAlumno;
-    }
+	public void setUsersByAlumnoId(Users usersByAlumnoId) {
+		this.usersByAlumnoId = usersByAlumnoId;
+	}
 
-    public Integer getIdProfesor() {
-        return idProfesor;
-    }
+	public Users getUsersByProfesorId() {
+		return usersByProfesorId;
+	}
 
-    public void setIdProfesor(Integer idProfesor) {
-        this.idProfesor = idProfesor;
-    }
+	public void setUsersByProfesorId(Users usersByProfesorId) {
+		this.usersByProfesorId = usersByProfesorId;
+	}
 
-    public String getEstado() {
-        return estado;
-    }
+	public String getEstado() {
+		return estado;
+	}
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 
-    public String getEstadoEus() {
-        return estadoEus;
-    }
+	public String getEstadoEus() {
+		return estadoEus;
+	}
 
-    public void setEstadoEus(String estadoEus) {
-        this.estadoEus = estadoEus;
-    }
+	public void setEstadoEus(String estadoEus) {
+		this.estadoEus = estadoEus;
+	}
 
-    public String getIdCentro() {
-        return idCentro;
-    }
+	public String getIdCentro() {
+		return idCentro;
+	}
 
-    public void setIdCentro(String idCentro) {
-        this.idCentro = idCentro;
-    }
+	public void setIdCentro(String idCentro) {
+		this.idCentro = idCentro;
+	}
 
-    public String getTitulo() {
-        return titulo;
-    }
+	public String getTitulo() {
+		return titulo;
+	}
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
 
-    public String getAsunto() {
-        return asunto;
-    }
+	public String getAsunto() {
+		return asunto;
+	}
 
-    public void setAsunto(String asunto) {
-        this.asunto = asunto;
-    }
+	public void setAsunto(String asunto) {
+		this.asunto = asunto;
+	}
 
-    public String getAula() {
-        return aula;
-    }
+	public String getAula() {
+		return aula;
+	}
 
-    public void setAula(String aula) {
-        this.aula = aula;
-    }
+	public void setAula(String aula) {
+		this.aula = aula;
+	}
 
-    public Timestamp getFecha() {
-        return fecha;
-    }
+	public Timestamp getFecha() {
+		return fecha;
+	}
 
-    public void setFecha(Timestamp fecha) {
-        this.fecha = fecha;
-    }
+	public void setFecha(Timestamp fecha) {
+		this.fecha = fecha;
+	}
 }

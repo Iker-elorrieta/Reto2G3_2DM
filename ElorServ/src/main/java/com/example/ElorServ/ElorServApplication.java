@@ -1,25 +1,37 @@
 package com.example.ElorServ;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import controlador.ControladorServidor;
 import sockets.Servidor;
 
-@SpringBootApplication(scanBasePackages = {
-	    "com.example.ElorServ",
-	    "apiRestControllers",
-	    "apiRestServices",
-	    "apiDAO"
-	})
+import jakarta.annotation.PostConstruct;
 
+@SpringBootApplication(scanBasePackages = {
+        "com.example.ElorServ",
+        "apiRestControllers",
+        "apiRestServices",
+        "apiDAO",
+        "bd",
+        "controlador",
+        "modelo"
+})
 public class ElorServApplication {
+
+    @Autowired
+    private ControladorServidor controladorServidor;
 
     public static void main(String[] args) {
         SpringApplication.run(ElorServApplication.class, args);
+    }
 
-        new Thread(() -> {                // INICIAR EL SERVIDOR EN UN HILO SEPARADO PARA QUE FUNCIONE CON SPRINGBOOT A LA VEZ
+    @PostConstruct
+    public void iniciarServidorSockets() {
+        new Thread(() -> {
             try {
-                Servidor.iniciar();
+                Servidor.iniciar(controladorServidor);
             } catch (Exception e) {
                 e.printStackTrace();
             }

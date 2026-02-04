@@ -18,23 +18,7 @@ public class CentroController {
 
     @GetMapping 
     public List<Centro> getCentros() {            //EJECUCCION DE FUNCIONES DEPENDIENDO DE LO DESEADO 
-        return LeerJson.getCentros();
+    	return service.getCentros();
     }
 
-    @PostMapping
-    public Centro crearCentro(@RequestBody Centro centro) {
-        service.crearCentro(centro);
-        return centro;
-    }
-
-    @PutMapping("/{id}")
-    public Centro actualizarCentro(@PathVariable int id, @RequestBody Centro centro) {
-        service.actualizarCentro(id, centro);
-        return centro;
-    }
-
-    @DeleteMapping("/{id}")
-    public void eliminarCentro(@PathVariable int id) {
-        service.eliminarCentro(id);
-    }
 }

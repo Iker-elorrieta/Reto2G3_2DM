@@ -4,6 +4,7 @@ package modelo;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -17,9 +18,11 @@ public class Horarios implements java.io.Serializable {
     private Integer id;
 
     @Expose
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Modulos modulos;
 
-    @JsonIgnore
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Users users;
 
     @Expose
@@ -78,7 +81,7 @@ public class Horarios implements java.io.Serializable {
     public void setModulos(Modulos modulos) {
         this.modulos = modulos;
     }
-
+    @JsonIgnore
     public Users getUsers() {
         return this.users;
     }

@@ -3,39 +3,35 @@ package controlador;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import bd.HibernateUtil;
 import modelo.Users;
 
-//CIFRADO 1 SOLA VEZ POR ALUMNOS, IKER NO TIENES QUE TOCAR
+@Component
 public class PrimeroCifrar {
 
-    public static void main(String[] args) throws Exception {
-        cifrarUsuariosYContrasenas();
+    private final HibernateUtil hibernateUtil;
+
+    @Autowired
+    public PrimeroCifrar(HibernateUtil hibernateUtil) {
+        this.hibernateUtil = hibernateUtil;
     }
 
-    public static void cifrarUsuariosYContrasenas() {
-        Session sesion = HibernateUtil.getSessionFactory().openSession();
+    public void cifrarUsuariosYContrasenas() {
+        Session sesion = hibernateUtil.getSessionFactory().openSession();
         sesion.beginTransaction();
 
         List<Users> lista = sesion.createQuery("FROM Users", Users.class).list();
 
         for (Users u : lista) {
-
-           
-                u.setUsername(CypherAES.encrypt(u.getUsername()));
-         
-
-           
-                u.setPassword(CypherAES.encrypt(u.getPassword()));
-            
-
+            u.setUsername(CypherAES.encrypt(u.getUsername()));
+            u.setPassword(CypherAES.encrypt(u.getPassword()));
             sesion.merge(u);
         }
 
         sesion.getTransaction().commit();
         sesion.close();
     }
-
-  
 }

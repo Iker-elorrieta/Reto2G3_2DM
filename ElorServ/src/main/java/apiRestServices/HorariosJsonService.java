@@ -21,4 +21,10 @@ public class HorariosJsonService {
     public List<Horarios> horariosAlumno(int idAlumno) {
         return dao.getHorariosAlumno(idAlumno);
     }
+
+    public void crearHorario(Horarios h) {
+        dao.insertHorario(h);
+    }
 }
+
+

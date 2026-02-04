@@ -18,7 +18,18 @@ public class ConexionServidor {
 
     public ConexionServidor() throws Exception {
 
-        socket = new Socket("localhost", 5000);
+        String ip = ConfigServidor.IP;
+        int puerto = ConfigServidor.PUERTO;
+
+        // Si no hay variables de entorno, usa localhost por defecto
+        if (ip == null || ip.isEmpty()) {
+            ip = "localhost";
+        }
+        if (puerto == 0) {
+            puerto = 5000;
+        }
+
+        socket = new Socket(ip, puerto);
 
         dos = new DataOutputStream(socket.getOutputStream());
         dis = new DataInputStream(socket.getInputStream());
@@ -28,6 +39,7 @@ public class ConexionServidor {
 
         ois = new ObjectInputStream(socket.getInputStream());
     }
+
 
     public ObjectOutputStream getOos() {
         return oos;

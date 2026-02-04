@@ -1,0 +1,68 @@
+package Vista;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import controlador.Controlador;
+import modelo.Centro;
+import modelo.Reuniones;
+
+public class DialogVerReunion extends JDialog {
+
+	private static final long serialVersionUID = 1L;
+
+	public DialogVerReunion(JFrame parent, ArrayList<Reuniones> reuniones, Controlador controlador) {
+
+		super(parent, "Todas las reuniones", true);
+		setSize(520, 520);
+		setLocationRelativeTo(parent);
+		getContentPane().setLayout(null);
+
+		JLabel lblTitulo = new JLabel("Todas las reuniones del profesor:");
+		lblTitulo.setBounds(20, 20, 400, 25);
+		getContentPane().add(lblTitulo);
+
+		JPanel panelLista = new JPanel();
+		panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
+		panelLista.setBackground(new Color(240, 240, 240));
+
+		JScrollPane scroll = new JScrollPane(panelLista);
+		scroll.setBounds(20, 60, 470, 360);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
+		scroll.setBorder(null);
+		scroll.getViewport().setBackground(new Color(240, 240, 240));
+		getContentPane().add(scroll);
+
+		for (Reuniones r : reuniones) {
+
+			JPanel card = new JPanel();
+			card.setLayout(new GridLayout(0, 1));
+			card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
+			card.setBorder(
+					BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+							BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+			card.setBackground(Color.WHITE);
+
+			String centro = controlador.obtenerCentros().stream()
+					.filter(c -> String.valueOf(c.getCCEN()).equals(r.getIdCentro())).findFirst().map(Centro::getNOM)
+					.orElse("Desconocido");
+
+			card.add(new JLabel("Título: " + r.getTitulo()));
+			card.add(new JLabel("Fecha: " + r.getFecha().toString()));
+			card.add(new JLabel("Tema: " + r.getAsunto()));
+			card.add(new JLabel("Aula: " + r.getAula()));
+			card.add(new JLabel("Centro: " + centro));
+			card.add(new JLabel(
+					"Alumno: " + r.getUsersByAlumnoId().getNombre() + " " + r.getUsersByAlumnoId().getApellidos()));
+			card.add(new JLabel("Estado: " + r.getEstado()));
+
+			panelLista.add(card);
+			panelLista.add(Box.createVerticalStrut(10));
+		}
+
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setBounds(180, 430, 150, 35);
+		btnVolver.addActionListener(e -> dispose());
+		getContentPane().add(btnVolver);
+	}
+}
